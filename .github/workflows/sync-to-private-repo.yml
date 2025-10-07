@@ -8,11 +8,16 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    if: |
+      secrets.SSH_PRIVATE_KEY != '' &&
+      secrets.ORGANIZATION_NAME != '' &&
+      secrets.PRIVATE_REPO_NAME != ''
     steps:
       - name: Checkout source repository
         uses: actions/checkout@v4
 
       - name: Push to private repository
-        run: |
-          git remote add private https://x-access-token:${{ secrets.PRIVATE_REPO_TOKEN }}@github.com/${{ secrets.ORGANIZATION_NAME }}/${{ secrets.PRIVATE_REPO_NAME }}.git
-          git push private main --force
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url: git@github.com:${{ secrets.ORGANIZATION_NAME }}/${{ secrets.PRIVATE_REPO_NAME }}.git
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
