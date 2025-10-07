@@ -2,6 +2,8 @@ package eu.epitech.t_dev_700.models;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.time.OffsetDateTime;
+
 public class ClockModels {
 
     public enum ClockAction {
@@ -10,7 +12,8 @@ public class ClockModels {
     }
 
     public record PostClockRequest(
-            @NotNull ClockModels.ClockAction io
+            @NotNull ClockModels.ClockAction io,
+            OffsetDateTime timestamp
     ) {}
 
 }
