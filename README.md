@@ -1,6 +1,6 @@
-# 🕒 Time Manager
+# Time Manager
 
-## 📖 Overview
+## Overview
 **Time Manager** is an employee management and time-tracking application designed to help companies monitor working hours, team performance, and employee punctuality.  
 The project follows the **DevOps philosophy**, emphasizing automation, testing, and CI/CD practices.
 
@@ -8,7 +8,7 @@ Employees can clock in/out, view their activity summaries, and managers can acce
 
 ---
 
-## 🧱 Architecture
+## Architecture
 
 | Layer | Technology | Description |
 |-------|-------------|-------------|
@@ -21,15 +21,15 @@ Employees can clock in/out, view their activity summaries, and managers can acce
 
 ---
 
-## 🧩 Features
+## Features
 
-### 👤 Common (Employee)
+### Common (Employee)
 - Login and logout securely (JWT authentication)
 - Edit and delete personal account
 - Clock in and clock out
 - View working hours and dashboards
 
-### 👨‍💼 Manager
+### Manager
 - Manage teams (add, update, delete members)
 - View team KPIs (e.g., lateness rate, total working hours)
 - Access reports by date and employee
@@ -37,7 +37,7 @@ Employees can clock in/out, view their activity summaries, and managers can acce
 
 ---
 
-## ⚙️ Backend API
+## Backend API
 
 ### Base URL
 ```http://localhost:<backend_port>/api```
@@ -59,20 +59,20 @@ Employees can clock in/out, view their activity summaries, and managers can acce
 
 ---
 
-## 🔐 Authentication
+## Authentication
 All protected routes require a **JWT token** obtained after login.  
 Passwords are hashed and user data is validated server-side.
 
 ---
 
-## 🧪 Testing
+## Testing
 - Unit and integration tests for API routes using Spring Boot’s testing framework.
 - Flutter widget tests for core UI components.
 - Test coverage is reported via **GitHub Actions CI**.
 
 ---
 
-## 🐳 Docker Setup
+## Docker Setup
 
 ### Development
 Create a `docker-compose.yml` file with services for:
@@ -92,7 +92,7 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 | Variable | Description |
 |----------|-------------|
 |POSTGRES_USER | PostgreSQL username |
@@ -104,7 +104,7 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 
 ---
 
-## 🚀 CI/CD Pipeline
+## CI/CD Pipeline
 
 1. Using **GitHub Actions**, the pipeline includes:
 2. **Build** backend and frontend
@@ -114,7 +114,7 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 
 ---
 
-## 💡 Good Practices
+## Good Practices
 
 - Follows **DevOps methodology** (automation, continuous integration)
 - Consistent **Git flow** with protected branches and code reviews
@@ -124,13 +124,13 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 
 ---
 
-## 🧾 License
+## License
 
 This project is developed as part of the **Epitech school program** and is not intended for commercial use.
 
 ---
 
-## 🧑‍💻 Authors
+## Authors
 
 ### **Team NAN_2**
 
