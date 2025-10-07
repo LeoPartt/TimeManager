@@ -15,7 +15,7 @@ Thank you for your interest in this project! This document describes the convent
 The project uses a hierarchical branch structure:
 
 - **`main`**: Production branch (protected, no direct push)
-- **`develop`**: Main development branch
+- **`develop`**: Main development branch (protected, no direct push)
 - **`frontend`**: Branch dedicated to frontend development
 - **`backend`**: Branch dedicated to backend development
 - **`feature/*`**: Temporary branches for new features (deleted after merge)
