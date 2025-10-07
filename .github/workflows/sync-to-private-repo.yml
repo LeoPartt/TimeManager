@@ -8,10 +8,6 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    if: |
-      secrets.SSH_PRIVATE_KEY != '' &&
-      secrets.ORGANIZATION_NAME != '' &&
-      secrets.PRIVATE_REPO_NAME != ''
     steps:
       - name: Checkout source repository
         uses: actions/checkout@v4
