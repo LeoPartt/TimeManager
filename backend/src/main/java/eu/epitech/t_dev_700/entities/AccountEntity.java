@@ -34,8 +34,8 @@ public class AccountEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "flags", columnDefinition = "bit varying")
-    private String flags;
+    @Column(name = "flags")
+    private byte flags = 0;
 
     @OneToOne(mappedBy = "account")
     @JsonIgnore

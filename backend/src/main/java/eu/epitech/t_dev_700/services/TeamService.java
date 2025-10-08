@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public final class TeamService {
+public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
     private final PasswordEncoder passwordEncoder;
