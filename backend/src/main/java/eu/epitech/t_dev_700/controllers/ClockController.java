@@ -4,10 +4,12 @@ import eu.epitech.t_dev_700.models.ClockModels;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/clocks")
-public class ClockController {
+@RestController
+@RequestMapping("/clocks")
+public final class ClockController {
 
     @PostMapping("")
     public void PostClock(@Valid @RequestBody ClockModels.PostClockRequest body) {

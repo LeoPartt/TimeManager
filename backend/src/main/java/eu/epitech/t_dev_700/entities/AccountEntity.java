@@ -26,7 +26,7 @@ public class AccountEntity {
 
     @NotBlank
     @Size(max = 255)
-    @Column(name = "username", nullable = false, unique = true, columnDefinition = "citext")
+    @Column(name = "username", nullable = false, unique = true, columnDefinition = "VARCHAR")
     private String username;
 
     @NotBlank

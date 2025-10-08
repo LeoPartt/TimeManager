@@ -4,8 +4,9 @@ import eu.epitech.t_dev_700.models.TeamModels;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/teams")
-public class TeamController {
+@RestController
+@RequestMapping("/teams")
+public final class TeamController {
     @GetMapping
     public TeamModels.GetTeamResponse GetTeams() {
         // TODO: Logic for getting teams
