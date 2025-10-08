@@ -1,32 +1,34 @@
 package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.models.UserModels;
+import eu.epitech.t_dev_700.services.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/users")
-public class UserController {
+@RequiredArgsConstructor
 public final class UserController {
+
+    private final UserService userService;
 
     @GetMapping
     public UserModels.GetUserResponse GetUsers() {
-        // TODO: Logic for getting users
-        return null;
+        return userService.listUsers();
     }
 
     @PostMapping
     public UserModels.User PostUser(@Valid @RequestBody UserModels.PostUserRequest body) {
-        // TODO: Logic for creating a user
-        return null;
+        return userService.createUser(body);
     }
 
     @PutMapping("{id}")
-    public void PutUser(@PathVariable String id, @Valid @RequestBody UserModels.PutUserRequest body) {
-        // TODO: Logic for updating a user
+    public UserModels.User PutUser(@PathVariable Long id, @Valid @RequestBody UserModels.PutUserRequest body) {
+        return userService.updateUser(id, body);
     }
 
     @DeleteMapping("{id}")
-    public void DeleteUser(@PathVariable String id) {
-        // TODO: Logic for deleting a user
+    public void DeleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
