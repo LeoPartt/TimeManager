@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/teams")
-public class TeamController {
+public final class TeamController {
     @GetMapping
     public TeamModels.GetTeamResponse GetTeams() {
         // TODO: Logic for getting teams
