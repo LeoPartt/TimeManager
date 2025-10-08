@@ -11,7 +11,7 @@
 	<groupId>eu.epitech</groupId>
 	<artifactId>t_dev_700</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>t-dev-700</name>
+	<name>t_dev_700</name>
 	<description>Time Manager (T-DEV-700)</description>
 	<url/>
 	<licenses>
@@ -66,6 +66,21 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.11.5</version>
 		</dependency>
         <dependency>
             <groupId>com.h2database</groupId>
