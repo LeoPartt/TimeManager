@@ -45,7 +45,7 @@ public class UserEntity {
     private String lastName;
 
     // citext in Postgres for case-insensitive comparison; keep nullable if optional
-    @Column(name = "email", columnDefinition = "citext")
+    @Column(name = "email", columnDefinition = "VARCHAR")
     private String email;
 
     @Size(max = 32)
