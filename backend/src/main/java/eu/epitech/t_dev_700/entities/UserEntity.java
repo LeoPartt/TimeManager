@@ -1,7 +1,5 @@
 package eu.epitech.t_dev_700.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import eu.epitech.t_dev_700.entities.AccountEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -32,8 +30,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Optional 1-1 to Account (accounts can exist without users)
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", unique = true, foreignKey = @ForeignKey(name = "fk_user_account"))
     private AccountEntity account;
 
@@ -61,7 +58,6 @@ public class UserEntity {
 
     public boolean isActive() { return deletedAt == null; }
 
-    /* equals & hashCode on id only */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

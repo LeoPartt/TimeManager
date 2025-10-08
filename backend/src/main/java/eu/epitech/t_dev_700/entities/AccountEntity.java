@@ -37,7 +37,7 @@ public class AccountEntity {
     @Column(name = "flags", columnDefinition = "bit varying")
     private String flags;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account")
     @JsonIgnore
     private UserEntity user;
 
@@ -47,6 +47,7 @@ public class AccountEntity {
         if (!(o instanceof AccountEntity that)) return false;
         return id != null && id.equals(that.id);
     }
+
     @Override
     public int hashCode() { return Objects.hashCode(id); }
 
