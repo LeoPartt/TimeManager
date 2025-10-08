@@ -93,14 +93,13 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 ---
 
 ## Environment Variables
-| Variable | Description |
-|----------|-------------|
-|POSTGRES_USER | PostgreSQL username |
-|POSTGRES_PASSWORD | PostgreSQL password |
-|POSTGRES_DB | Database name |
-|SPRING_DATASOURCE_URL | JDBC connection URL |
-|JWT_SECRET | Secret key for token generation |
-|SERVER_PORT | Backend server port |
+| Variable    | Description                     |
+|-------------|---------------------------------|
+| DB_NAME     | Database name                   |
+| DB_USER     | PostgreSQL username             |
+| DB_PASSWORD | PostgreSQL password             |
+| DB_HOST     | Database host                   |
+| DB_PORT     | Database port                   |
 
 ---
 
