@@ -15,14 +15,14 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(
-        name = "user",
+        name = "tm_user",
         indexes = {
                 @Index(name = "idx_user_account_id", columnList = "account_id"),
                 @Index(name = "idx_user_first_last", columnList = "first_name, last_name"),
                 @Index(name = "idx_user_last", columnList = "last_name")
         }
 )
-@SQLDelete(sql = "UPDATE \"user\" SET deleted_at = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE tm_user SET deleted_at = now() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL") // only return active users by default
 public class UserEntity {
 
