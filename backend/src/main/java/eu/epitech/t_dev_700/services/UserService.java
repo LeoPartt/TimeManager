@@ -8,10 +8,11 @@ import eu.epitech.t_dev_700.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public final class UserService {
+public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -20,6 +21,7 @@ public final class UserService {
         return userMapper.getUsers(userRepository.findAll());
     }
 
+    @Transactional
     public UserModels.User createUser(UserModels.PostUserRequest body) {
         UserEntity entity = userMapper.createUser(body, passwordEncoder);
         UserEntity saved = userRepository.save(entity);
