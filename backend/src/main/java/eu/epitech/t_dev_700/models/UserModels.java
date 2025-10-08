@@ -15,11 +15,6 @@ public class UserModels {
             String phoneNumber
     ) {}
 
-    //RESPONSES
-    public record GetUserResponse(
-            User[] users
-    ) {}
-
     //REQUESTS
     public record PostUserRequest(
             @NotBlank String username,

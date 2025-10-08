@@ -1,47 +1,31 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.controllers.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.mappers.UserMapper;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
+import eu.epitech.t_dev_700.utils.CRUDHookUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+public class UserService extends CRUDService<
+        UserEntity,
+        UserModels.PostUserRequest, UserModels.PutUserRequest,
+        UserModels.User> {
+
     private final PasswordEncoder passwordEncoder;
 
-    public UserModels.GetUserResponse listUsers() {
-        return userMapper.getUsers(userRepository.findAll());
+    public UserService(UserRepository repo, UserMapper mapper, PasswordEncoder passwordEncoder) {
+        super(repo, mapper, "User");
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
-    public UserModels.User createUser(UserModels.PostUserRequest body) {
-        UserEntity entity = userMapper.createUser(body, passwordEncoder);
-        UserEntity saved = userRepository.save(entity);
-        return userMapper.toModel(saved);
+    @CRUDHookUtils.CRUDHook(moment = CRUDHookUtils.Moment.BEFORE, action = CRUDHookUtils.Action.CREATE)
+    protected void beforeCreate(UserEntity entity, UserModels.PostUserRequest request) {
+        if (entity.getAccount() != null && entity.getAccount().getPassword() != null) {
+            entity.getAccount().setPassword(passwordEncoder.encode(entity.getAccount().getPassword()));
+        }
     }
 
-    public UserModels.User updateUser(Long id, UserModels.PutUserRequest body) {
-        UserEntity entity = getUserEntityOrThrow(id);
-        userMapper.updateUser(entity, body);
-        UserEntity saved = userRepository.save(entity);
-        return userMapper.toModel(saved);
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.delete(getUserEntityOrThrow(id));
-    }
-
-    private UserEntity getUserEntityOrThrow(Long id) throws ResourceNotFoundException {
-        return userRepository
-                .findById(id)
-                .orElseThrow(ResourceNotFoundException.supply("User", id));
-    }
 }

@@ -4,45 +4,43 @@ import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.UserModels;
 import org.mapstruct.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
+public interface UserMapper extends CRUDMapper<
+        UserEntity,
+        UserModels.PostUserRequest,
+        UserModels.PutUserRequest,
+        UserModels.User
+        > {
 
-    // ---------- Entity -> DTO ----------
     @Mapping(target = "username", source = "account.username")
     UserModels.User toModel(UserEntity entity);
 
-    default UserModels.GetUserResponse getUsers(List<UserEntity> entities) {
-        UserModels.User[] arr = entities.stream().map(this::toModel).toArray(UserModels.User[]::new);
-        return new UserModels.GetUserResponse(arr);
+    default UserModels.User[] listEntity(List<UserEntity> entities) {
+        return entities.stream().map(this::toModel).toArray(UserModels.User[]::new);
     }
 
-    // ---------- POST: DTO -> Entity (create) ----------
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "account", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
-    UserEntity createUser(UserModels.PostUserRequest req, @Context PasswordEncoder encoder);
+    UserEntity createEntity(UserModels.PostUserRequest req);
 
     @AfterMapping
     default void attachAccount(UserModels.PostUserRequest body,
-                               @MappingTarget UserEntity user,
-                               @Context PasswordEncoder encoder) {
+                               @MappingTarget UserEntity user) {
         var acc = new AccountEntity();
         acc.setUsername(body.username());
-        acc.setPassword(encoder.encode(body.password()));
         user.setAccount(acc);
         acc.setUser(user);
     }
 
-    // ---------- PUT: DTO -> existing Entity (update) ----------
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "account", ignore = true)
-    void updateUser(@MappingTarget UserEntity entity, UserModels.PutUserRequest body);
+    void updateEntity(@MappingTarget UserEntity entity, UserModels.PutUserRequest body);
 
     @AfterMapping
     default void updateAccountUsername(UserModels.PutUserRequest req, @MappingTarget UserEntity user) {
