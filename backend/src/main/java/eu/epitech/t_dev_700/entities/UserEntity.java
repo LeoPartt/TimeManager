@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -23,7 +23,7 @@ import java.util.Objects;
         }
 )
 @SQLDelete(sql = "UPDATE \"user\" SET deleted_at = now() WHERE id = ?")
-@Where(clause = "deleted_at IS NULL") // only return active users by default
+@SQLRestriction("deleted_at IS NULL") // only return active users by default
 public class UserEntity {
 
     @Id

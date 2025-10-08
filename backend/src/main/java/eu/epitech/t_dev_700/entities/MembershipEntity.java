@@ -3,7 +3,7 @@ package eu.epitech.t_dev_700.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.OffsetDateTime;
 
@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
                 columnNames = {"user_id","team_id"}),
         indexes = @Index(name = "idx_membership_team_role", columnList = "team_id, role")
 )
-@Where(clause = "deleted_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 public class MembershipEntity {
     @Id
     @GeneratedValue

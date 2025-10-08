@@ -1,13 +1,12 @@
 package eu.epitech.t_dev_700.entities;
 
-import eu.epitech.t_dev_700.entities.MembershipEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
@@ -24,7 +23,7 @@ import java.util.Set;
         }
 )
 @SQLDelete(sql = "UPDATE team SET deleted_at = now() WHERE id = ?")
-@Where(clause = "deleted_at IS NULL")
+@SQLRestriction("deleted_at IS NULL")
 public class TeamEntity {
 
     @Id
