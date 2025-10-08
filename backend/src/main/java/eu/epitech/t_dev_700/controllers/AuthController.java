@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/auth")
-public class AuthController {
+public final class AuthController {
 
     @PostMapping("/login")
     public AuthModels.PostLoginResponse PostLogin(@Valid @RequestBody AuthModels.PostLoginRequest body) {

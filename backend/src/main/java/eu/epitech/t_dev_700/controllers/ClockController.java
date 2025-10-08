@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/clocks")
-public class ClockController {
+public final class ClockController {
 
     @PostMapping("")
     public void PostClock(@Valid @RequestBody ClockModels.PostClockRequest body) {

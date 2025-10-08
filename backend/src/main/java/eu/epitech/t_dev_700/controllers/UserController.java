@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("/users")
 public class UserController {
+public final class UserController {
 
     @GetMapping
     public UserModels.GetUserResponse GetUsers() {
