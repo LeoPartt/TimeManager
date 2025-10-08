@@ -1,31 +1,35 @@
 package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.models.TeamModels;
+import eu.epitech.t_dev_700.services.TeamService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/teams")
+@RequiredArgsConstructor
 public final class TeamController {
+
+    private final TeamService teamService;
+
     @GetMapping
     public TeamModels.GetTeamResponse GetTeams() {
-        // TODO: Logic for getting teams
-        return null;
+        return teamService.listTeams();
     }
 
     @PostMapping
     public TeamModels.Team PostTeam(@Valid @RequestBody TeamModels.PostTeamRequest body) {
-        // TODO: Logic for creating a team
-        return null;
+        return teamService.createTeam(body);
     }
 
     @PutMapping("{id}")
-    public void PutTeam(@PathVariable String id, @Valid @RequestBody TeamModels.PutTeamRequest body) {
-        // TODO: Logic for updating a team
+    public TeamModels.Team PutTeam(@PathVariable Long id, @Valid @RequestBody TeamModels.PutTeamRequest body) {
+        return teamService.updateTeam(id, body);
     }
 
     @DeleteMapping("{id}")
-    public void DeleteTeam(@PathVariable String id) {
-        // TODO: Logic for deleting a team
+    public void DeleteTeam(@PathVariable Long id) {
+        teamService.deleteTeam(id);
     }
 }
