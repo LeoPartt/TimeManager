@@ -1,7 +1,6 @@
 package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.models.TeamModels;
-import eu.epitech.t_dev_700.models.UserModels;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
