@@ -1,7 +1,6 @@
 services:
   db:
     image: postgres:17-alpine
-    restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
@@ -13,8 +12,7 @@ services:
 
   backend:
     build: backend
-    image: time-manager-backend:latest
-    restart: unless-stopped
+    image: time-manager-backend:dev
     depends_on:
       - db
     environment:
@@ -25,6 +23,24 @@ services:
       DB_PORT: ${DB_PORT}
       SPRING_PROFILES_ACTIVE: dev
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT_EXTERNAL:-8081}:8080"
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.dev
+    image: time-manager-frontend:dev
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: http://backend:8081
+    ports:
+      - "${FRONTEND_PORT_EXTERNAL:-8080}:8080"
+    volumes:
+      - ./frontend/time_manager:/app:delegated
+      - flutter_pub_cache:/root/.pub-cache
+
 volumes:
   postgres_data:
+  flutter_pub_cache:
