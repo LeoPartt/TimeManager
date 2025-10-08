@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: on-failure:3
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Pas de ports exposés - réseau interne seulement
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    image: time-manager-backend:${VERSION:-latest}
+    restart: on-failure:3
+    depends_on:
+      - db
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: "false"
+    # Pas de ports exposés - derrière reverse proxy
+
+  frontend-builder:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.prod
+    image: time-manager-frontend-builder:${VERSION:-latest}
+    volumes:
+      - apk_output:/app/build/app/outputs/flutter-apk
+      - aab_output:/app/build/app/outputs/bundle/release
+    environment:
+      BUILD_NUMBER: ${BUILD_NUMBER:-1}
+      VERSION_NAME: ${VERSION:-1.0.0}
+
+volumes:
+  postgres_data:
+  apk_output:
+  aab_output:
