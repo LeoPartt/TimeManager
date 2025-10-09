@@ -131,3 +131,25 @@ jobs:
           else
             echo "No coverage data (tests not implemented yet)"
           fi
+
+  validation-complete:
+    name: Validation Complete
+    runs-on: ubuntu-latest
+    needs: [detect-changes, backend-validation, frontend-validation]
+    if: always()
+    steps:
+      - name: Check validation results
+        run: |
+          backend_result="${{ needs.backend-validation.result }}"
+          frontend_result="${{ needs.frontend-validation.result }}"
+
+          if [[ "$backend_result" == "success" || "$backend_result" == "skipped" ]] && \
+             [[ "$frontend_result" == "success" || "$frontend_result" == "skipped" ]]; then
+            echo "✅ Validation passed"
+            exit 0
+          else
+            echo "❌ Validation failed"
+            echo "Backend: $backend_result"
+            echo "Frontend: $frontend_result"
+            exit 1
+          fi
