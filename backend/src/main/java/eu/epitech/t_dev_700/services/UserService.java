@@ -22,7 +22,7 @@ public class UserService extends CRUDService<
     }
 
     @CRUDHookUtils.CRUDHook(moment = CRUDHookUtils.Moment.BEFORE, action = CRUDHookUtils.Action.CREATE)
-    protected void beforeCreate(UserEntity entity, UserModels.PostUserRequest request) {
+    public void beforeCreate(UserEntity entity, UserModels.PostUserRequest request) {
         if (entity.getAccount() != null && entity.getAccount().getPassword() != null) {
             entity.getAccount().setPassword(passwordEncoder.encode(entity.getAccount().getPassword()));
         }

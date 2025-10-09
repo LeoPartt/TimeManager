@@ -32,6 +32,7 @@ public interface UserMapper extends CRUDMapper<
                                @MappingTarget UserEntity user) {
         var acc = new AccountEntity();
         acc.setUsername(body.username());
+        acc.setPassword(body.password());
         user.setAccount(acc);
         acc.setUser(user);
     }
