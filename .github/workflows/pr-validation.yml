@@ -145,10 +145,10 @@ jobs:
 
           if [[ "$backend_result" == "success" || "$backend_result" == "skipped" ]] && \
              [[ "$frontend_result" == "success" || "$frontend_result" == "skipped" ]]; then
-            echo "✅ Validation passed"
+            echo "Validation passed"
             exit 0
           else
-            echo "❌ Validation failed"
+            echo "Validation failed"
             echo "Backend: $backend_result"
             echo "Frontend: $frontend_result"
             exit 1
