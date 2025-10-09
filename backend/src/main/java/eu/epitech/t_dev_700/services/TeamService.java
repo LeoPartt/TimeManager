@@ -9,12 +9,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamService extends CRUDService<
         TeamEntity,
+        TeamModels.TeamModel,
         TeamModels.PostTeamRequest,
         TeamModels.PutTeamRequest,
-        TeamModels.Team
+        TeamModels.PatchTeamRequest
         > {
 
     protected TeamService(TeamRepository teamRepository, TeamMapper teamMapper) {
-        super(teamRepository, teamMapper, "Team");
+        super(teamRepository, teamMapper, "TeamModel");
     }
 }

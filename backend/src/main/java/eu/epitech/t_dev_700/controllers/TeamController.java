@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/teams")
 public class TeamController extends CRUDController<
         TeamEntity,
+        TeamModels.TeamModel,
         TeamModels.PostTeamRequest,
         TeamModels.PutTeamRequest,
-        TeamModels.Team
+        TeamModels.PatchTeamRequest
         > {
 
     public TeamController(TeamService teamService) {

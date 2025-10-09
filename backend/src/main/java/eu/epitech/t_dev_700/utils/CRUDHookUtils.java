@@ -14,43 +14,51 @@ import java.util.function.Predicate;
 
 public class CRUDHookUtils {
 
-    public static <E> void beforeCreate(CRUDService<E, ?, ?, ?> service, E entity, Object request) {
+    public static <E> void beforeCreate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
         invokeHooks(service, Moment.BEFORE, Action.CREATE, entity, request);
     }
 
-    public static <E> void afterCreate(CRUDService<E, ?, ?, ?> service, E entity, Object request) {
+    public static <E> void afterCreate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
         invokeHooks(service, Moment.AFTER, Action.CREATE, entity, request);
     }
 
-    public static <E> void beforeUpdate(CRUDService<E, ?, ?, ?> service, E entity, Object request) {
+    public static <E> void beforeUpdate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
         invokeHooks(service, Moment.BEFORE, Action.UPDATE, entity, request);
     }
 
-    public static <E> void afterUpdate(CRUDService<E, ?, ?, ?> service, E entity, Object request) {
+    public static <E> void afterUpdate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
         invokeHooks(service, Moment.AFTER, Action.UPDATE, entity, request);
     }
 
-    public static <E> void beforeDelete(CRUDService<E, ?, ?, ?> service, E entity) {
+    public static <E> void beforeReplace(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
+        invokeHooks(service, Moment.BEFORE, Action.REPLACE, entity, request);
+    }
+
+    public static <E> void afterReplace(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
+        invokeHooks(service, Moment.AFTER, Action.REPLACE, entity, request);
+    }
+
+    public static <E> void beforeDelete(CRUDService<E, ?, ?, ?, ?> service, E entity) {
         invokeHooks(service, Moment.BEFORE, entity);
     }
 
-    public static <E> void afterDelete(CRUDService<E, ?, ?, ?> service, E entity) {
+    public static <E> void afterDelete(CRUDService<E, ?, ?, ?, ?> service, E entity) {
         invokeHooks(service, Moment.AFTER, entity);
     }
 
-    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?> service, Moment moment, Action action, E entity, Object request) {
+    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?, ?> service, Moment moment, Action action, E entity, Object request) {
         HookInvoker<E> invoker = new HookInvoker<>(service, entity, request);
         HookAnnotationPredicate predicate = new HookAnnotationPredicate(moment, action);
         invokeHooks(service, invoker, predicate);
     }
 
-    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?> service, Moment moment, E entity) {
+    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?, ?> service, Moment moment, E entity) {
         HookInvoker<E> invoker = new HookInvoker<>(service, entity);
         HookAnnotationPredicate predicate = new HookAnnotationPredicate(moment, Action.DELETE);
         invokeHooks(service, invoker, predicate);
     }
 
-    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?> service, HookInvoker<E> invoker, HookAnnotationPredicate predicate) {
+    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?, ?> service, HookInvoker<E> invoker, HookAnnotationPredicate predicate) {
         try {
             Arrays.stream(service.getClass().getMethods())
                     .filter(predicate)
@@ -69,9 +77,9 @@ public class CRUDHookUtils {
         }
     }
 
-    private record HookInvoker<E>(CRUDService<E, ?, ?, ?> service, E entity,
+    private record HookInvoker<E>(CRUDService<E, ?, ?, ?, ?> service, E entity,
                                   Object request) implements Consumer<Method> {
-        public HookInvoker(CRUDService<E, ?, ?, ?> service, E entity) {
+        public HookInvoker(CRUDService<E, ?, ?, ?, ?> service, E entity) {
             this(service, entity, null);
         }
 
@@ -101,6 +109,7 @@ public class CRUDHookUtils {
     public enum Action {
         CREATE,
         UPDATE,
+        REPLACE,
         DELETE
     }
 

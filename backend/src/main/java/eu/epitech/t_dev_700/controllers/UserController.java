@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController extends CRUDController<
         UserEntity,
+        UserModels.UserModel,
         UserModels.PostUserRequest,
         UserModels.PutUserRequest,
-        UserModels.User
+        UserModels.PatchUserRequest
         > {
 
     public UserController(UserService userService) {
