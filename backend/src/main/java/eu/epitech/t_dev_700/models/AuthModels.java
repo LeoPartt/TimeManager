@@ -4,13 +4,14 @@ import jakarta.validation.constraints.NotNull;
 
 public class AuthModels {
 
-    public record PostLoginRequest(
+    public record LoginRequest(
             @NotNull String username,
             @NotNull String password
     ) {}
 
-    public record PostLoginResponse(
-            String token
+    public record LoginResponse(
+            String token,
+            long expiresIn
     ) {}
 
 }
