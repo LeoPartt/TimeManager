@@ -25,7 +25,7 @@ void main() {
 
     test('validatePassword returns error for short password', () {
       final result = Validators.validatePassword('123');
-      expect(result, contains('6 caractères'));
+      expect(result, contains('6 characters'));
     });
 
     test('validatePassword returns null for strong password', () {
@@ -34,8 +34,9 @@ void main() {
     });
 
     test('validateNotEmpty returns error if empty', () {
-      final result = Validators.validateNotEmpty('', 'Name');
-      expect(result, "The Name field is required");
+      final String name = 'Name';
+      final result = Validators.validateNotEmpty('', name);
+      expect(result, "The '$name' field is required");
     });
 
     test('validateNotEmpty returns null if filled', () {

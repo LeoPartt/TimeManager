@@ -1,30 +1,31 @@
+import 'package:time_manager/core/constants/app_strings.dart';
 import 'package:time_manager/core/utils/extensions/string_extensions.dart';
 
 /// Provides reusable validation functions for form inputs.
 class Validators {
- static String? validateEmail(String? value) {
+  static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return "L'adresse e-mail est requise";
+      return AppStrings.emailRequired;
     }
     if (!value.isValidEmail) {
-      return "Adresse e-mail invalide";
+      return AppStrings.invalidEmail;
     }
     return null;
   }
 
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return "Le mot de passe est requis";
+      return AppStrings.passwordRequired;
     }
     if (value.length < 6) {
-      return "Le mot de passe doit comporter au moins 6 caractères";
+      return AppStrings.shortPassword;
     }
     return null;
   }
 
   static String? validateNotEmpty(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
-      return "Le champ '$fieldName' est obligatoire";
+      return AppStrings.fieldIsRequired(fieldName);
     }
     return null;
   }
