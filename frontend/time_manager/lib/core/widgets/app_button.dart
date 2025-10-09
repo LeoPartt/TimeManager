@@ -34,8 +34,8 @@ class AppButton extends StatelessWidget {
         color: AppColors.secondary,
           borderRadius: r,
           border: Border.all(
-            color: AppColors.shadow.withValues(alpha: 0.35),
-            width: 1,
+            color: AppColors.shadow.withValues(alpha: 0.6),
+            width: 2,
           )
         ),
         child: InkWell( 
