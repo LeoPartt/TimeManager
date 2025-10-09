@@ -1,23 +1,30 @@
 services:
   db:
     image: postgres:17-alpine
-    restart: on-failure:3
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      LANG: en_US.utf8
+      LC_ALL: en_US.utf8
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    # Pas de ports exposés - réseau interne seulement
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
       context: backend
       dockerfile: Dockerfile
     image: time-manager-backend:${VERSION:-latest}
-    restart: on-failure:3
+    restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -27,13 +34,18 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_JPA_SHOW_SQL: "false"
-    # Pas de ports exposés - derrière reverse proxy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  frontend-builder:
+  frontend:
     build:
       context: frontend
       dockerfile: Dockerfile.prod
-    image: time-manager-frontend-builder:${VERSION:-latest}
+    image: time-manager-frontend:${VERSION:-latest}
     volumes:
       - apk_output:/app/build/app/outputs/flutter-apk
       - aab_output:/app/build/app/outputs/bundle/release
