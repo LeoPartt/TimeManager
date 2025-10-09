@@ -27,10 +27,8 @@ jobs:
           filters: |
             backend:
               - 'backend/**'
-              - '.github/workflows/pr-validation.yml'
             frontend:
               - 'frontend/**'
-              - '.github/workflows/pr-validation.yml'
 
   backend-validation:
     name: Backend - Build, Test & Coverage
