@@ -1,70 +1,92 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:time_manager/core/constants/app_sizes.dart';
 
-/// Defines global spacing, radius, and size constants for responsiveness.
-///
-/// Use these constants to ensure consistent spacing and sizing across the app.
-class AppSizes {
-  // ───────────────────────────────
-  // 🔹 Padding & Margins
-  // ───────────────────────────────
-  static const double p2 = 2.0;
-  static const double p4 = 4.0;
-  static const double p8 = 8.0;
-  static const double p12 = 12.0;
-  static const double p16 = 16.0;
-  static const double p20 = 20.0;
-  static const double p24 = 24.0;
-  static const double p32 = 32.0;
+void main() {
+  group('AppSizes', () {
+    testWidgets('responsiveWidth adjusts based on screen width', (
+      tester,
+    ) async {
+      const double base = 100.0;
 
-  // ───────────────────────────────
-  // 🔹 Border Radius
-  // ───────────────────────────────
-  static const double r4 = 4.0;
-  static const double r8 = 8.0;
-  static const double r12 = 12.0;
-  static const double r16 = 16.0;
-  static const double r24 = 24.0;
+      // Petit écran
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(size: Size(320, 640)),
+          child: Builder(
+            builder: (context) {
+              final small = AppSizes.responsiveWidth(context, base);
+              expect(small, lessThan(base));
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
-  // ───────────────────────────────
-  // 🔹 Icon sizes
-  // ───────────────────────────────
-  static const double iconSmall = 16.0;
-  static const double iconMedium = 24.0;
-  static const double iconLarge = 32.0;
+      // Grand écran
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(size: Size(800, 1280)),
+          child: Builder(
+            builder: (context) {
+              final large = AppSizes.responsiveWidth(context, base);
+              expect(large, greaterThan(base));
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+    });
 
-  // ───────────────────────────────
-  // 🔹 Text sizes (base, can be scaled responsively)
-  // ───────────────────────────────
-  static const double textXs = 10.0;
-  static const double textSm = 12.0;
-  static const double textMd = 14.0;
-  static const double textLg = 16.0;
-  static const double textXl = 20.0;
-  static const double textXxl = 24.0;
-  static const double textDisplay = 32.0;
+    testWidgets('responsiveHeight adjusts based on screen height', (
+      tester,
+    ) async {
+      const double base = 200.0;
 
-  // ───────────────────────────────
-  // 🔹 Responsive utility
-  // ───────────────────────────────
-  /// Returns responsive width based on screen width ratio.
-  static double responsiveWidth(BuildContext context, double size) {
-    final width = MediaQuery.of(context).size.width;
-    if (width < 350) return size * 0.85; // Small screen
-    if (width > 600) return size * 1.15; // Tablet
-    return size;
-  }
+      // Petit écran
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(size: Size(320, 530)),
+          child: Builder(
+            builder: (context) {
+              final small = AppSizes.responsiveHeight(context, base);
+              expect(small, lessThan(base));
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
 
-  /// Returns responsive height based on screen height ratio.
-  static double responsiveHeight(BuildContext context, double size) {
-    final height = MediaQuery.of(context).size.height;
-    if (height < 650) return size * 0.9;
-    if (height > 900) return size * 1.1;
-    return size;
-  }
+      // Grand écran
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(size: Size(800, 1200)),
+          child: Builder(
+            builder: (context) {
+              final large = AppSizes.responsiveHeight(context, base);
+              expect(large, greaterThan(base));
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+    });
 
-  /// Returns a responsive text size using MediaQuery scaling.
-  static double responsiveText(BuildContext context, double size) {
-    final scale = MediaQuery.of(context).textScaleFactor;
-    return size * scale.clamp(0.9, 1.2);
-  }
+    testWidgets('responsiveText scales with text factor', (tester) async {
+      const double baseTextSize = 16.0;
+
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(1.2)),
+          child: Builder(
+            builder: (context) {
+              final scaled = AppSizes.responsiveText(context, baseTextSize);
+              expect(scaled, greaterThan(baseTextSize));
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+    });
+  });
 }
