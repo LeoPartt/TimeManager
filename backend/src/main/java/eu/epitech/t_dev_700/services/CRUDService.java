@@ -37,8 +37,6 @@ public abstract class CRUDService<E, C, U, M> {
         this.entityName = entityName;
     }
 
-    /* -------------------- READ -------------------- */
-
     @Transactional(readOnly = true)
     public M[] list() {
         List<E> entities = repository.findAll();
@@ -50,8 +48,6 @@ public abstract class CRUDService<E, C, U, M> {
         return CRUDMapper.toModel(getOrThrow(id));
     }
 
-    /* -------------------- CREATE -------------------- */
-
     @Transactional
     public M create(C request) {
         E entity = CRUDMapper.createEntity(request);
@@ -60,8 +56,6 @@ public abstract class CRUDService<E, C, U, M> {
         CRUDHookUtils.afterCreate(this, saved, request);
         return CRUDMapper.toModel(saved);
     }
-
-    /* -------------------- UPDATE -------------------- */
 
     @Transactional
     public M update(Long id, U request) {
@@ -73,8 +67,6 @@ public abstract class CRUDService<E, C, U, M> {
         return CRUDMapper.toModel(saved);
     }
 
-    /* -------------------- DELETE -------------------- */
-
     @Transactional
     public void delete(Long id) {
         E entity = getOrThrow(id);
@@ -82,8 +74,6 @@ public abstract class CRUDService<E, C, U, M> {
         repository.delete(entity);
         CRUDHookUtils.afterDelete(this, entity);
     }
-
-    /* -------------------- Hooks & utilities -------------------- */
 
     protected E getOrThrow(Long id) {
         return repository.findById(id).orElseThrow(ResourceNotFoundException.supply(this.entityName, id));
