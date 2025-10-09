@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
+import 'package:time_manager/core/constants/app_sizes.dart';
 
 class AppLabelContainer extends StatelessWidget {
   final String label;
-  final double? width;
-  final double? height;
-  final BorderRadius? radius;
+  final bool fullSize;
 
   const AppLabelContainer({
     super.key,
+    required this.fullSize,
     required this.label,
-    this.width,
-    this.height,
-    this.radius,
   });
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final w = width ?? size.width * 0.6;
-    final h = height ?? size.height * 0.08;
-    final r = radius ?? BorderRadius.circular(15);
+    final w =  fullSize ? AppSizes.appContainerWidth(context) : AppSizes.appSmallContainerWidth(context) ;
+    final h =  fullSize ? AppSizes.appContainerHeight(context) : AppSizes.appSmallContainerHeight(context);
+    final r = BorderRadius.circular(AppSizes.r16);
 
     return Material( 
       color: Colors.transparent,
@@ -33,7 +29,7 @@ class AppLabelContainer extends StatelessWidget {
         borderRadius: r,
          border: Border.all(
             color: AppColors.secondary,
-            width: 5,
+            width: 4,
           )
         ),
         child: FittedBox(
@@ -41,7 +37,7 @@ class AppLabelContainer extends StatelessWidget {
            child: Text(
             label,
             style: TextStyle(
-              fontSize: size.width * 0.08,
+              fontSize: fullSize ? AppSizes.textDisplay : AppSizes.textXxl,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),

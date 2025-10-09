@@ -25,9 +25,10 @@ class HomeScreen extends StatelessWidget {
             children: [
               const Header(label: "DASHBOARD"),
               const SizedBox(height: 100),
-              AppLabelContainer(label: "First name"),
-              AppLabelContainer(label: "Last name"),
-              AppButton(label: "Settings", onPressed: () {context.pushRoute(SettingsRoute());},),
+              AppLabelContainer(label: "First name", fullSize: true),
+              AppLabelContainer(label: "Last name", fullSize: false),
+              AppButton(label: "Settings", fullSize: true, onPressed: () {context.pushRoute(SettingsRoute());},),
+              AppButton(label: "test small", fullSize: false, onPressed: () {context.pushRoute(SettingsRoute());},)
             ],
         ),
         )
