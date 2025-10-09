@@ -1,47 +1,22 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.controllers.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.mappers.UserMapper;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
+public class UserService extends CRUDService<
+        UserEntity,
+        UserModels.UserModel,
+        UserModels.PostUserRequest,
+        UserModels.PutUserRequest,
+        UserModels.PatchUserRequest
+        > {
 
-    public UserModels.GetUserResponse listUsers() {
-        return userMapper.getUsers(userRepository.findAll());
+    public UserService(UserRepository repo, UserMapper mapper) {
+        super(repo, mapper, "User");
     }
 
-    @Transactional
-    public UserModels.User createUser(UserModels.PostUserRequest body) {
-        UserEntity entity = userMapper.createUser(body, passwordEncoder);
-        UserEntity saved = userRepository.save(entity);
-        return userMapper.toModel(saved);
-    }
-
-    public UserModels.User updateUser(Long id, UserModels.PutUserRequest body) {
-        UserEntity entity = getUserEntityOrThrow(id);
-        userMapper.updateUser(entity, body);
-        UserEntity saved = userRepository.save(entity);
-        return userMapper.toModel(saved);
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.delete(getUserEntityOrThrow(id));
-    }
-
-    private UserEntity getUserEntityOrThrow(Long id) throws ResourceNotFoundException {
-        return userRepository
-                .findById(id)
-                .orElseThrow(ResourceNotFoundException.supply("User", id));
-    }
 }

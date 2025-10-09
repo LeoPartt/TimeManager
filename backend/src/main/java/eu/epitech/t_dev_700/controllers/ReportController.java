@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/reports")
-public final class ReportController {
+public class ReportController {
 
     @GetMapping
     public ReportModels.GetReportResponse getReports() {
