@@ -1,22 +1,32 @@
 services:
   db:
     image: postgres:17-alpine
+    ports:
+      - "${DB_PORT:-5432}:5432"
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "5432:5432"
+      LANG: en_US.utf8
+      LC_ALL: en_US.utf8
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: backend
-    image: time-manager-backend:latest
+    image: time-manager-backend:dev
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -24,7 +34,62 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       SPRING_PROFILES_ACTIVE: dev
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.dev
+    image: time-manager-frontend:dev
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      BACKEND_URL: http://backend:8080
+    volumes:
+      - ./frontend/time_manager:/app:delegated
+      - flutter_pub_cache:/root/.pub-cache
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -s -o /dev/null http://localhost:8080 || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  nginx:
+    image: nginx:alpine
     ports:
-      - "8080:8080"
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    networks:
+      - internal
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
 volumes:
   postgres_data:
+  flutter_pub_cache:
+
+networks:
+  internal:
+    driver: bridge

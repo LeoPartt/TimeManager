@@ -40,7 +40,7 @@ Employees can clock in/out, view their activity summaries, and managers can acce
 ## Backend API
 
 ### Base URL
-```http://localhost:<backend_port>/api```
+```http://localhost/api```
 
 ### Main Endpoints
 | Method | Endpoint | Description |
@@ -75,15 +75,9 @@ Passwords are hashed and user data is validated server-side.
 ## Docker Setup
 
 ### Development
-Create a `docker-compose.yml` file with services for:
-- `backend` (Spring Boot)
-- `frontend` (Flutter build or web)
-- `db` (PostgreSQL)
-- `proxy` (Nginx)
-
 Run all containers:
 ```bash
-  docker-compose up --build
+  docker compose up --build
 ```
 
 ### Production
@@ -93,23 +87,25 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 ---
 
 ## Environment Variables
-| Variable    | Description                     |
-|-------------|---------------------------------|
-| DB_NAME     | Database name                   |
-| DB_USER     | PostgreSQL username             |
-| DB_PASSWORD | PostgreSQL password             |
-| DB_HOST     | Database host                   |
-| DB_PORT     | Database port                   |
+| Variable     | Description                          |
+|--------------|--------------------------------------|
+| DB_NAME      | Database name                        |
+| DB_USER      | PostgreSQL username                  |
+| DB_PASSWORD  | PostgreSQL password                  |
+| DB_HOST      | Database host                        |
+| DB_PORT      | Database port                        |
+| NGINX_PORT   | Nginx port                           |
+| VERSION      | App version (prod only)              |
+| BUILD_NUMBER | Incremental build number (prod only) |
 
 ---
 
-## CI/CD Pipeline
+## CI/CD Pipelines
 
-1. Using **GitHub Actions**, the pipeline includes:
+1. Using **GitHub Actions**, the pipelines includes:
 2. **Build** backend and frontend
 3. **Run tests** and check coverage
 4. **Generate artifacts** (APK or web build)
-5. **Deploy** to the testing environment
 
 ---
 
