@@ -2,8 +2,10 @@ package eu.epitech.t_dev_700.utils;
 
 import eu.epitech.t_dev_700.services.CRUDService;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -54,7 +56,7 @@ public class CRUDHookUtils {
                     .filter(predicate)
                     .forEach(invoker);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to invoke CRUD hooks", e);
         }
     }
 
@@ -75,8 +77,16 @@ public class CRUDHookUtils {
 
         public void accept(Method method) {
             try {
-                if ((request == null)) method.invoke(entity);
-                else method.invoke(entity, request);
+                method.setAccessible(true);
+                Class<?>[] params = method.getParameterTypes();
+
+                if (params.length == 1 && params[0].isInstance(entity)) {
+                    method.invoke(service, entity);
+                } else if (params.length == 2 && params[0].isInstance(entity) && params[1].isInstance(request)) {
+                    method.invoke(service, entity, request);
+                } else {
+                    throw new RuntimeException("Invalid CRUDHook method signature: " + method);
+                }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
@@ -95,9 +105,9 @@ public class CRUDHookUtils {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
     public @interface CRUDHook {
         Moment moment();
-
         Action action();
     }
 
