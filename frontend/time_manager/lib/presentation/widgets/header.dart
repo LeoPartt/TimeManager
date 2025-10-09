@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_manager/core/constants/app_colors.dart';
 
 class Header extends StatelessWidget {
   final String label;
@@ -17,7 +18,7 @@ class Header extends StatelessWidget {
     return Container(   
       width: w,
       height: h,
-      color: const Color(0xFF768191),
+      color: AppColors.accent,
       margin: EdgeInsets.only(top : size.height * 0.05),
       child: Center(
         child: FittedBox(
@@ -27,7 +28,7 @@ class Header extends StatelessWidget {
             style: TextStyle(
               fontSize: size.width * 0.08,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: AppColors.textPrimary,
             ),
           ),
         ),

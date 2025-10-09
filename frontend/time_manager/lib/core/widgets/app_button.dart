@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_manager/core/constants/app_colors.dart';
 
 class AppButton extends StatelessWidget {
   final String label;
@@ -30,18 +31,18 @@ class AppButton extends StatelessWidget {
         width: w,
         height: h,
         decoration: BoxDecoration(
-          color: const Color(0xFF768191),
+        color: AppColors.secondary,
           borderRadius: r,
           border: Border.all(
-            color: const Color.fromRGBO(0, 0, 0, 0.35),
+            color: AppColors.shadow.withValues(alpha: 0.35),
             width: 1,
           )
         ),
         child: InkWell( 
           borderRadius: r,
           onTap: onPressed,
-          splashColor: Color(0xFF0088FF).withValues(alpha: 0.2),
-          highlightColor: Color(0xFF0088FF).withValues(alpha: 0.1),
+          splashColor: AppColors.primary.withValues(alpha : 0.2),
+          highlightColor: AppColors.primary.withValues(alpha : 0.1),
           child: Center(
             child: FittedBox(
               fit: BoxFit.scaleDown,
@@ -50,7 +51,7 @@ class AppButton extends StatelessWidget {
                 style: TextStyle(
                   fontSize: size.width * 0.08,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ),
