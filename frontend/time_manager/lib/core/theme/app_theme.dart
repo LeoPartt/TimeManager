@@ -15,7 +15,6 @@ class AppTheme {
         colorScheme: const ColorScheme.light(
           primary: AppColors.primary,
           secondary: AppColors.accent,
-          background: AppColors.backgroundLight,
           surface: Colors.white,
           error: AppColors.error,
         ),
@@ -49,7 +48,6 @@ class AppTheme {
         colorScheme: const ColorScheme.dark(
           primary: AppColors.primary,
           secondary: AppColors.secondary,
-          background: AppColors.backgroundDark,
           surface: AppColors.cardDark,
           error: AppColors.error,
         ),
