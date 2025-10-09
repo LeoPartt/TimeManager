@@ -42,11 +42,6 @@ jobs:
           path: backend/target/site/jacoco/
           retention-days: 30
 
-      - name: Check coverage threshold
-        run: |
-          cd backend
-          ./mvnw jacoco:check || echo "Coverage threshold not met (will be enforced later)"
-
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request'
         uses: madrapps/jacoco-report@v1.6.1
@@ -89,7 +84,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd frontend/time_manager
-          flutter test --coverage || echo "No tests found yet"
+          flutter test --coverage
 
       - name: Upload coverage report
         if: always()
