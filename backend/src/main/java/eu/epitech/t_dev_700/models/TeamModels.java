@@ -12,11 +12,6 @@ public class TeamModels {
             String description
     ) {}
 
-    //RESPONSES
-    public record GetTeamResponse(
-            Team[] teams
-    ) {}
-
     //REQUESTS
     public record PostTeamRequest(
             @NotBlank String name,
