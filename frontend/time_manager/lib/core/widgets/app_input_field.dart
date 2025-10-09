@@ -31,7 +31,7 @@ class AppInputField extends StatelessWidget {
         labelText: label,
         labelStyle: theme.textTheme.bodySmall?.copyWith(
           fontSize: AppSizes.responsiveText(context, AppSizes.textSm),
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
         ),
         filled: true,
         fillColor: theme.colorScheme.surfaceContainerHighest,

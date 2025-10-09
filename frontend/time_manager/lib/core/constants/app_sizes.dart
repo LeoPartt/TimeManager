@@ -88,7 +88,9 @@ class AppSizes {
 
   /// Returns a responsive text size using MediaQuery scaling.
   static double responsiveText(BuildContext context, double size) {
-    final scale = MediaQuery.of(context).textScaleFactor;
-    return size * scale.clamp(0.9, 1.2);
+    if (size <= 0) return size;
+    final ts = MediaQuery.textScalerOf(context);
+    final scaled = ts.scale(size);                         
+    return scaled.clamp(size * 0.9, size * 1.2).toDouble(); 
   }
 }
