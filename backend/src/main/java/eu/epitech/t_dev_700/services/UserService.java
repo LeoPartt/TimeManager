@@ -14,18 +14,8 @@ public class UserService extends CRUDService<
         UserModels.PostUserRequest, UserModels.PutUserRequest,
         UserModels.User> {
 
-    private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository repo, UserMapper mapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repo, UserMapper mapper) {
         super(repo, mapper, "User");
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @CRUDHookUtils.CRUDHook(moment = CRUDHookUtils.Moment.BEFORE, action = CRUDHookUtils.Action.CREATE)
-    public void beforeCreate(UserEntity entity, UserModels.PostUserRequest request) {
-        if (entity.getAccount() != null && entity.getAccount().getPassword() != null) {
-            entity.getAccount().setPassword(passwordEncoder.encode(entity.getAccount().getPassword()));
-        }
     }
 
 }
