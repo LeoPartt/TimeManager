@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Utility class that helps ensure accessibility consistency across the app.
-///
-/// It adapts color contrast, text scaling, and semantics to improve
-/// usability for all users (especially with visual impairments).
+/*Utility class that helps ensure accessibility consistency across the app.
+
+ It adapts color contrast, text scaling, and semantics to improve
+ usability for all users (especially with visual impairments).*/
 class AccessibilityUtils {
-  /// Ensures sufficient color contrast based on the current theme brightness.
-  ///
-  /// If the background color is too dark or too bright, this method
-  /// returns a text color that ensures readable contrast.
+  /* Ensures sufficient color contrast based on the current theme brightness.
+   If the background color is too dark or too bright, this method
+   returns a text color that ensures readable contrast*/
   static Color ensureContrast(BuildContext context, Color background) {
     final luminance = background.computeLuminance();
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -21,9 +20,8 @@ class AccessibilityUtils {
     }
   }
 
-  /// Wraps a widget with semantic information for screen readers.
-  ///
-  /// This helps assistive technologies describe widgets verbally.
+  /* Wraps a widget with semantic information for screen readers.
+   This helps assistive technologies describe widgets verbally.*/
   static Widget withLabel({
     required String label,
     required Widget child,

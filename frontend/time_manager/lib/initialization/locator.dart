@@ -26,24 +26,27 @@ Future<void> setupLocator() async {
   // ─────────────────────────────────────────────
   // CORE SERVICES
   // ─────────────────────────────────────────────
-  locator.registerLazySingleton<LocalStorageService>(() => LocalStorageService());
-  locator.registerLazySingleton<AuthHeaderService>(() => AuthHeaderService(locator()));
+  locator.registerLazySingleton<LocalStorageService>(
+    () => LocalStorageService(),
+  );
+  locator.registerLazySingleton<AuthHeaderService>(
+    () => AuthHeaderService(locator()),
+  );
   locator.registerLazySingleton<ApiClient>(
-    () => ApiClient(
-      baseUrl: const String.fromEnvironment(
-        'API_URL',
-        defaultValue: 'http://localhost:8080', // Change for production
-      ),
-      authHeaderService: locator(),
-    ),
+    () => ApiClient(authHeaderService: locator<AuthHeaderService>()),
   );
 
   // ─────────────────────────────────────────────
   // ACCOUNT FEATURE
   // ─────────────────────────────────────────────
-  locator.registerLazySingleton<AccountApi>(() => AccountApi(locator<ApiClient>().baseUrl));
+  locator.registerLazySingleton<AccountApi>(
+    () => AccountApi(locator<ApiClient>()),
+  );
   locator.registerLazySingleton<AccountRepository>(
-    () => AccountRepositoryImpl(api: locator<AccountApi>(), storage: locator<LocalStorageService>()),
+    () => AccountRepositoryImpl(
+      api: locator<AccountApi>(),
+      storage: locator<LocalStorageService>(),
+    ),
   );
 
   locator.registerFactory(() => LoginUser(locator<AccountRepository>()));
@@ -63,7 +66,10 @@ Future<void> setupLocator() async {
   // ─────────────────────────────────────────────
   locator.registerLazySingleton<UserApi>(() => UserApi(locator<ApiClient>()));
   locator.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(api: locator<UserApi>(), storage: locator<LocalStorageService>()),
+    () => UserRepositoryImpl(
+      api: locator<UserApi>(),
+      storage: locator<LocalStorageService>(),
+    ),
   );
 
   locator.registerFactory(() => GetUserProfile(locator<UserRepository>()));

@@ -28,7 +28,7 @@ class ThemeSwitcher extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Force a specific mode (optional).
+  /// Force a specific mode 
   Future<void> setTheme(bool darkMode) async {
     _isDarkMode = darkMode;
     final prefs = await SharedPreferences.getInstance();

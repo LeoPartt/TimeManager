@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Use these constants to ensure consistent spacing and sizing across the app.
 class AppSizes {
   // ───────────────────────────────
-  // 🔹 Padding & Margins
+  //  Padding & Margins
   // ───────────────────────────────
   static const double p2 = 2.0;
   static const double p4 = 4.0;
@@ -17,7 +17,7 @@ class AppSizes {
   static const double p32 = 32.0;
 
   // ───────────────────────────────
-  // 🔹 Border Radius
+  //  Border Radius
   // ───────────────────────────────
   static const double r4 = 4.0;
   static const double r8 = 8.0;
@@ -26,14 +26,14 @@ class AppSizes {
   static const double r24 = 24.0;
 
   // ───────────────────────────────
-  // 🔹 Icon sizes
+  //  Icon sizes
   // ───────────────────────────────
   static const double iconSmall = 16.0;
   static const double iconMedium = 24.0;
   static const double iconLarge = 32.0;
 
   // ───────────────────────────────
-  // 🔹 Text sizes (base, can be scaled responsively)
+  //  Text sizes (base, can be scaled responsively)
   // ───────────────────────────────
   static const double textXs = 10.0;
   static const double textSm = 12.0;
@@ -44,7 +44,7 @@ class AppSizes {
   static const double textDisplay = 32.0;
 
   // ───────────────────────────────
-  // 🔹 Container sizes 
+  //  Container sizes 
   // ───────────────────────────────
   static double appContainerWidth(BuildContext context) {
     return MediaQuery.of(context).size.width * 0.7 ;
@@ -68,7 +68,7 @@ class AppSizes {
   }
 
   // ───────────────────────────────
-  // 🔹 Responsive utility
+  //  Responsive utility
   // ───────────────────────────────
   /// Returns responsive width based on screen width ratio.
   static double responsiveWidth(BuildContext context, double size) {
