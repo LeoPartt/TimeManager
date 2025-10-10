@@ -94,6 +94,8 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 | DB_PASSWORD  | PostgreSQL password                  |
 | DB_HOST      | Database host                        |
 | DB_PORT      | Database port                        |
+| JWT_SECRET   | JWT secret key                       |
+| SERVER_PORT  | Server port                          |
 | NGINX_PORT   | Nginx port                           |
 | VERSION      | App version (prod only)              |
 | BUILD_NUMBER | Incremental build number (prod only) |
