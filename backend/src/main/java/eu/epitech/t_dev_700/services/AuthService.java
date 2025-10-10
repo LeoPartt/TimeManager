@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.context.annotation.Profile("!test")
 public class AuthService {
     private final AccountRepository accountRepository;
     private final AuthenticationManager authenticationManager;
