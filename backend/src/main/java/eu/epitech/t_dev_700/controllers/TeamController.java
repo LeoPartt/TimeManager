@@ -1,24 +1,59 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.services.TeamService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/teams")
+@RequiredArgsConstructor
 @Tag(name = "Team Management")
-public class TeamController extends CRUDController<
-        TeamEntity,
+public class TeamController implements CRUDController<
         TeamModels.TeamModel,
         TeamModels.PostTeamRequest,
         TeamModels.PutTeamRequest,
         TeamModels.PatchTeamRequest
         > {
 
-    public TeamController(TeamService teamService) {
-        super(teamService);
+    private final TeamService teamService;
+
+    @Override
+    @GetMapping("{id}")
+    public TeamModels.TeamModel Get(@PathVariable Long id) {
+        return teamService.get(id);
     }
+
+    @Override
+    @GetMapping
+    public TeamModels.TeamModel[] GetAll() {
+        return teamService.list();
+    }
+
+    @Override
+    @PostMapping
+    public TeamModels.TeamModel Post(@Valid @RequestBody TeamModels.PostTeamRequest body) {
+        return teamService.create(body);
+    }
+
+    @Override
+    @PutMapping("{id}")
+    public TeamModels.TeamModel Put(@PathVariable Long id, @Valid @RequestBody TeamModels.PutTeamRequest body) {
+        return teamService.replace(id, body);
+    }
+
+    @Override
+    @PatchMapping("{id}")
+    public TeamModels.TeamModel Patch(@PathVariable Long id, @Valid @RequestBody TeamModels.PatchTeamRequest body) {
+        return teamService.update(id, body);
+    }
+
+    @Override
+    @DeleteMapping("{id}")
+    public void Delete(@PathVariable Long id) {
+        teamService.delete(id);
+    }
+
 }
