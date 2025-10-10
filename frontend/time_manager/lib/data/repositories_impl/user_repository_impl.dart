@@ -27,7 +27,7 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<User> updateUserProfile(UpdateUserProfileParams params) async {
     final body = <String, dynamic>{};
-    if (params.name != null) body['name'] = params.name;
+    if (params.username != null) body['username'] = params.username;
     if (params.email != null) body['email'] = params.email;
     if (params.avatarUrl != null) body['avatarUrl'] = params.avatarUrl;
     if (params.phone != null) body['phone'] = params.phone;

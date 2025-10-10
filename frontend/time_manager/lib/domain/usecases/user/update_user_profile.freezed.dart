@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateUserProfileParams {
 
- String? get name; String? get email; String? get avatarUrl; String? get phone;
+ String? get username; String? get email; String? get avatarUrl; String? get phone;
 /// Create a copy of UpdateUserProfileParams
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UpdateUserProfileParamsCopyWith<UpdateUserProfileParams> get copyWith => _$Upda
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateUserProfileParams&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.phone, phone) || other.phone == phone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateUserProfileParams&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.phone, phone) || other.phone == phone));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,email,avatarUrl,phone);
+int get hashCode => Object.hash(runtimeType,username,email,avatarUrl,phone);
 
 @override
 String toString() {
-  return 'UpdateUserProfileParams(name: $name, email: $email, avatarUrl: $avatarUrl, phone: $phone)';
+  return 'UpdateUserProfileParams(username: $username, email: $email, avatarUrl: $avatarUrl, phone: $phone)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UpdateUserProfileParamsCopyWith<$Res>  {
   factory $UpdateUserProfileParamsCopyWith(UpdateUserProfileParams value, $Res Function(UpdateUserProfileParams) _then) = _$UpdateUserProfileParamsCopyWithImpl;
 @useResult
 $Res call({
- String? name, String? email, String? avatarUrl, String? phone
+ String? username, String? email, String? avatarUrl, String? phone
 });
 
 
@@ -62,9 +62,9 @@ class _$UpdateUserProfileParamsCopyWithImpl<$Res>
 
 /// Create a copy of UpdateUserProfileParams
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? email = freezed,Object? avatarUrl = freezed,Object? phone = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? username = freezed,Object? email = freezed,Object? avatarUrl = freezed,Object? phone = freezed,}) {
   return _then(_self.copyWith(
-name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,phone: freezed == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
@@ -153,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? email,  String? avatarUrl,  String? phone)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? username,  String? email,  String? avatarUrl,  String? phone)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateUserProfileParams() when $default != null:
-return $default(_that.name,_that.email,_that.avatarUrl,_that.phone);case _:
+return $default(_that.username,_that.email,_that.avatarUrl,_that.phone);case _:
   return orElse();
 
 }
@@ -174,10 +174,10 @@ return $default(_that.name,_that.email,_that.avatarUrl,_that.phone);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? email,  String? avatarUrl,  String? phone)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? username,  String? email,  String? avatarUrl,  String? phone)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateUserProfileParams():
-return $default(_that.name,_that.email,_that.avatarUrl,_that.phone);case _:
+return $default(_that.username,_that.email,_that.avatarUrl,_that.phone);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +194,10 @@ return $default(_that.name,_that.email,_that.avatarUrl,_that.phone);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? email,  String? avatarUrl,  String? phone)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? username,  String? email,  String? avatarUrl,  String? phone)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateUserProfileParams() when $default != null:
-return $default(_that.name,_that.email,_that.avatarUrl,_that.phone);case _:
+return $default(_that.username,_that.email,_that.avatarUrl,_that.phone);case _:
   return null;
 
 }
@@ -209,10 +209,10 @@ return $default(_that.name,_that.email,_that.avatarUrl,_that.phone);case _:
 
 
 class _UpdateUserProfileParams implements UpdateUserProfileParams {
-  const _UpdateUserProfileParams({this.name, this.email, this.avatarUrl, this.phone});
+  const _UpdateUserProfileParams({this.username, this.email, this.avatarUrl, this.phone});
   
 
-@override final  String? name;
+@override final  String? username;
 @override final  String? email;
 @override final  String? avatarUrl;
 @override final  String? phone;
@@ -227,16 +227,16 @@ _$UpdateUserProfileParamsCopyWith<_UpdateUserProfileParams> get copyWith => __$U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateUserProfileParams&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.phone, phone) || other.phone == phone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateUserProfileParams&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.phone, phone) || other.phone == phone));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,email,avatarUrl,phone);
+int get hashCode => Object.hash(runtimeType,username,email,avatarUrl,phone);
 
 @override
 String toString() {
-  return 'UpdateUserProfileParams(name: $name, email: $email, avatarUrl: $avatarUrl, phone: $phone)';
+  return 'UpdateUserProfileParams(username: $username, email: $email, avatarUrl: $avatarUrl, phone: $phone)';
 }
 
 
@@ -247,7 +247,7 @@ abstract mixin class _$UpdateUserProfileParamsCopyWith<$Res> implements $UpdateU
   factory _$UpdateUserProfileParamsCopyWith(_UpdateUserProfileParams value, $Res Function(_UpdateUserProfileParams) _then) = __$UpdateUserProfileParamsCopyWithImpl;
 @override @useResult
 $Res call({
- String? name, String? email, String? avatarUrl, String? phone
+ String? username, String? email, String? avatarUrl, String? phone
 });
 
 
@@ -264,9 +264,9 @@ class __$UpdateUserProfileParamsCopyWithImpl<$Res>
 
 /// Create a copy of UpdateUserProfileParams
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? email = freezed,Object? avatarUrl = freezed,Object? phone = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? username = freezed,Object? email = freezed,Object? avatarUrl = freezed,Object? phone = freezed,}) {
   return _then(_UpdateUserProfileParams(
-name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+username: freezed == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,phone: freezed == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable

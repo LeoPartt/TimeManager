@@ -45,8 +45,17 @@ class AppAvatar extends StatelessWidget {
           ? Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                
                 border: Border.all(color: borderColor, width: 2),
+                boxShadow: const [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(0, 0, 0, 0.35),
+                                      offset: Offset(0, 2),
+                                      blurRadius: 6,
+                                    ),
+                                  ],
               ),
+              
               padding: const EdgeInsets.all(2),
               child: avatar,
             )

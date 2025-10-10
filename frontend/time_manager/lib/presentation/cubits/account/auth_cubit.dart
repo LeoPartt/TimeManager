@@ -16,20 +16,20 @@ class AuthCubit extends Cubit<AuthState> {
     required this.logoutUser,
   }) : super(const AuthState.initial());
 
-  Future<void> login(String email, String password) async {
+  Future<void> login({required String username, required String password}) async {
     emit(const AuthState.loading());
     try {
-      final user = await loginUser(email, password);
+      final user = await loginUser(username, password);
       emit(AuthState.authenticated(user));
     } catch (e) {
       emit(AuthState.error(e.toString()));
     }
   }
 
-  Future<void> register(String name, String email, String password) async {
+  Future<void> register({required String name, required String username, required String password}) async {
     emit(const AuthState.loading());
     try {
-      final user = await registerUser(name, email, password);
+      final user = await registerUser(name, username, password);
       emit(AuthState.authenticated(user));
     } catch (e) {
       emit(AuthState.error(e.toString()));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
-import 'package:time_manager/core/constants/app_sizes.dart';
 
 class Header extends StatelessWidget {
   final String label;
@@ -13,8 +12,8 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final w = AppSizes.dashboardWidth(context);
-    final h = AppSizes.dashboardHeight(context);
+    final w = size.width * 0.9;
+    final h = size.height * 0.06;
 
     return Container(   
       width: w,
@@ -27,7 +26,7 @@ class Header extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: AppSizes.textDisplay,
+              fontSize: size.width * 0.08,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),

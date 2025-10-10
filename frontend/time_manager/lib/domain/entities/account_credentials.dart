@@ -6,7 +6,7 @@ part 'account_credentials.g.dart';
 @freezed
 abstract class AccountCredentials with _$AccountCredentials {
   const factory AccountCredentials({
-    required String email,
+    required String username,
     required String password,
   }) = _AccountCredentials;
 

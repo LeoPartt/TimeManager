@@ -8,7 +8,7 @@ part 'user_model.g.dart';
 abstract class UserModel with _$UserModel {
   const factory UserModel({
     required int id,
-    required String name,
+    required String username,
     required String email,
     String? avatarUrl,
     String? role,
@@ -24,7 +24,7 @@ abstract class UserModel with _$UserModel {
 extension UserModelX on UserModel {
   User toDomain() => User(
         id: id,
-        name: name,
+        username: username,
         email: email,
         avatarUrl: avatarUrl,
         role: role,

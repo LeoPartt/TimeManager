@@ -11,8 +11,8 @@ class AccountRepositoryImpl implements AccountRepository {
   AccountRepositoryImpl( {required this.api, required this.storage});
 
   @override
-  Future<User> login(String email, String password) async {
-    final response = await api.login(email, password);
+  Future<User> login(String username, String password) async {
+    final response = await api.login(username, password);
 
     // Parse response into DTO
     final userDto = UserModel.fromJson(response);
@@ -30,8 +30,8 @@ class AccountRepositoryImpl implements AccountRepository {
   // 🔹 REGISTER
   // ─────────────────────────────────────────────
   @override
-  Future<User> register(String name, String email, String password) async {
-    final response = await api.register(name, email, password);
+  Future<User> register(String username, String email, String password) async {
+    final response = await api.register(username, email, password);
     final userDto = UserModel.fromJson(response);
     return userDto.toDomain();
   }

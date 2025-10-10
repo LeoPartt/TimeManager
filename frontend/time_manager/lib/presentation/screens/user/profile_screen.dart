@@ -15,9 +15,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final nameCtrl = TextEditingController();
-  final emailCtrl = TextEditingController();
-  final phoneCtrl = TextEditingController();
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -36,33 +36,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (msg) => Center(child: Text(msg)),
             loaded: (user) {
-              nameCtrl.text = user.name;
-              emailCtrl.text = user.email;
-              phoneCtrl.text = user.phone ?? "";
+              usernameController.text = user.username;
+              emailController.text = user.email;
+              phoneController.text = user.phone ?? "";
 
               return Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   children: [
                     TextField(
-                      controller: nameCtrl,
-                      decoration: const InputDecoration(labelText: "Name"),
+                      controller: usernameController,
+                      decoration: const InputDecoration(labelText: "UserName"),
                     ),
                     TextField(
-                      controller: emailCtrl,
+                      controller: emailController,
                       decoration: const InputDecoration(labelText: "Email"),
                     ),
                     TextField(
-                      controller: phoneCtrl,
+                      controller: phoneController,
                       decoration: const InputDecoration(labelText: "Phone"),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         final params = UpdateUserProfileParams(
-                          name: nameCtrl.text,
-                          email: emailCtrl.text,
-                          phone: phoneCtrl.text,
+                          username: usernameController.text,
+                          email: emailController.text,
+                          phone: phoneController.text,
                         );
                         context.read<UserCubit>().updateProfile(params);
                       },
