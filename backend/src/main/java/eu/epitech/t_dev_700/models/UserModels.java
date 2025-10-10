@@ -1,24 +1,31 @@
 package eu.epitech.t_dev_700.models;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import eu.epitech.t_dev_700.models.constraints.NullableNotBlank;
+import jakarta.validation.constraints.*;
 
 public class UserModels {
 
-    public record User(
+    public interface User {
+        String username();
+
+        String firstName();
+
+        String lastName();
+
+        String email();
+
+        String phoneNumber();
+    }
+
+    public record UserModel(
             Long id,
             String username,
             String firstName,
             String lastName,
             String email,
             String phoneNumber
-    ) {}
-
-    //RESPONSES
-    public record GetUserResponse(
-            User[] users
-    ) {}
+    ) implements User {
+    }
 
     //REQUESTS
     public record PostUserRequest(
@@ -26,16 +33,27 @@ public class UserModels {
             @NotBlank String password,
             @NotBlank String firstName,
             @NotBlank String lastName,
-            @NotBlank @Email String email,
-            @NotBlank String phoneNumber
-    ) {}
+            @NotNull @Email String email,
+            @NotNull String phoneNumber
+    ) implements User {
+    }
 
     public record PutUserRequest(
-            @NotEmpty String username,
-            @NotEmpty String firstName,
-            @NotEmpty String lastName,
-            @NotEmpty String email,
-            @NotEmpty String phoneNumber
-    ) {}
+            @NotBlank String username,
+            @NotBlank String firstName,
+            @NotBlank String lastName,
+            @NotNull String email,
+            @NotNull String phoneNumber
+    ) implements User {
+    }
+
+    public record PatchUserRequest(
+            @NullableNotBlank String username,
+            @NullableNotBlank String firstName,
+            @NullableNotBlank String lastName,
+            String email,
+            String phoneNumber
+    ) implements User {
+    }
 
 }

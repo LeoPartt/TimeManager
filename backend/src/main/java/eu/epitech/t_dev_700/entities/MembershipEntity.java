@@ -18,7 +18,7 @@ import java.time.OffsetDateTime;
 @SQLRestriction("deleted_at IS NULL")
 public class MembershipEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false) @JoinColumn(name = "user_id")

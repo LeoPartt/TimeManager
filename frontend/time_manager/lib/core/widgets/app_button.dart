@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
+import 'package:time_manager/core/constants/app_sizes.dart';
 
 class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
-  final double? width;
-  final double? height;
-  final BorderRadius? radius;
+  final bool fullSize;
 
   const AppButton({
     super.key,
     required this.label,
     required this.onPressed,
-    this.width,
-    this.height,
-    this.radius,
+    required this.fullSize,
   });
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final w = width ?? size.width * 0.6;
-    final h = height ?? size.height * 0.08;
-    final r = radius ?? BorderRadius.circular(15);
+    final w = fullSize ? AppSizes.appContainerWidth(context) : AppSizes.appSmallContainerWidth(context);
+    final h = fullSize ? AppSizes.appContainerHeight(context) : AppSizes.appSmallContainerHeight(context);
+    final r = BorderRadius.circular(AppSizes.r16);
 
     return Material( 
       color: Colors.transparent,
@@ -34,8 +30,8 @@ class AppButton extends StatelessWidget {
         color: AppColors.secondary,
           borderRadius: r,
           border: Border.all(
-            color: AppColors.shadow.withValues(alpha: 0.35),
-            width: 1,
+            color: AppColors.shadow.withValues(alpha: 0.6),
+            width: 2,
           )
         ),
         child: InkWell( 
@@ -49,7 +45,7 @@ class AppButton extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: size.width * 0.08,
+                  fontSize: fullSize ? AppSizes.textDisplay : AppSizes.textXxl,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
                 ),

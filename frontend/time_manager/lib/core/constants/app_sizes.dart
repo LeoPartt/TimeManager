@@ -44,6 +44,30 @@ class AppSizes {
   static const double textDisplay = 32.0;
 
   // ───────────────────────────────
+  // 🔹 Container sizes 
+  // ───────────────────────────────
+  static double appContainerWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width * 0.7 ;
+  }  
+  static double appContainerHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height * 0.08 ;
+  }
+  static double appSmallContainerWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width * 0.35 ;
+  }  
+  static double appSmallContainerHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height * 0.08 ;
+  }
+
+  static double dashboardHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height * 0.06 ;
+  }
+
+  static double dashboardWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width * 0.9 ;
+  }
+
+  // ───────────────────────────────
   // 🔹 Responsive utility
   // ───────────────────────────────
   /// Returns responsive width based on screen width ratio.
@@ -64,7 +88,9 @@ class AppSizes {
 
   /// Returns a responsive text size using MediaQuery scaling.
   static double responsiveText(BuildContext context, double size) {
-    final scale = MediaQuery.of(context).textScaleFactor;
-    return size * scale.clamp(0.9, 1.2);
+    if (size <= 0) return size;
+    final ts = MediaQuery.textScalerOf(context);
+    final scaled = ts.scale(size);                         
+    return scaled.clamp(size * 0.9, size * 1.2).toDouble(); 
   }
 }

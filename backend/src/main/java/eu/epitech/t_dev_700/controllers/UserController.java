@@ -1,31 +1,43 @@
 package eu.epitech.t_dev_700.controllers;
 
+import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.UserModels;
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
+import eu.epitech.t_dev_700.services.ClockService;
+import eu.epitech.t_dev_700.services.UserService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/users")
-public class UserController {
+import java.time.OffsetDateTime;
 
-    @GetMapping
-    public UserModels.GetUserResponse GetUsers() {
-        // TODO: Logic for getting users
-        return null;
+@RestController
+@RequestMapping("/users")
+public class UserController extends CRUDController<
+        UserEntity,
+        UserModels.UserModel,
+        UserModels.PostUserRequest,
+        UserModels.PutUserRequest,
+        UserModels.PatchUserRequest
+        > {
+
+    private final UserService userService;
+    private final ClockService clockService;
+
+    public UserController(UserService userService, ClockService clockService) {
+        super(userService);
+        this.userService = userService;
+        this.clockService = clockService;
     }
 
-    @PostMapping
-    public UserModels.User PostUser(@Valid @RequestBody UserModels.PostUserRequest body) {
-        // TODO: Logic for creating a user
-        return null;
+    @GetMapping("{id}/clocks")
+    public Long[] getUserClocks(@PathVariable Long id) {
+        return clockService.getUserClocks(id);
     }
 
-    @PutMapping("{id}")
-    public void PutUser(@PathVariable String id, @Valid @RequestBody UserModels.PutUserRequest body) {
-        // TODO: Logic for updating a user
-    }
-
-    @DeleteMapping("{id}")
-    public void DeleteUser(@PathVariable String id) {
-        // TODO: Logic for deleting a user
+    @GetMapping("/me")
+    public UserModels.UserModel getUser() {
+        return userService.getCurrentUser();
     }
 }

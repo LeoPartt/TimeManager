@@ -20,7 +20,7 @@ import java.time.OffsetDateTime;
 @Check(constraints = "departure_ts IS NULL OR departure_ts >= arrival_ts")
 public class ScheduleEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false) @JoinColumn(name = "user_id")

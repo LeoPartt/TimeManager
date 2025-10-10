@@ -40,14 +40,23 @@ class AccessibilityUtils {
   ///
   /// Respects the device's textScaleFactor and stays within safe bounds.
   static double accessibleText(BuildContext context, double baseSize) {
-    final scale = MediaQuery.of(context).textScaleFactor.clamp(0.8, 1.4);
-    return baseSize * scale;
+    final scaled = MediaQuery.textScalerOf(context).scale(baseSize);
+    final min = baseSize * 0.8;
+    final max = baseSize * 1.4;
+    return scaled.clamp(min, max).toDouble();
   }
 
+
   /// Returns true if the system text scale is large (e.g., accessibility zoom)
-  static bool isTextZoomed(BuildContext context) {
-    final scale = MediaQuery.of(context).textScaleFactor;
-    return scale > 1.2;
+  static bool isTextZoomed(
+    BuildContext context, {
+    double threshold = 1.2,      
+    double probeSize = 16.0,    
+  }) {
+    assert(probeSize > 0);
+    final ts = MediaQuery.textScalerOf(context);
+    final ratio = ts.scale(probeSize) / probeSize; 
+    return ratio > threshold;
   }
 
   /// Adds a semantic tooltip for non-text widgets (e.g., icons, buttons)
