@@ -31,4 +31,5 @@ public class ScheduleEntity {
 
     @Column(name = "departure_ts")
     private OffsetDateTime departureTs;
+
 }
