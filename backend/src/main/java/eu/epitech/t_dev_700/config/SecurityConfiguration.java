@@ -47,6 +47,7 @@ public class SecurityConfiguration {
                 )*/
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider) // if you log in with username/password
