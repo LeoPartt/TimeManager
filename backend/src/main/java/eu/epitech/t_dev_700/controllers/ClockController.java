@@ -2,12 +2,12 @@ package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.models.ClockModels;
 import eu.epitech.t_dev_700.services.ClockService;
+import eu.epitech.t_dev_700.services.exceptions.InvalidClocking;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/clocks")
@@ -20,4 +20,5 @@ public class ClockController {
     public void PostClock(@Valid @RequestBody ClockModels.PostClockRequest body) {
         this.clockService.postClock(body);
     }
+
 }
