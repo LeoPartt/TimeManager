@@ -1,16 +1,16 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.services.TeamService;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -59,7 +59,7 @@ class TeamControllerTest {
 
     @Test
     void testGet_whenTeamNotExists_shouldReturn404() throws Exception {
-        when(teamService.get(999L)).thenThrow(new ResourceNotFoundException("Team", 999L));
+        when(teamService.get(999L)).thenThrow(new ResourceNotFound("Team", 999L));
 
         mockMvc.perform(get("/teams/999"))
                 .andExpect(status().isNotFound());
@@ -160,7 +160,7 @@ class TeamControllerTest {
                 """;
 
         when(teamService.replace(eq(999L), any()))
-                .thenThrow(new ResourceNotFoundException("Team", 999L));
+                .thenThrow(new ResourceNotFound("Team", 999L));
 
         mockMvc.perform(put("/teams/999")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -225,7 +225,7 @@ class TeamControllerTest {
                 """;
 
         when(teamService.update(eq(999L), any()))
-                .thenThrow(new ResourceNotFoundException("Team", 999L));
+                .thenThrow(new ResourceNotFound("Team", 999L));
 
         mockMvc.perform(patch("/teams/999")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -241,7 +241,7 @@ class TeamControllerTest {
 
     @Test
     void testDelete_whenTeamNotExists_shouldReturn404() throws Exception {
-        doThrow(new ResourceNotFoundException("Team", 999L))
+        doThrow(new ResourceNotFound("Team", 999L))
                 .when(teamService).delete(999L);
 
         mockMvc.perform(delete("/teams/999"))

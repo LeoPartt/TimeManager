@@ -1,6 +1,6 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.mappers.TeamMapper;
 import eu.epitech.t_dev_700.models.TeamModels;
@@ -101,7 +101,7 @@ class TeamServiceTest {
         when(teamRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> teamService.get(999L))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(teamRepository).findById(999L);
         verify(teamMapper, never()).toModel(any());
@@ -142,7 +142,7 @@ class TeamServiceTest {
         when(teamRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> teamService.replace(999L, putRequest))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(teamRepository).findById(999L);
         verify(teamMapper, never()).replaceEntity(any(), any());
@@ -170,7 +170,7 @@ class TeamServiceTest {
         when(teamRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> teamService.update(999L, patchRequest))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(teamRepository).findById(999L);
         verify(teamMapper, never()).updateEntity(any(), any());
@@ -193,7 +193,7 @@ class TeamServiceTest {
         when(teamRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> teamService.delete(999L))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(teamRepository).findById(999L);
         verify(teamRepository, never()).delete(any());
@@ -214,7 +214,7 @@ class TeamServiceTest {
         when(teamRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> teamService.getOrThrow(999L))
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(ResourceNotFound.class)
                 .hasMessageContaining("TeamModel")
                 .hasMessageContaining("999");
 
