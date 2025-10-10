@@ -20,17 +20,20 @@ public class UserService extends CRUDService<
 
     private final UserMapper userMapper;
 
+    public static UserEntity currentUser() {
+        return ((AccountEntity) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal())
+                .getUser();
+    }
+
     public UserService(UserRepository repo, UserMapper mapper) {
         super(repo, mapper, "User");
         this.userMapper = mapper;
     }
 
     public UserModels.UserModel getCurrentUser() {
-        return userMapper.toModel(
-                ((AccountEntity) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal())
-                        .getUser());
+        return userMapper.toModel(currentUser());
     }
 }

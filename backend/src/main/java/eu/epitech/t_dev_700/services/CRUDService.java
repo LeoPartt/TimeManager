@@ -1,8 +1,8 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.mappers.CRUDMapper;
-import eu.epitech.t_dev_700.utils.CRUDHookUtils;
+import eu.epitech.t_dev_700.utils.CRUDHookUtil;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,9 +43,9 @@ public abstract class CRUDService<E, M, C, R, U> {
     @Transactional
     public M create(C request) {
         E entity = CRUDMapper.createEntity(request);
-        CRUDHookUtils.beforeCreate(this, entity, request);
+        CRUDHookUtil.beforeCreate(this, entity, request);
         E saved = repository.save(entity);
-        CRUDHookUtils.afterCreate(this, saved, request);
+        CRUDHookUtil.afterCreate(this, saved, request);
         return CRUDMapper.toModel(saved);
     }
 
@@ -53,9 +53,9 @@ public abstract class CRUDService<E, M, C, R, U> {
     public M replace(Long id, R request) {
         E entity = getOrThrow(id);
         CRUDMapper.replaceEntity(entity, request);
-        CRUDHookUtils.beforeReplace(this, entity, request);
+        CRUDHookUtil.beforeReplace(this, entity, request);
         E saved = repository.save(entity);
-        CRUDHookUtils.afterReplace(this, saved, request);
+        CRUDHookUtil.afterReplace(this, saved, request);
         return CRUDMapper.toModel(saved);
     }
 
@@ -63,22 +63,22 @@ public abstract class CRUDService<E, M, C, R, U> {
     public M update(Long id, U request) {
         E entity = getOrThrow(id);
         CRUDMapper.updateEntity(entity, request);
-        CRUDHookUtils.beforeUpdate(this, entity, request);
+        CRUDHookUtil.beforeUpdate(this, entity, request);
         E saved = repository.save(entity);
-        CRUDHookUtils.afterUpdate(this, saved, request);
+        CRUDHookUtil.afterUpdate(this, saved, request);
         return CRUDMapper.toModel(saved);
     }
 
     @Transactional
     public void delete(Long id) {
         E entity = getOrThrow(id);
-        CRUDHookUtils.beforeDelete(this, entity);
+        CRUDHookUtil.beforeDelete(this, entity);
         repository.delete(entity);
-        CRUDHookUtils.afterDelete(this, entity);
+        CRUDHookUtil.afterDelete(this, entity);
     }
 
     protected E getOrThrow(Long id) {
-        return repository.findById(id).orElseThrow(ResourceNotFoundException.supply(this.entityName, id));
+        return repository.findById(id).orElseThrow(new ResourceNotFound(this.entityName, id));
     }
 
 }

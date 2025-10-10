@@ -6,21 +6,19 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.function.Consumer;
 
-public final class InvalidClocking extends ResponseStatusException {
+public final class InvalidClocking extends ResponseStatusException implements Consumer<Object>, Runnable {
 
     public InvalidClocking() {
         super(HttpStatus.BAD_REQUEST, "Invalid clocking");
     }
 
-    public static <T> Consumer<T> consumer() {
-        return t -> {
-            throw new InvalidClocking();
-        };
+    @Override
+    public void accept(Object o) {
+        throw this;
     }
 
-    public static Runnable runnable() {
-        return () -> {
-            throw new InvalidClocking();
-        };
+    @Override
+    public void run() {
+        throw this;
     }
 }

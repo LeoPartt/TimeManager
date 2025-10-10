@@ -6,7 +6,7 @@ import eu.epitech.t_dev_700.models.ClockModels;
 import eu.epitech.t_dev_700.repositories.ScheduleRepository;
 import eu.epitech.t_dev_700.repositories.UserRepository;
 import eu.epitech.t_dev_700.services.exceptions.InvalidClocking;
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ClockService {
         return scheduleRepository
                 .findByUser(userRepository
                         .findById(id)
-                        .orElseThrow(ResourceNotFoundException.supply("User", id)))
+                        .orElseThrow(new ResourceNotFound("User", id)))
                 .stream()
                 .flatMap(scheduleEntity -> scheduleEntity.getDepartureTs() == null ?
                         Stream.of(scheduleEntity.getArrivalTs().toEpochSecond()) :
@@ -33,32 +33,22 @@ public class ClockService {
     }
 
     public void postClock(ClockModels.PostClockRequest body) {
-        UserEntity userEntity = getCurrentUser();
         switch (body.io()) {
             case IN -> scheduleRepository
-                    .findByUserAndDepartureTsIsNull(userEntity)
+                    .findByUserAndDepartureTsIsNull(UserService.currentUser())
                     .ifPresentOrElse(
-                            InvalidClocking.consumer(),
+                            new InvalidClocking(),
                             () -> scheduleRepository.save(scheduleRepository
-                                    .createFromUserAndArrivalTs(userEntity, body.timestamp())));
+                                    .createFromUserAndArrivalTs(UserService.currentUser(), body.timestamp())));
             case OUT -> scheduleRepository
-                    .findByUserAndDepartureTsIsNull(userEntity)
+                    .findByUserAndDepartureTsIsNull(UserService.currentUser())
                     .ifPresentOrElse(
                             scheduleEntity -> {
                                 scheduleEntity.setDepartureTs(body.timestamp());
                                 scheduleRepository.save(scheduleEntity);
                             },
-                            InvalidClocking.runnable());
+                            new InvalidClocking());
         }
     }
 
-    private UserEntity getCurrentUser() {
-        return ((AccountEntity) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal())
-                .getUser();
-    }
-
-    ;
 }
