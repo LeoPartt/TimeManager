@@ -12,92 +12,82 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class CRUDHookUtils {
+public record CRUDHookUtils<E>(
+        CRUDService<E, ?, ?, ?, ?> service,
+        Moment moment,
+        Action action,
+        E entity,
+        Object request
+) implements Runnable, Predicate<Method>, Consumer<Method> {
 
     public static <E> void beforeCreate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        invokeHooks(service, Moment.BEFORE, Action.CREATE, entity, request);
+        new CRUDHookUtils<>(service, Moment.BEFORE, Action.CREATE, entity, request).run();
     }
 
     public static <E> void afterCreate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        invokeHooks(service, Moment.AFTER, Action.CREATE, entity, request);
+        new CRUDHookUtils<>(service, Moment.AFTER, Action.CREATE, entity, request).run();
     }
 
     public static <E> void beforeUpdate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        invokeHooks(service, Moment.BEFORE, Action.UPDATE, entity, request);
+        new CRUDHookUtils<>(service, Moment.BEFORE, Action.UPDATE, entity, request).run();
     }
 
     public static <E> void afterUpdate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        invokeHooks(service, Moment.AFTER, Action.UPDATE, entity, request);
+        new CRUDHookUtils<>(service, Moment.AFTER, Action.UPDATE, entity, request).run();
     }
 
     public static <E> void beforeReplace(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        invokeHooks(service, Moment.BEFORE, Action.REPLACE, entity, request);
+        new CRUDHookUtils<>(service, Moment.BEFORE, Action.REPLACE, entity, request).run();
     }
 
     public static <E> void afterReplace(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        invokeHooks(service, Moment.AFTER, Action.REPLACE, entity, request);
+        new CRUDHookUtils<>(service, Moment.AFTER, Action.REPLACE, entity, request).run();
     }
 
     public static <E> void beforeDelete(CRUDService<E, ?, ?, ?, ?> service, E entity) {
-        invokeHooks(service, Moment.BEFORE, entity);
+        new CRUDHookUtils<>(service, Moment.BEFORE, entity).run();
     }
 
     public static <E> void afterDelete(CRUDService<E, ?, ?, ?, ?> service, E entity) {
-        invokeHooks(service, Moment.AFTER, entity);
+        new CRUDHookUtils<>(service, Moment.AFTER, entity).run();
     }
 
-    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?, ?> service, Moment moment, Action action, E entity, Object request) {
-        HookInvoker<E> invoker = new HookInvoker<>(service, entity, request);
-        HookAnnotationPredicate predicate = new HookAnnotationPredicate(moment, action);
-        invokeHooks(service, invoker, predicate);
+    public CRUDHookUtils(CRUDService<E, ?, ?, ?, ?> service, Moment moment, E entity) {
+        this(service, moment, Action.DELETE, entity, null);
     }
 
-    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?, ?> service, Moment moment, E entity) {
-        HookInvoker<E> invoker = new HookInvoker<>(service, entity);
-        HookAnnotationPredicate predicate = new HookAnnotationPredicate(moment, Action.DELETE);
-        invokeHooks(service, invoker, predicate);
-    }
-
-    private static <E> void invokeHooks(CRUDService<E, ?, ?, ?, ?> service, HookInvoker<E> invoker, HookAnnotationPredicate predicate) {
+    @Override
+    public void run() {
         try {
             Arrays.stream(service.getClass().getMethods())
-                    .filter(predicate)
-                    .forEach(invoker);
+                    .filter(this)
+                    .forEach(this);
         } catch (Exception e) {
             throw new RuntimeException("Failed to invoke CRUD hooks", e);
         }
     }
 
-    private record HookAnnotationPredicate(Moment moment, Action action) implements Predicate<Method> {
-        @Override
-        public boolean test(Method method) {
-            return method.isAnnotationPresent(CRUDHook.class)
-                   && (method.getAnnotation(CRUDHook.class)).moment() == moment
-                   && (method.getAnnotation(CRUDHook.class)).action() == action;
-        }
+    @Override
+    public boolean test(Method method) {
+        return method.isAnnotationPresent(CRUDHook.class)
+               && (method.getAnnotation(CRUDHook.class)).moment() == moment
+               && (method.getAnnotation(CRUDHook.class)).action() == action;
     }
 
-    private record HookInvoker<E>(CRUDService<E, ?, ?, ?, ?> service, E entity,
-                                  Object request) implements Consumer<Method> {
-        public HookInvoker(CRUDService<E, ?, ?, ?, ?> service, E entity) {
-            this(service, entity, null);
-        }
+    public void accept(Method method) {
+        try {
+            method.setAccessible(true);
+            Class<?>[] params = method.getParameterTypes();
 
-        public void accept(Method method) {
-            try {
-                method.setAccessible(true);
-                Class<?>[] params = method.getParameterTypes();
-
-                if (params.length == 1 && params[0].isInstance(entity)) {
-                    method.invoke(service, entity);
-                } else if (params.length == 2 && params[0].isInstance(entity) && params[1].isInstance(request)) {
-                    method.invoke(service, entity, request);
-                } else {
-                    throw new RuntimeException("Invalid CRUDHook method signature: " + method);
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+            if (params.length == 1 && params[0].isInstance(entity)) {
+                method.invoke(service, entity);
+            } else if (params.length == 2 && params[0].isInstance(entity) && params[1].isInstance(request)) {
+                method.invoke(service, entity, request);
+            } else {
+                throw new InvalidMethodSignature(method);
             }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,7 +107,14 @@ public class CRUDHookUtils {
     @Target(ElementType.METHOD)
     public @interface CRUDHook {
         Moment moment();
+
         Action action();
+    }
+
+    static class InvalidMethodSignature extends RuntimeException {
+        public InvalidMethodSignature(Method method) {
+            super("Invalid CRUDHookUtils method signature: " + method);
+        }
     }
 
 }

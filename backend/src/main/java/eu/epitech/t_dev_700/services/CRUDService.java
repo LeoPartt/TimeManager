@@ -1,7 +1,7 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.mappers.CRUDMapper;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.utils.CRUDHookUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +78,7 @@ public abstract class CRUDService<E, M, C, R, U> {
     }
 
     protected E getOrThrow(Long id) {
-        return repository.findById(id).orElseThrow(ResourceNotFoundException.supply(this.entityName, id));
+        return repository.findById(id).orElseThrow(new ResourceNotFound(this.entityName, id));
     }
 
 }

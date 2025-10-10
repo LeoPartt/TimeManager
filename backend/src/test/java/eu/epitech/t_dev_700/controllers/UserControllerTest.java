@@ -1,6 +1,6 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.ClockService;
 import eu.epitech.t_dev_700.services.UserService;
@@ -69,7 +69,7 @@ class UserControllerTest {
 
     @Test
     void testGet_whenUserNotExists_shouldReturn404() throws Exception {
-        when(userService.get(999L)).thenThrow(new ResourceNotFoundException("User", 999L));
+        when(userService.get(999L)).thenThrow(new ResourceNotFound("User", 999L));
 
         mockMvc.perform(get("/users/999"))
                 .andExpect(status().isNotFound());
@@ -187,7 +187,7 @@ class UserControllerTest {
                 """;
 
         when(userService.replace(eq(999L), any()))
-                .thenThrow(new ResourceNotFoundException("User", 999L));
+                .thenThrow(new ResourceNotFound("User", 999L));
 
         mockMvc.perform(put("/users/999")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -231,7 +231,7 @@ class UserControllerTest {
                 """;
 
         when(userService.update(eq(999L), any()))
-                .thenThrow(new ResourceNotFoundException("User", 999L));
+                .thenThrow(new ResourceNotFound("User", 999L));
 
         mockMvc.perform(patch("/users/999")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -247,7 +247,7 @@ class UserControllerTest {
 
     @Test
     void testDelete_whenUserNotExists_shouldReturn404() throws Exception {
-        doThrow(new ResourceNotFoundException("User", 999L))
+        doThrow(new ResourceNotFound("User", 999L))
                 .when(userService).delete(999L);
 
         mockMvc.perform(delete("/users/999"))

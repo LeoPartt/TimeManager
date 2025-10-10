@@ -1,6 +1,6 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.mappers.UserMapper;
@@ -123,7 +123,7 @@ class UserServiceTest {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.get(999L))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(userRepository).findById(999L);
         verify(userMapper, never()).toModel(any());
@@ -164,7 +164,7 @@ class UserServiceTest {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.replace(999L, putRequest))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(userRepository).findById(999L);
         verify(userMapper, never()).replaceEntity(any(), any());
@@ -192,7 +192,7 @@ class UserServiceTest {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.update(999L, patchRequest))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(userRepository).findById(999L);
         verify(userMapper, never()).updateEntity(any(), any());
@@ -215,7 +215,7 @@ class UserServiceTest {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.delete(999L))
-                .isInstanceOf(ResourceNotFoundException.class);
+                .isInstanceOf(ResourceNotFound.class);
 
         verify(userRepository).findById(999L);
         verify(userRepository, never()).delete(any());
@@ -236,7 +236,7 @@ class UserServiceTest {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.getOrThrow(999L))
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(ResourceNotFound.class)
                 .hasMessageContaining("User")
                 .hasMessageContaining("999");
 
