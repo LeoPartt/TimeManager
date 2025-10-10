@@ -32,7 +32,7 @@ public class UserController extends CRUDController<
     }
 
     @GetMapping("{id}/clocks")
-    public OffsetDateTime[] getUserClocks(@PathVariable Long id) {
+    public Long[] getUserClocks(@PathVariable Long id) {
         return clockService.getUserClocks(id);
     }
 

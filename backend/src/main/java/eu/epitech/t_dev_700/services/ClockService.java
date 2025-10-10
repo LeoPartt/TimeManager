@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -21,13 +20,13 @@ public class ClockService {
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
 
-    public OffsetDateTime[] getUserClocks(Long id) {
+    public Long[] getUserClocks(Long id) {
         UserEntity user = userRepository.findById(id).orElseThrow(ResourceNotFoundException.supply("User", id));
         List<ScheduleEntity> schedules = this.scheduleRepository.findByUser(user);
         return schedules.stream().flatMap(s -> s.getDepartureTs() == null ?
-                Stream.of(s.getArrivalTs()) :
-                Stream.of(s.getArrivalTs(), s.getDepartureTs())
-        ).toArray(OffsetDateTime[]::new);
+                Stream.of(s.getArrivalTs().toEpochSecond()) :
+                Stream.of(s.getArrivalTs().toEpochSecond(), s.getDepartureTs().toEpochSecond())
+        ).toArray(Long[]::new);
     }
 
     public void postClock(ClockModels.PostClockRequest body) {
