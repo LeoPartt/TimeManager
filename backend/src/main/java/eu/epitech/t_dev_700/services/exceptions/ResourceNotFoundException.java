@@ -1,4 +1,4 @@
-package eu.epitech.t_dev_700.controllers.exceptions;
+package eu.epitech.t_dev_700.services.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

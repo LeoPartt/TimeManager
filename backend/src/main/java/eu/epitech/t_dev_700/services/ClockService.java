@@ -1,13 +1,15 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.controllers.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.entities.AccountEntity;
+import eu.epitech.t_dev_700.services.exceptions.ClockedOutWithNoClockedIn;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.entities.ScheduleEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.ClockModels;
 import eu.epitech.t_dev_700.repositories.ScheduleRepository;
 import eu.epitech.t_dev_700.repositories.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +32,23 @@ public class ClockService {
     }
 
     public void postClock(ClockModels.PostClockRequest body) {
-
+        UserEntity userEntity = ((AccountEntity) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal())
+                .getUser();
+        if (body.io() == ClockModels.ClockAction.OUT) {
+            ScheduleEntity scheduleEntity = scheduleRepository
+                    .findByUserAndDepartureTsIsNull(userEntity)
+                    .orElseThrow(ClockedOutWithNoClockedIn::new);
+            scheduleEntity.setArrivalTs(body.timestamp());
+            scheduleRepository.save(scheduleEntity);
+        } else if (body.io() == ClockModels.ClockAction.IN) {
+            ScheduleEntity scheduleEntity = new ScheduleEntity();
+            scheduleEntity.setUser(userEntity);
+            scheduleEntity.setArrivalTs(body.timestamp());
+            scheduleRepository.save(scheduleEntity);
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.controllers.exceptions.ResourceNotFoundException;
-import eu.epitech.t_dev_700.entities.UserEntity;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.mappers.CRUDMapper;
 import eu.epitech.t_dev_700.utils.CRUDHookUtils;
 import org.springframework.data.jpa.repository.JpaRepository;

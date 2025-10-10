@@ -1,5 +1,6 @@
 package eu.epitech.t_dev_700.services;
 
+import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.mappers.UserMapper;
 import eu.epitech.t_dev_700.models.UserModels;
@@ -25,9 +26,11 @@ public class UserService extends CRUDService<
     }
 
     public UserModels.UserModel getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserEntity user = (UserEntity) authentication.getPrincipal();
-        return userMapper.toModel(user);
+        return userMapper.toModel(
+                ((AccountEntity) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal())
+                        .getUser());
     }
 }
