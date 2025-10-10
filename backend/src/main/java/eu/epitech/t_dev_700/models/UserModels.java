@@ -1,7 +1,9 @@
 package eu.epitech.t_dev_700.models;
 
 import eu.epitech.t_dev_700.models.constraints.NullableNotBlank;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class UserModels {
 

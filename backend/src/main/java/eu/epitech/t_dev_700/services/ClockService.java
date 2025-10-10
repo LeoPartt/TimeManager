@@ -1,14 +1,11 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.entities.AccountEntity;
-import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.ClockModels;
 import eu.epitech.t_dev_700.repositories.ScheduleRepository;
 import eu.epitech.t_dev_700.repositories.UserRepository;
 import eu.epitech.t_dev_700.services.exceptions.InvalidClocking;
 import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
