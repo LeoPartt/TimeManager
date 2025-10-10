@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public record CRUDHookUtil<E>(
+public record CRUDHookUtils<E>(
         CRUDService<E, ?, ?, ?, ?> service,
         Moment moment,
         Action action,
@@ -21,38 +21,38 @@ public record CRUDHookUtil<E>(
 ) implements Runnable, Predicate<Method>, Consumer<Method> {
 
     public static <E> void beforeCreate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        new CRUDHookUtil<>(service, Moment.BEFORE, Action.CREATE, entity, request).run();
+        new CRUDHookUtils<>(service, Moment.BEFORE, Action.CREATE, entity, request).run();
     }
 
     public static <E> void afterCreate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        new CRUDHookUtil<>(service, Moment.AFTER, Action.CREATE, entity, request).run();
+        new CRUDHookUtils<>(service, Moment.AFTER, Action.CREATE, entity, request).run();
     }
 
     public static <E> void beforeUpdate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        new CRUDHookUtil<>(service, Moment.BEFORE, Action.UPDATE, entity, request).run();
+        new CRUDHookUtils<>(service, Moment.BEFORE, Action.UPDATE, entity, request).run();
     }
 
     public static <E> void afterUpdate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        new CRUDHookUtil<>(service, Moment.AFTER, Action.UPDATE, entity, request).run();
+        new CRUDHookUtils<>(service, Moment.AFTER, Action.UPDATE, entity, request).run();
     }
 
     public static <E> void beforeReplace(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        new CRUDHookUtil<>(service, Moment.BEFORE, Action.REPLACE, entity, request).run();
+        new CRUDHookUtils<>(service, Moment.BEFORE, Action.REPLACE, entity, request).run();
     }
 
     public static <E> void afterReplace(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
-        new CRUDHookUtil<>(service, Moment.AFTER, Action.REPLACE, entity, request).run();
+        new CRUDHookUtils<>(service, Moment.AFTER, Action.REPLACE, entity, request).run();
     }
 
     public static <E> void beforeDelete(CRUDService<E, ?, ?, ?, ?> service, E entity) {
-        new CRUDHookUtil<>(service, Moment.BEFORE, entity).run();
+        new CRUDHookUtils<>(service, Moment.BEFORE, entity).run();
     }
 
     public static <E> void afterDelete(CRUDService<E, ?, ?, ?, ?> service, E entity) {
-        new CRUDHookUtil<>(service, Moment.AFTER, entity).run();
+        new CRUDHookUtils<>(service, Moment.AFTER, entity).run();
     }
 
-    public CRUDHookUtil(CRUDService<E, ?, ?, ?, ?> service, Moment moment, E entity) {
+    public CRUDHookUtils(CRUDService<E, ?, ?, ?, ?> service, Moment moment, E entity) {
         this(service, moment, Action.DELETE, entity, null);
     }
 
@@ -113,7 +113,7 @@ public record CRUDHookUtil<E>(
 
     static class InvalidMethodSignature extends RuntimeException {
         public InvalidMethodSignature(Method method) {
-            super("Invalid CRUDHookUtil method signature: " + method);
+            super("Invalid CRUDHookUtils method signature: " + method);
         }
     }
 

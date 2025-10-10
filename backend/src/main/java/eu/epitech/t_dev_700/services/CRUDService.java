@@ -2,7 +2,7 @@ package eu.epitech.t_dev_700.services;
 
 import eu.epitech.t_dev_700.mappers.CRUDMapper;
 import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
-import eu.epitech.t_dev_700.utils.CRUDHookUtil;
+import eu.epitech.t_dev_700.utils.CRUDHookUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,9 +43,9 @@ public abstract class CRUDService<E, M, C, R, U> {
     @Transactional
     public M create(C request) {
         E entity = CRUDMapper.createEntity(request);
-        CRUDHookUtil.beforeCreate(this, entity, request);
+        CRUDHookUtils.beforeCreate(this, entity, request);
         E saved = repository.save(entity);
-        CRUDHookUtil.afterCreate(this, saved, request);
+        CRUDHookUtils.afterCreate(this, saved, request);
         return CRUDMapper.toModel(saved);
     }
 
@@ -53,9 +53,9 @@ public abstract class CRUDService<E, M, C, R, U> {
     public M replace(Long id, R request) {
         E entity = getOrThrow(id);
         CRUDMapper.replaceEntity(entity, request);
-        CRUDHookUtil.beforeReplace(this, entity, request);
+        CRUDHookUtils.beforeReplace(this, entity, request);
         E saved = repository.save(entity);
-        CRUDHookUtil.afterReplace(this, saved, request);
+        CRUDHookUtils.afterReplace(this, saved, request);
         return CRUDMapper.toModel(saved);
     }
 
@@ -63,18 +63,18 @@ public abstract class CRUDService<E, M, C, R, U> {
     public M update(Long id, U request) {
         E entity = getOrThrow(id);
         CRUDMapper.updateEntity(entity, request);
-        CRUDHookUtil.beforeUpdate(this, entity, request);
+        CRUDHookUtils.beforeUpdate(this, entity, request);
         E saved = repository.save(entity);
-        CRUDHookUtil.afterUpdate(this, saved, request);
+        CRUDHookUtils.afterUpdate(this, saved, request);
         return CRUDMapper.toModel(saved);
     }
 
     @Transactional
     public void delete(Long id) {
         E entity = getOrThrow(id);
-        CRUDHookUtil.beforeDelete(this, entity);
+        CRUDHookUtils.beforeDelete(this, entity);
         repository.delete(entity);
-        CRUDHookUtil.afterDelete(this, entity);
+        CRUDHookUtils.afterDelete(this, entity);
     }
 
     protected E getOrThrow(Long id) {
