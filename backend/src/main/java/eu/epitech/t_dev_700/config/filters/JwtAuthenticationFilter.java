@@ -22,6 +22,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@org.springframework.context.annotation.Profile("!test")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final HandlerExceptionResolver handlerExceptionResolver;

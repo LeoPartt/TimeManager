@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
+@org.springframework.context.annotation.Profile("!test")
 public class AuthenticationConfiguration {
 
     private final AccountRepository accountRepository;

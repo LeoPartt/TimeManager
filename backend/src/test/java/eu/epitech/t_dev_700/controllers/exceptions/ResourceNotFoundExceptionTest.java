@@ -1,5 +1,6 @@
 package eu.epitech.t_dev_700.controllers.exceptions;
 
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Supplier;

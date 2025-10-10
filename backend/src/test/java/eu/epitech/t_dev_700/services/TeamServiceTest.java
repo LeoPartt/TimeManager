@@ -1,6 +1,6 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.controllers.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.mappers.TeamMapper;
 import eu.epitech.t_dev_700.models.TeamModels;
@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +70,7 @@ class TeamServiceTest {
 
     @Test
     void testList_shouldReturnAllTeams() {
-        List<TeamEntity> entities = Arrays.asList(teamEntity);
+        List<TeamEntity> entities = Collections.singletonList(teamEntity);
         TeamModels.TeamModel[] models = new TeamModels.TeamModel[]{teamModel};
 
         when(teamRepository.findAll()).thenReturn(entities);

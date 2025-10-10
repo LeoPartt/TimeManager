@@ -1,13 +1,15 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.controllers.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.models.UserModels;
+import eu.epitech.t_dev_700.services.ClockService;
 import eu.epitech.t_dev_700.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,14 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @ActiveProfiles("test")
-@org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private ClockService clockService;
 
     private UserModels.UserModel userModel;
     private UserModels.UserModel[] userModels;

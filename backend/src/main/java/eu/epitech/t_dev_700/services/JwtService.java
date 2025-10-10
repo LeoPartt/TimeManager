@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
+@org.springframework.context.annotation.Profile("!test")
 public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String secretKey;

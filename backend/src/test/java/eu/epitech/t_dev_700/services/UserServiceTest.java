@@ -1,6 +1,6 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.controllers.exceptions.ResourceNotFoundException;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFoundException;
 import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.mappers.UserMapper;
@@ -13,14 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -93,7 +92,7 @@ class UserServiceTest {
 
     @Test
     void testList_shouldReturnAllUsers() {
-        List<UserEntity> entities = Arrays.asList(userEntity);
+        List<UserEntity> entities = Collections.singletonList(userEntity);
         UserModels.UserModel[] models = new UserModels.UserModel[]{userModel};
 
         when(userRepository.findAll()).thenReturn(entities);
