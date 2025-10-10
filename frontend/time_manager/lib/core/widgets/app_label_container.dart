@@ -6,44 +6,69 @@ class AppLabelContainer extends StatelessWidget {
   final String label;
   final bool fullSize;
 
+  final bool editable;
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
+  final TextInputType keyboardType;
+
   const AppLabelContainer({
     super.key,
-    required this.fullSize,
     required this.label,
+    required this.fullSize,
+    this.editable = false,
+    this.controller,
+    this.onChanged,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
   Widget build(BuildContext context) {
-    final w =  fullSize ? AppSizes.appContainerWidth(context) : AppSizes.appSmallContainerWidth(context) ;
-    final h =  fullSize ? AppSizes.appContainerHeight(context) : AppSizes.appSmallContainerHeight(context);
+    final w = fullSize
+        ? AppSizes.appContainerWidth(context)
+        : AppSizes.appSmallContainerWidth(context);
+    final h = fullSize
+        ? AppSizes.appContainerHeight(context)
+        : AppSizes.appSmallContainerHeight(context);
     final r = BorderRadius.circular(AppSizes.r16);
 
-    return Material( 
-      color: Colors.transparent,
-
-      child: Container(    
-        width: w,
-        height: h,
-        decoration: BoxDecoration(
+    return Container(
+      width: w,
+      height: h,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
         color: AppColors.primary,
         borderRadius: r,
-         border: Border.all(
-            color: AppColors.secondary,
-            width: 4,
-          )
-        ),
-        child: FittedBox(
-           fit: BoxFit.scaleDown,
-           child: Text(
-            label,
-            style: TextStyle(
-              fontSize: fullSize ? AppSizes.textDisplay : AppSizes.textXxl,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
-        ),
+        border: Border.all(color: AppColors.secondary, width: 4),
       ),
+      alignment: Alignment.center,
+      child: editable
+          ? TextField(
+              controller: controller,
+              onChanged: onChanged,
+              keyboardType: keyboardType,
+              style: TextStyle(
+                fontSize: fullSize ? AppSizes.textDisplay : AppSizes.textXxl,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+              decoration: InputDecoration(
+                hintText: label,
+                isCollapsed: true,
+                border: InputBorder.none,
+              ),
+            )
+          : FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: fullSize ? AppSizes.textDisplay : AppSizes.textXxl,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
     );
   }
 }

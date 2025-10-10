@@ -11,6 +11,22 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [ClockingScreen]
+class ClockingRoute extends PageRouteInfo<void> {
+  const ClockingRoute({List<PageRouteInfo>? children})
+    : super(ClockingRoute.name, initialChildren: children);
+
+  static const String name = 'ClockingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ClockingScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -70,6 +86,22 @@ class SettingsRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SettingsScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [UserScreen]
+class UserRoute extends PageRouteInfo<void> {
+  const UserRoute({List<PageRouteInfo>? children})
+    : super(UserRoute.name, initialChildren: children);
+
+  static const String name = 'UserRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const UserScreen();
     },
   );
 }
