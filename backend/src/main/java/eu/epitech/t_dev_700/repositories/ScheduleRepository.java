@@ -14,6 +14,12 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
 
     List<ScheduleEntity> findByUser(UserEntity user);
 
+    List<ScheduleEntity> findByUserAndArrivalTsBefore(UserEntity user, OffsetDateTime arrivalTs);
+
+    List<ScheduleEntity> findByUserAndDepartureTsAfter(UserEntity user, OffsetDateTime departureTs);
+
+    List<ScheduleEntity> findByUserAndDepartureTsAfterAndArrivalTsBefore(UserEntity user, OffsetDateTime departureTs, OffsetDateTime arrivalTs);
+
     Optional<ScheduleEntity> findByUserAndDepartureTsIsNull(UserEntity user);
 
     default ScheduleEntity createFromUserAndArrivalTs(UserEntity user, OffsetDateTime arrivalTs) {
