@@ -1,8 +1,8 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.models.AuthModels;
 import eu.epitech.t_dev_700.repositories.AccountRepository;
+import eu.epitech.t_dev_700.services.exceptions.UnknownAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.context.annotation.Profile("!test")
 public class AuthService {
     private final AccountRepository accountRepository;
     private final AuthenticationManager authenticationManager;
@@ -22,7 +23,9 @@ public class AuthService {
                         input.password()
                 )
         );
-        AccountEntity authenticatedUser = accountRepository.findByUsername(input.username()).orElseThrow();
-        return jwtService.generateToken(authenticatedUser);
+        return jwtService
+                .generateToken(accountRepository
+                        .findByUsername(input.username())
+                        .orElseThrow(new UnknownAccount()));
     }
 }
