@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
 import 'package:time_manager/presentation/cubits/navigation/navbar_cubit.dart';
 import 'package:time_manager/presentation/cubits/navigation/navbar_state.dart';
+import 'package:time_manager/presentation/routes/app_router.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -15,6 +17,14 @@ class NavBar extends StatelessWidget {
       Icons.work_history_rounded,
       Icons.group_rounded,
       Icons.person_rounded,
+      Icons.settings
+    ];
+    final routes = [
+      const HomeRoute(),
+      const ClockingRoute(),
+      const ManagementRoute(),
+      const UserRoute(),
+      const SettingsRoute()
     ];
 
     return Container(
@@ -31,7 +41,10 @@ class NavBar extends StatelessWidget {
             children: List.generate(icons.length, (index) {
               final isSelected = index == state.index;
               return IconButton(
-                onPressed: () => context.read<NavCubit>().changeTab(index),
+                onPressed: () => {
+                  context.pushRoute(routes[index]),
+                  context.read<NavCubit>().changeTab(index)
+                },
                 icon: Icon(
                   icons[index],
                   size: size.width * 0.08,
