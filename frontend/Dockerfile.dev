@@ -26,6 +26,8 @@ WORKDIR /app
 
 # Copy pubspec files for dependency caching
 COPY time_manager/pubspec.yaml time_manager/pubspec.lock ./
+
+# Run flutter pub get
 RUN flutter pub get
 
 # Copy the rest of the application
@@ -35,4 +37,6 @@ COPY time_manager/ ./
 EXPOSE 8080
 
 # Run Flutter web in debug mode with hot reload
+# Note: Running as root in DEV for better DX (hot reload, no permission issues)
+# Production Dockerfile uses non-root user for security
 CMD ["flutter", "run", "-d", "web-server", "--web-hostname", "0.0.0.0", "--web-port", "8080"]
