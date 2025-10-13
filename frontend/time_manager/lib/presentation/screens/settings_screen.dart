@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:time_manager/presentation/widgets/header.dart';
+import 'package:time_manager/presentation/widgets/navbar.dart';
 import '../../core/theme/theme_switcher.dart';
 
 @RoutePage()
@@ -12,10 +14,11 @@ class SettingsScreen extends StatelessWidget {
     final themeSwitcher = context.watch<ThemeSwitcher>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Paramètres')),
+      bottomNavigationBar: const NavBar(),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          const Header(label: "SETTINGS"),
           SwitchListTile(
             title: const Text('Mode sombre'),
             subtitle: Text(
