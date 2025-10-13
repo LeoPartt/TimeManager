@@ -48,7 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      // ✅ On ne force plus de couleur ici : la couleur vient du thème global
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           state.maybeWhen(
