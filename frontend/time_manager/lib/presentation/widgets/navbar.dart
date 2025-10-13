@@ -33,6 +33,12 @@ class NavBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.accent,
         borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          offset: Offset(0, 4),
+                          blurRadius: 12,
+                        ),]
       ),
       child: BlocBuilder<NavCubit, NavState>(
         builder: (context, state) {

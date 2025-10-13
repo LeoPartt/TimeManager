@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
+import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/widgets/header.dart';
 import 'package:time_manager/presentation/widgets/navbar.dart';
 import 'package:time_manager/presentation/cubits/clock/clock_cubit.dart';
@@ -41,6 +42,7 @@ class _ClockingScreenState extends State<ClockingScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final tr = AppLocalizations.of(context)!;
 
     return BlocProvider(
       create: (_) => ClockCubit(),
@@ -53,7 +55,7 @@ class _ClockingScreenState extends State<ClockingScreen> {
 
               return Column(
                 children: [
-                  Header(label: isClockIn ? "CLOCK IN" : "CLOCK OUT"),
+                  Header(label: isClockIn ? tr.clockin : tr.clockout),
                   SizedBox(height: size.height * 0.03),
                   Center(
                     child: Container(
@@ -84,8 +86,8 @@ class _ClockingScreenState extends State<ClockingScreen> {
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.schedule),
                               hintText: isClockIn
-                                  ? "Arrival time"
-                                  : "Departure time",
+                                  ? tr.arrival
+                                  : tr.departure,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 borderSide: BorderSide(
@@ -102,7 +104,7 @@ class _ClockingScreenState extends State<ClockingScreen> {
 
                           AppButton(
                             fullSize: true,
-                            label: "Validate",
+                            label: tr.validate,
                             onPressed: () {
 
                               debugPrint("Selected time: ${_timeController.text}");
