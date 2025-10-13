@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:17-alpine
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -23,8 +23,6 @@ services:
   backend:
     build: backend
     image: time-manager-backend:dev
-    ports:
-      - "${SERVER_PORT:-8080}:8080"
     restart: unless-stopped
     depends_on:
       db:
