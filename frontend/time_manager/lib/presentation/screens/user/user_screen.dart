@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
 import 'package:time_manager/core/widgets/app_label_container.dart';
+import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/routes/app_router.dart';
 import 'package:time_manager/presentation/widgets/header.dart';
 import 'package:time_manager/presentation/widgets/navbar.dart';
@@ -14,6 +15,7 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final tr = AppLocalizations.of(context)!;
 
   return Scaffold(
         bottomNavigationBar: const NavBar(),
@@ -21,7 +23,7 @@ class UserScreen extends StatelessWidget {
           child: SingleChildScrollView( 
             child: Column(
               children: [
-                const Header(label: "ME"),
+                Header(label: tr.me),
                 SizedBox(height: size.height * 0.04),
                 Center(
                   child: Container(
@@ -96,7 +98,7 @@ class UserScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: AppButton(
-                                label: "Modify",
+                                label: tr.modify,
                                 fullSize: true,
                                 onPressed: () => context.pushRoute(const SettingsRoute()),
                               ),
@@ -104,7 +106,7 @@ class UserScreen extends StatelessWidget {
                             SizedBox(width: size.width * 0.04),
                             Expanded(
                               child: AppButton(
-                                label: "Delete",
+                                label: tr.delete,
                                 fullSize: true,
                                 onPressed: () => {context.pushRoute(const ProfileRoute())},
                               ),

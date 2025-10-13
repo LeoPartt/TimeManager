@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
 
+
 class AppSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
@@ -10,7 +11,7 @@ class AppSearchBar extends StatelessWidget {
     super.key,
     required this.controller,
     this.onChanged,
-    this.hintText = "User or team...",
+    required this.hintText,
   });
 
   @override

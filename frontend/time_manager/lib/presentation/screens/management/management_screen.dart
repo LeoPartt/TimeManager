@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
+import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/routes/app_router.dart';
 import 'package:time_manager/presentation/widgets/header.dart';
 import 'package:time_manager/presentation/widgets/navbar.dart';
@@ -14,6 +15,7 @@ class ManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final searchCtrl = TextEditingController(); 
+    final tr = AppLocalizations.of(context)!;
 
     return Scaffold(
       bottomNavigationBar: const NavBar(),
@@ -24,10 +26,11 @@ class ManagementScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: size.height * 0.04),
           child: Column(
             children: [
-              const Header(label: "MANAGEMENT"),
+              Header(label: tr.management),
               SizedBox(height: size.height * 0.04),
 
               AppSearchBar(
+                hintText: tr.searchbarhint,
                 controller: searchCtrl,
                 onChanged: (query) {
 
@@ -37,13 +40,13 @@ class ManagementScreen extends StatelessWidget {
               SizedBox(height: size.height * 0.04),
 
               AppButton(
-                label: "Add a new user",
+                label: tr.addanewuser,
                 fullSize: true,
                 onPressed: () => context.pushRoute(const SettingsRoute()),
               ),
               SizedBox(height: size.height * 0.03),
               AppButton(
-                label: "Add a new team",
+                label: tr.addanewteam,
                 fullSize: true,
                 onPressed: () => context.pushRoute(const SettingsRoute()),
               ),

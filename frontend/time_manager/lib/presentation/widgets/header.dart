@@ -19,7 +19,15 @@ class Header extends StatelessWidget {
     return Container(   
       width: w,
       height: h,
-      color: AppColors.accent,
+      decoration: BoxDecoration(
+        color: AppColors.accent,
+        boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          offset: Offset(0, 4),
+                          blurRadius: 12,
+                        ),]
+      ),
       margin: EdgeInsets.only(top : size.height * 0.05),
       child: Center(
         child: FittedBox(
