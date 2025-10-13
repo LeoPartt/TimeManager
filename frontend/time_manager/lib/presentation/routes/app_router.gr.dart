@@ -59,6 +59,22 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ManagementScreen]
+class ManagementRoute extends PageRouteInfo<void> {
+  const ManagementRoute({List<PageRouteInfo>? children})
+    : super(ManagementRoute.name, initialChildren: children);
+
+  static const String name = 'ManagementRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const ManagementScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [ProfileScreen]
 class ProfileRoute extends PageRouteInfo<void> {
   const ProfileRoute({List<PageRouteInfo>? children})

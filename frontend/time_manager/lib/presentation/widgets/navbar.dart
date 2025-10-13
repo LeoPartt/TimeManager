@@ -17,12 +17,14 @@ class NavBar extends StatelessWidget {
       Icons.work_history_rounded,
       Icons.group_rounded,
       Icons.person_rounded,
+      Icons.settings
     ];
     final routes = [
       const HomeRoute(),
       const ClockingRoute(),
-      const SettingsRoute(),
+      const ManagementRoute(),
       const UserRoute(),
+      const SettingsRoute()
     ];
 
     return Container(
