@@ -5,4 +5,12 @@ abstract class UserRepository {
   Future<User> getUserProfile();
   Future<User> updateUserProfile(UpdateUserProfileParams params);
   Future<void> deleteUser();
+  Future<User> createUser({
+    required String username,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String phoneNumber,
+  });
 }

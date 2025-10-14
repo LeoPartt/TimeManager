@@ -23,8 +23,10 @@ class ApiClient {
     return _handleResponse(response);
   }
 
-  Future<Map<String, dynamic>> post(String endpoint, Map<String, dynamic> body) async {
-    final headers = await authHeaderService.buildHeaders();
+  Future<Map<String, dynamic>> post(String endpoint, Map<String, dynamic> body,{bool withAuth = true}) async {
+  final headers = withAuth
+      ? await authHeaderService.buildHeaders()
+      : {'Content-Type': 'application/json', 'Accept': 'application/json'};
     final response = await http.post(
       Uri.parse('$_baseUrl$endpoint'),
       headers: headers,

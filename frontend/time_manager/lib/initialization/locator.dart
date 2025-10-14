@@ -11,6 +11,7 @@ import 'package:time_manager/domain/repositories/user_repository.dart';
 import 'package:time_manager/domain/usecases/account/login_user.dart';
 import 'package:time_manager/domain/usecases/account/logout_user.dart';
 import 'package:time_manager/domain/usecases/account/register_account.dart';
+import 'package:time_manager/domain/usecases/user/create_user.dart';
 import 'package:time_manager/domain/usecases/user/delete_user.dart';
 import 'package:time_manager/domain/usecases/user/get_user_profile.dart';
 import 'package:time_manager/domain/usecases/user/update_user_profile.dart';
@@ -75,12 +76,13 @@ Future<void> setupLocator() async {
   locator.registerFactory(() => GetUserProfile(locator<UserRepository>()));
   locator.registerFactory(() => UpdateUserProfile(locator<UserRepository>()));
   locator.registerFactory(() => DeleteUser(locator<UserRepository>()));
+  locator.registerFactory(() => CreateUser(locator<UserRepository>()));
 
   locator.registerFactory(
     () => UserCubit(
       getUserProfile: locator<GetUserProfile>(),
       updateUserProfile: locator<UpdateUserProfile>(),
-      deleteUser: locator<DeleteUser>(),
+      deleteUser: locator<DeleteUser>(), createUserUsecase: locator<CreateUser>(),
     ),
   );
 

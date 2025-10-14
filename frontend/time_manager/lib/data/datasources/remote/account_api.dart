@@ -13,7 +13,7 @@ class AccountApi {
       return await client.post(ApiEndpoints.login, {
         'username': username,
         'password': password,
-      });
+      }, withAuth: false);
     } on NetworkException {
       rethrow;
     } catch (e) {
@@ -27,7 +27,7 @@ class AccountApi {
         'username': username,
         'email': email,
         'password': password,
-      });
+      }, withAuth: false);
     } on NetworkException {
       rethrow;
     } catch (e) {

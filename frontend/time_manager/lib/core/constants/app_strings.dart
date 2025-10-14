@@ -7,6 +7,9 @@ class AppStrings {
   static const String emailLabel = "Email Address";
   static const String passwordLabel = "Password";
   static const String userNameLabel = "username";
+  static const String firstNameLabel = "First Name";
+  static const String phoneNumberLabel = "Phone Number";
+  static const String lastNameLabel =  "Last Name";
   static const String forgotPassword = "Forgot your password?";
   static const String loginButton = "Sign In";
   static const String registerButton = "Sign Up";

@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:time_manager/presentation/screens/auth/login_screen.dart';
 import 'package:time_manager/presentation/screens/clocking.dart';
+import 'package:time_manager/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:time_manager/presentation/screens/home_screen.dart';
+import 'package:time_manager/presentation/screens/management/create_user_screen.dart';
 import 'package:time_manager/presentation/screens/management/management_screen.dart';
 import 'package:time_manager/presentation/screens/settings_screen.dart';
 import 'package:time_manager/presentation/screens/user/profile_screen.dart';
@@ -18,9 +20,10 @@ class AppRouter extends RootStackRouter   {
    List<AutoRoute> get routes =>  [
      AutoRoute(page: HomeRoute.page, initial: false),
      AutoRoute(page: ProfileRoute.page, initial: false),
-     AutoRoute(page: LoginRoute.page, initial: false),
+     AutoRoute(page: LoginRoute.page, initial: true),
      AutoRoute(page: SettingsRoute.page, initial: false),
-     AutoRoute(page: UserRoute.page, initial: true),
+     AutoRoute(page: UserRoute.page, initial: false),
+     AutoRoute(page: CreateUserRoute.page, initial: false),
      AutoRoute(page: ClockingRoute.page, initial: false),
      AutoRoute(page: ManagementRoute.page, initial: false)
   ];

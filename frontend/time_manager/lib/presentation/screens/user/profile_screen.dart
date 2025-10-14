@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             loaded: (user) {
               usernameController.text = user.username;
               emailController.text = user.email;
-              phoneController.text = user.phone ?? "";
+              phoneController.text = user.phoneNumber ?? "";
 
               return Padding(
                 padding: const EdgeInsets.all(24.0),

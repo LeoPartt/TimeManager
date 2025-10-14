@@ -27,6 +27,38 @@ class ClockingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CreateUserScreen]
+class CreateUserRoute extends PageRouteInfo<void> {
+  const CreateUserRoute({List<PageRouteInfo>? children})
+    : super(CreateUserRoute.name, initialChildren: children);
+
+  static const String name = 'CreateUserRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CreateUserScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [DashboardScreen]
+class DashboardRoute extends PageRouteInfo<void> {
+  const DashboardRoute({List<PageRouteInfo>? children})
+    : super(DashboardRoute.name, initialChildren: children);
+
+  static const String name = 'DashboardRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DashboardScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})

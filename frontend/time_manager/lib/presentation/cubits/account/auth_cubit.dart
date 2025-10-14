@@ -20,6 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState.loading());
     try {
       final user = await loginUser(username, password);
+      
       emit(AuthState.authenticated(user));
     } catch (e) {
       emit(AuthState.error(e.toString()));

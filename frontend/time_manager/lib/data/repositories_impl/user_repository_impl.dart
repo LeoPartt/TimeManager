@@ -25,6 +25,27 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<User> createUser({
+    required String username,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String phoneNumber,
+  }) async {
+    final response = await api.createUser({
+      'username': username,
+      'password': password,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+    });
+
+    return UserModel.fromJson(response).toDomain();
+  }
+
+  @override
   Future<User> updateUserProfile(UpdateUserProfileParams params) async {
     final body = <String, dynamic>{};
     if (params.username != null) body['username'] = params.username;

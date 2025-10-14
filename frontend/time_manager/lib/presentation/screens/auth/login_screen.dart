@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_strings.dart';
 import 'package:time_manager/core/constants/app_sizes.dart';
-import 'package:time_manager/core/utils/validators.dart';
+//import 'package:time_manager/core/utils/validators.dart';
 import 'package:time_manager/core/utils/extensions/context_extensions.dart';
 import 'package:time_manager/core/widgets/app_avatars.dart';
 import 'package:time_manager/presentation/cubits/account/auth_cubit.dart';
@@ -11,6 +11,7 @@ import 'package:time_manager/presentation/cubits/account/auth_state.dart';
 import 'package:time_manager/core/widgets/app_loader.dart';
 import 'package:time_manager/core/widgets/app_input_field.dart';
 import 'package:time_manager/core/widgets/app_card.dart';
+import 'package:time_manager/presentation/routes/app_router.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
@@ -52,7 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           state.maybeWhen(
             error: (message) => context.showSnack(message, isError: true),
-            authenticated: (_) => context.showSnack("Login successful!"),
+            authenticated: (_){context.showSnack("Login successful!");
+            context.pushRoute(HomeRoute());} ,
             orElse: () {},
           );
         },
@@ -98,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 label: AppStrings.passwordLabel,
                                 icon: Icons.lock_outline,
                                 obscureText: true,
-                                validator: Validators.validatePassword,
+                                //validator: Validators.validatePassword,
                                 textInputAction: TextInputAction.done,
                                 onSubmitted: () => _onLoginPressed(context),
                               ),

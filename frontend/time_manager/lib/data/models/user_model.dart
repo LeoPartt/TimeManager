@@ -10,11 +10,13 @@ abstract class UserModel with _$UserModel {
     required int id,
     required String username,
     required String email,
-    String? avatarUrl,
-    String? role,
-    String? phone,
+     required String firstName,
+    required String lastName,
+    //String? avatarUrl,
+    //String? role,
+    String? phoneNumber,
 
-    String? token,
+    //String? token,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -26,9 +28,11 @@ extension UserModelX on UserModel {
         id: id,
         username: username,
         email: email,
-        avatarUrl: avatarUrl,
-        role: role,
-        phone: phone,
-        token: token,
+        firstName:firstName,
+        lastName:lastName,
+        //avatarUrl: avatarUrl,
+       // role: role,
+        phoneNumber: phoneNumber,
+       // token: token,
       );
 }

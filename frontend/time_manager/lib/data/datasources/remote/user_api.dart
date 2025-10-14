@@ -18,6 +18,17 @@ class UserApi {
       throw NetworkException('Unexpected error fetching user profile: $e');
     }
   }
+   Future<Map<String, dynamic>> createUser(Map<String, dynamic> body) async {
+    //
+     try {
+      return client.post(ApiEndpoints.users, body);
+    } on NetworkException {
+      rethrow;
+    } catch (e) {
+      throw NetworkException('Unexpected error updating profile: $e');
+    }
+  
+  }
 
   Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> body) async {
     try {
