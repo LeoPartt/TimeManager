@@ -16,8 +16,8 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final w = fullSize ? AppSizes.appContainerWidth(context) : AppSizes.appSmallContainerWidth(context);
-    final h = fullSize ? AppSizes.appContainerHeight(context) : AppSizes.appSmallContainerHeight(context);
+    final w = AppSizes.responsiveWidth(context, fullSize ? 300 : 150);
+    final h = AppSizes.responsiveHeight(context, fullSize ? 60 : 48);
     final r = BorderRadius.circular(AppSizes.r16);
 
     return Material( 
