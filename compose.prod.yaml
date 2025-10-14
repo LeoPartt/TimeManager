@@ -1,3 +1,7 @@
+# Production Docker Compose Configuration
+# Usage: docker compose -f compose.prod.yaml up -d
+# Required: .env file with DB credentials
+
 services:
   db:
     image: postgres:17-alpine
@@ -10,6 +14,8 @@ services:
       LC_ALL: en_US.utf8
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - time-manager-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -20,7 +26,7 @@ services:
     build:
       context: backend
       dockerfile: Dockerfile
-    image: time-manager-backend:${VERSION:-latest}
+    image: time-manager-backend:latest
     restart: unless-stopped
     depends_on:
       db:
@@ -34,6 +40,8 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
       SPRING_JPA_SHOW_SQL: "false"
+    networks:
+      - time-manager-network
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -45,13 +53,16 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile.prod
-    image: time-manager-frontend:${VERSION:-latest}
+    image: time-manager-frontend:latest
     volumes:
       - apk_output:/app/build/app/outputs/flutter-apk
       - aab_output:/app/build/app/outputs/bundle/release
-    environment:
-      BUILD_NUMBER: ${BUILD_NUMBER:-1}
-      VERSION_NAME: ${VERSION:-1.0.0}
+    networks:
+      - time-manager-network
+
+networks:
+  time-manager-network:
+    driver: bridge
 
 volumes:
   postgres_data:

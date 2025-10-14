@@ -86,6 +86,16 @@ JWT_SECRET: (see .env file - 64 char base64)
 
 ## Common Issues
 
+### Compose won't start or services keep restarting
+```bash
+# Clean everything and rebuild
+docker compose down -v  # -v removes volumes (including DB data)
+docker compose up --build  # --build rebuilds images
+
+# This fixes most startup issues by starting fresh
+# Note: You'll lose your database data with -v
+```
+
 ### Can't connect to database from IDE
 ```bash
 # Check port binding
