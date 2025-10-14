@@ -3,30 +3,41 @@ package eu.epitech.t_dev_700.mappers;
 import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.models.TeamModels;
 import org.mapstruct.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface TeamMapper {
+public interface TeamMapper extends CRUDMapper<
+        TeamEntity,
+        TeamModels.TeamModel,
+        TeamModels.PostTeamRequest,
+        TeamModels.PutTeamRequest,
+        TeamModels.PatchTeamRequest
+        > {
 
-    // ---------- Entity -> DTO ----------
-    TeamModels.Team toModel(TeamEntity entity);
+    @Override
+    TeamModels.TeamModel toModel(TeamEntity entity);
 
-    default TeamModels.GetTeamResponse getTeams(List<TeamEntity> entities) {
-        TeamModels.Team[] arr = entities.stream().map(this::toModel).toArray(TeamModels.Team[]::new);
-        return new TeamModels.GetTeamResponse(arr);
+    @Override
+    default TeamModels.TeamModel[] listEntity(List<TeamEntity> entities) {
+        return entities.stream().map(this::toModel).toArray(TeamModels.TeamModel[]::new);
     }
 
-    // ---------- POST: DTO -> Entity (create) ----------
+    @Override
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
-    TeamEntity createTeam(TeamModels.PostTeamRequest req, @Context PasswordEncoder encoder);
+    TeamEntity createEntity(TeamModels.PostTeamRequest req);
 
-    // ---------- PUT: DTO -> existing Entity (update) ----------
+    @Override
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
-    void updateTeam(@MappingTarget TeamEntity entity, TeamModels.PutTeamRequest body);
+    void replaceEntity(@MappingTarget TeamEntity entity, TeamModels.PutTeamRequest body);
+
+    @Override
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    void updateEntity(@MappingTarget TeamEntity entity, TeamModels.PatchTeamRequest body);
 }
 

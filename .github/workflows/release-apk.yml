@@ -30,6 +30,19 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Building version: $VERSION"
 
+      - name: Verify version matches pubspec.yaml
+        run: |
+          PUBSPEC_VERSION=$(grep '^version:' frontend/time_manager/pubspec.yaml | sed 's/version: *//' | tr -d ' ')
+          TAG_VERSION="${{ steps.version.outputs.version }}"
+          if [ "$PUBSPEC_VERSION" != "$TAG_VERSION" ]; then
+            echo "Warning: Version mismatch!"
+            echo "  - Tag version: $TAG_VERSION"
+            echo "  - pubspec.yaml version: $PUBSPEC_VERSION"
+            echo "This might indicate the pubspec.yaml was not updated correctly"
+          else
+            echo "Version verified: $TAG_VERSION matches pubspec.yaml ✓"
+          fi
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -53,10 +66,32 @@ jobs:
           cd frontend/time_manager/build/app/outputs/flutter-apk
           mv app-release.apk time-manager-${{ steps.version.outputs.version }}.apk
 
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          cat > release_notes.md << 'EOF'
+          ## Time Manager v${{ steps.version.outputs.version }}
+
+          ### Installation
+          Téléchargez l'APK ci-dessous et installez-le sur votre appareil Android.
+
+          ### Informations de build
+          - **Version**: ${{ steps.version.outputs.version }}
+          - **Build number**: ${{ github.run_number }}
+          - **Date**: $(date +'%Y-%m-%d %H:%M:%S UTC')
+          - **Commit**: ${{ github.sha }}
+
+          ### Téléchargement
+          📱 [time-manager-${{ steps.version.outputs.version }}.apk](https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.version }}/time-manager-${{ steps.version.outputs.version }}.apk)
+
+          ---
+          EOF
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: frontend/time_manager/build/app/outputs/flutter-apk/time-manager-${{ steps.version.outputs.version }}.apk
+          body_path: release_notes.md
           generate_release_notes: true
           draft: false
           prerelease: false

@@ -1,35 +1,45 @@
 package eu.epitech.t_dev_700.controllers;
 
+import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.UserModels;
+import eu.epitech.t_dev_700.services.ClockService;
 import eu.epitech.t_dev_700.services.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
-public final class UserController {
+@Tag(name = "User Management")
+public class UserController extends CRUDController<
+        UserEntity,
+        UserModels.UserModel,
+        UserModels.PostUserRequest,
+        UserModels.PutUserRequest,
+        UserModels.PatchUserRequest
+        > {
 
     private final UserService userService;
+    private final ClockService clockService;
 
-    @GetMapping
-    public UserModels.GetUserResponse GetUsers() {
-        return userService.listUsers();
+    public UserController(UserService userService, ClockService clockService) {
+        super(userService);
+        this.userService = userService;
+        this.clockService = clockService;
     }
 
-    @PostMapping
-    public UserModels.User PostUser(@Valid @RequestBody UserModels.PostUserRequest body) {
-        return userService.createUser(body);
+    @Operation(summary = "Get user's clock records")
+    @GetMapping("{id}/clocks")
+    public Long[] getUserClocks(@PathVariable Long id) {
+        return clockService.getUserClocks(id);
     }
 
-    @PutMapping("{id}")
-    public UserModels.User PutUser(@PathVariable Long id, @Valid @RequestBody UserModels.PutUserRequest body) {
-        return userService.updateUser(id, body);
-    }
-
-    @DeleteMapping("{id}")
-    public void DeleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @Operation(summary = "Get current authenticated user")
+    @GetMapping("/me")
+    public UserModels.UserModel getUser() {
+        return userService.getCurrentUser();
     }
 }

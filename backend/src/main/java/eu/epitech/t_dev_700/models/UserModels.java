@@ -1,41 +1,106 @@
 package eu.epitech.t_dev_700.models;
 
+import eu.epitech.t_dev_700.models.constraints.NullableNotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class UserModels {
 
-    public record User(
-            Long id,
-            String username,
-            String firstName,
-            String lastName,
-            String email,
-            String phoneNumber
-    ) {}
+    public interface User {
+        String username();
 
-    //RESPONSES
-    public record GetUserResponse(
-            User[] users
-    ) {}
+        String firstName();
+
+        String lastName();
+
+        String email();
+
+        String phoneNumber();
+    }
+
+    @Schema(description = "User information model")
+    public record UserModel(
+            @Schema(description = "Unique user identifier", example = "1")
+            Long id,
+
+            @Schema(description = "Username for authentication", example = "john.doe")
+            String username,
+
+            @Schema(description = "User's first name", example = "John")
+            String firstName,
+
+            @Schema(description = "User's last name", example = "Doe")
+            String lastName,
+
+            @Schema(description = "User's email address", example = "john.doe@example.com")
+            String email,
+
+            @Schema(description = "User's phone number", example = "+1234567890")
+            String phoneNumber
+    ) implements User {
+    }
 
     //REQUESTS
+    @Schema(description = "Request body for creating a new user")
     public record PostUserRequest(
+            @Schema(description = "Username for the new user", example = "john.doe")
             @NotBlank String username,
-            @NotBlank String password,
-            @NotBlank String firstName,
-            @NotBlank String lastName,
-            @NotBlank @Email String email,
-            @NotBlank String phoneNumber
-    ) {}
 
+            @Schema(description = "Password for the new user", example = "SecurePass123!")
+            @NotBlank String password,
+
+            @Schema(description = "First name of the user", example = "John")
+            @NotBlank String firstName,
+
+            @Schema(description = "Last name of the user", example = "Doe")
+            @NotBlank String lastName,
+
+            @Schema(description = "Email address of the user", example = "john.doe@example.com")
+            @NotNull @Email String email,
+
+            @Schema(description = "Phone number of the user", example = "+1234567890")
+            @NotNull String phoneNumber
+    ) implements User {
+    }
+
+    @Schema(description = "Request body for completely replacing a user (PUT)")
     public record PutUserRequest(
-            @NotEmpty String username,
-            @NotEmpty String firstName,
-            @NotEmpty String lastName,
-            @NotEmpty String email,
-            @NotEmpty String phoneNumber
-    ) {}
+            @Schema(description = "Username", example = "john.doe")
+            @NotBlank String username,
+
+            @Schema(description = "First name", example = "John")
+            @NotBlank String firstName,
+
+            @Schema(description = "Last name", example = "Doe")
+            @NotBlank String lastName,
+
+            @Schema(description = "Email address", example = "john.doe@example.com")
+            @NotNull String email,
+
+            @Schema(description = "Phone number", example = "+1234567890")
+            @NotNull String phoneNumber
+    ) implements User {
+    }
+
+    @Schema(description = "Request body for partially updating a user (PATCH)")
+    public record PatchUserRequest(
+            @Schema(description = "Username (optional)", example = "john.doe")
+            @NullableNotBlank String username,
+
+            @Schema(description = "First name (optional)", example = "John")
+            @NullableNotBlank String firstName,
+
+            @Schema(description = "Last name (optional)", example = "Doe")
+            @NullableNotBlank String lastName,
+
+            @Schema(description = "Email address (optional)", example = "john.doe@example.com")
+            String email,
+
+            @Schema(description = "Phone number (optional)", example = "+1234567890")
+            String phoneNumber
+    ) implements User {
+    }
 
 }
