@@ -2,7 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
+import 'package:time_manager/core/constants/app_sizes.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
+import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/widgets/header.dart';
 import 'package:time_manager/presentation/widgets/navbar.dart';
 import 'package:time_manager/presentation/cubits/clock/clock_cubit.dart';
@@ -40,7 +42,9 @@ class _ClockingScreenState extends State<ClockingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     final size = MediaQuery.sizeOf(context);
+    final isLandscape = size.width > size.height;
 
     return BlocProvider(
       create: (_) => ClockCubit(),
@@ -51,70 +55,77 @@ class _ClockingScreenState extends State<ClockingScreen> {
             builder: (context, state) {
               final isClockIn = state is ClockInState;
 
-              return Column(
-                children: [
-                  Header(label: isClockIn ? "CLOCK IN" : "CLOCK OUT"),
-                  SizedBox(height: size.height * 0.03),
-                  Center(
-                    child: Container(
-                      width: size.width * 0.9,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: size.width * 0.06,
-                        vertical: size.height * 0.03,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.accent,
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.access_time,
-                            size: size.width * 0.25,
-                            color: Colors.black,
-                          ),
-                          SizedBox(height: size.height * 0.03),
+              return SingleChildScrollView( 
+              
+                padding: EdgeInsets.symmetric(
+                  vertical: AppSizes.responsiveHeight(context, 0.03 * size.height),
+                ),
 
-                          TextField(
-                            controller: _timeController,
-                            readOnly: true,
-                            onTap: () => _selectTime(context),
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.schedule),
-                              hintText: isClockIn
-                                  ? "Arrival time"
-                                  : "Departure time",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                  color: AppColors.secondary,
-                                  width: 2,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: AppColors.primary,
+                child: Column(
+                  children: [
+                    Header(label: isClockIn ? tr.clockin : tr.clockout), 
+                    SizedBox(height: AppSizes.responsiveHeight(context, 0.03 * MediaQuery.of(context).size.height)),
+                    Center(
+                      child: Container(
+                        width: AppSizes.responsiveWidth(context, isLandscape ? 0.6 * MediaQuery.of(context).size.width :  0.9 * MediaQuery.of(context).size.width),
+                        padding: EdgeInsets.symmetric(
+                          horizontal:AppSizes.responsiveWidth(context, isLandscape ? 0.04 * MediaQuery.of(context).size.width : 0.06 * MediaQuery.of(context).size.width),
+                          vertical: AppSizes.responsiveHeight(context, isLandscape ? 0.015 * size.height : 0.03 * MediaQuery.of(context).size.height),
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent,
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              size: AppSizes.responsiveWidth(context, isLandscape ? 0.10 * MediaQuery.of(context).size.width : 0.25 * MediaQuery.of(context).size.width),
+                              color: Colors.black,
                             ),
-                          ),
+                            SizedBox(height: AppSizes.responsiveHeight(context, 0.03 * MediaQuery.of(context).size.height)),
 
-                          SizedBox(height: size.height * 0.03),
+                            TextField(
+                              controller: _timeController,
+                              readOnly: true,
+                              onTap: () => _selectTime(context),
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.schedule),
+                                hintText: isClockIn
+                                    ? tr.arrival
+                                    : tr.departure,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: AppColors.secondary,
+                                    width: 2,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: AppColors.primary,
+                              ),
+                            ),
 
-                          AppButton(
-                            fullSize: true,
-                            label: "Validate",
-                            onPressed: () {
+                            SizedBox(height: AppSizes.responsiveHeight(context, 0.03 * MediaQuery.of(context).size.height)),
 
-                              debugPrint("Selected time: ${_timeController.text}");
-                              context.read<ClockCubit>().toggleClockState();
-                              _timeController.clear();
-                            },
-                          ),
-                        ],
+                            AppButton(
+                              fullSize: true,
+                              label: tr.validate,
+                              onPressed: () {
+
+                                debugPrint("Selected time: ${_timeController.text}");
+                                context.read<ClockCubit>().toggleClockState();
+                                _timeController.clear();
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                )
               );
             },
           ),

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
+import 'package:time_manager/core/constants/app_sizes.dart';
 import 'package:time_manager/presentation/cubits/navigation/navbar_cubit.dart';
 import 'package:time_manager/presentation/cubits/navigation/navbar_state.dart';
 import 'package:time_manager/presentation/routes/app_router.dart';
@@ -28,11 +29,17 @@ class NavBar extends StatelessWidget {
     ];
 
     return Container(
-      margin: EdgeInsets.all(size.height * 0.02),
-      padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+      margin: EdgeInsets.all( AppSizes.responsiveHeight(context, size.height * 0.02)),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.responsiveHeight(context,size.height * 0.01)),
       decoration: BoxDecoration(
         color: AppColors.accent,
         borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          offset: Offset(0, 4),
+                          blurRadius: 12,
+                        ),]
       ),
       child: BlocBuilder<NavCubit, NavState>(
         builder: (context, state) {
@@ -47,7 +54,7 @@ class NavBar extends StatelessWidget {
                 },
                 icon: Icon(
                   icons[index],
-                  size: size.width * 0.08,
+                  size: AppSizes.responsiveHeight(context, AppSizes.iconLarge),
                   color: isSelected ? AppColors.primary : AppColors.backgroundDark,
                 ),
                 

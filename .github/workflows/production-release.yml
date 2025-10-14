@@ -1,0 +1,158 @@
+name: Production Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-release-tag:
+    name: Create Release & Build APK
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from pubspec.yaml
+        id: version
+        run: |
+          VERSION=$(grep '^version:' frontend/time_manager/pubspec.yaml | sed 's/version: *//' | tr -d ' ')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Detected version: $VERSION"
+
+      - name: Get latest tag
+        id: latest_tag
+        run: |
+          LATEST_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1 || echo "")
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No previous tag found, this will be the first release"
+            echo "latest_tag=" >> $GITHUB_OUTPUT
+            echo "latest_version=0.0.0" >> $GITHUB_OUTPUT
+          else
+            LATEST_VERSION=${LATEST_TAG#v}
+            echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+            echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+            echo "Latest tag: $LATEST_TAG (version: $LATEST_VERSION)"
+          fi
+
+      - name: Compare versions
+        id: compare
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.version }}"
+          LATEST_VERSION="${{ steps.latest_tag.outputs.latest_version }}"
+
+          # Function to compare semantic versions
+          version_gt() {
+            test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
+          }
+
+          if [ "$LATEST_VERSION" = "0.0.0" ]; then
+            echo "First release, skipping version comparison"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          elif [ "$NEW_VERSION" = "$LATEST_VERSION" ]; then
+            echo "Error: Version $NEW_VERSION is the same as the latest version"
+            echo "Please increment the version in pubspec.yaml"
+            exit 1
+          elif version_gt "$NEW_VERSION" "$LATEST_VERSION"; then
+            echo "Version $NEW_VERSION is greater than $LATEST_VERSION ✓"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "Error: Version $NEW_VERSION is lower than or equal to the latest version $LATEST_VERSION"
+            echo "Please update pubspec.yaml with a higher version"
+            exit 1
+          fi
+
+      - name: Check if tag already exists
+        run: |
+          NEW_TAG="v${{ steps.version.outputs.version }}"
+          if git rev-parse "$NEW_TAG" >/dev/null 2>&1; then
+            echo "Error: Tag $NEW_TAG already exists"
+            echo "Please use a different version number"
+            exit 1
+          fi
+          echo "Tag $NEW_TAG does not exist, proceeding..."
+
+      - name: Create and push tag
+        if: steps.compare.outputs.should_release == 'true'
+        run: |
+          NEW_TAG="v${{ steps.version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$NEW_TAG" -m "Release $NEW_TAG"
+          git push origin "$NEW_TAG"
+          echo "Created and pushed tag: $NEW_TAG"
+
+      - name: Set up Flutter
+        if: steps.compare.outputs.should_release == 'true'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.5'
+          channel: 'stable'
+
+      - name: Get dependencies
+        if: steps.compare.outputs.should_release == 'true'
+        run: |
+          cd frontend/time_manager
+          flutter pub get
+
+      - name: Build APK
+        if: steps.compare.outputs.should_release == 'true'
+        run: |
+          cd frontend/time_manager
+          flutter build apk --release \
+            --build-name=${{ steps.version.outputs.version }} \
+            --build-number=${{ github.run_number }}
+
+      - name: Rename APK
+        if: steps.compare.outputs.should_release == 'true'
+        run: |
+          cd frontend/time_manager/build/app/outputs/flutter-apk
+          mv app-release.apk time-manager-${{ steps.version.outputs.version }}.apk
+
+      - name: Generate release notes
+        if: steps.compare.outputs.should_release == 'true'
+        id: release_notes
+        run: |
+          cat > release_notes.md << 'EOF'
+          ## Time Manager v${{ steps.version.outputs.version }}
+
+          ### Installation
+          Téléchargez l'APK ci-dessous et installez-le sur votre appareil Android.
+
+          ### Informations de build
+          - **Version**: ${{ steps.version.outputs.version }}
+          - **Build number**: ${{ github.run_number }}
+          - **Date**: $(date +'%Y-%m-%d %H:%M:%S UTC')
+          - **Commit**: ${{ github.sha }}
+
+          ### Téléchargement
+          📱 [time-manager-${{ steps.version.outputs.version }}.apk](https://github.com/${{ github.repository }}/releases/download/v${{ steps.version.outputs.version }}/time-manager-${{ steps.version.outputs.version }}.apk)
+
+          ---
+          EOF
+
+      - name: Create GitHub Release
+        if: steps.compare.outputs.should_release == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          files: frontend/time_manager/build/app/outputs/flutter-apk/time-manager-${{ steps.version.outputs.version }}.apk
+          body_path: release_notes.md
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        if: steps.compare.outputs.should_release == 'true'
+        run: |
+          echo "✓ Release tag v${{ steps.version.outputs.version }} created successfully"
+          echo "✓ APK built and published to GitHub Releases"
+          echo "✓ Download: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.version }}"

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Defines global spacing, radius, and size constants for responsiveness.
+/// Global responsive sizing system for Time Manager.
 ///
-/// Use these constants to ensure consistent spacing and sizing across the app.
+/// Centralizes all paddings, radius, icon, text and layout sizes.
 class AppSizes {
   // ───────────────────────────────
   //  Padding & Margins
@@ -24,6 +24,7 @@ class AppSizes {
   static const double r12 = 12.0;
   static const double r16 = 16.0;
   static const double r24 = 24.0;
+  static const double r32 = 32.0;
 
   // ───────────────────────────────
   //  Icon sizes
@@ -31,9 +32,18 @@ class AppSizes {
   static const double iconSmall = 16.0;
   static const double iconMedium = 24.0;
   static const double iconLarge = 32.0;
+  static const double iconXl = 48.0;
+
+  /// Responsive icon sizing
+  static double responsiveIcon(BuildContext context, double size) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 350) return size * 0.85;
+    if (width > 600) return size * 1.2;
+    return size;
+  }
 
   // ───────────────────────────────
-  //  Text sizes (base, can be scaled responsively)
+  //  Text sizes (base, scalable)
   // ───────────────────────────────
   static const double textXs = 10.0;
   static const double textSm = 12.0;
@@ -68,17 +78,15 @@ class AppSizes {
   }
 
   // ───────────────────────────────
-  //  Responsive utility
+  //  Layout helpers (width/height)
   // ───────────────────────────────
-  /// Returns responsive width based on screen width ratio.
   static double responsiveWidth(BuildContext context, double size) {
     final width = MediaQuery.of(context).size.width;
-    if (width < 350) return size * 0.85; // Small screen
-    if (width > 600) return size * 1.15; // Tablet
+    if (width < 350) return size * 0.85; // Small phones
+    if (width > 600) return size * 1.15; // Tablets
     return size;
   }
 
-  /// Returns responsive height based on screen height ratio.
   static double responsiveHeight(BuildContext context, double size) {
     final height = MediaQuery.of(context).size.height;
     if (height < 650) return size * 0.9;
@@ -86,6 +94,17 @@ class AppSizes {
     return size;
   }
 
+  // ───────────────────────────────
+  // 🔹 Special containers (cards, forms)
+  // ───────────────────────────────
+  static double cardWidth(BuildContext context) =>
+      responsiveWidth(context, 600);
+
+  static double cardHeight(BuildContext context) =>
+      responsiveHeight(context, 300);
+
+  static double buttonHeight(BuildContext context) =>
+      responsiveHeight(context, 48);
   /// Returns a responsive text size using MediaQuery scaling.
   static double responsiveText(BuildContext context, double size) {
     final scale = MediaQuery.of(context).textScaleFactor;
