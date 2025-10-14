@@ -119,7 +119,8 @@ jobs:
         if: steps.compare.outputs.should_release == 'true'
         id: release_notes
         run: |
-          cat > release_notes.md << 'EOF'
+          BUILD_DATE=$(date +'%Y-%m-%d %H:%M:%S UTC')
+          cat > release_notes.md << EOF
           ## Time Manager v${{ steps.version.outputs.version }}
 
           ### Installation
@@ -128,7 +129,7 @@ jobs:
           ### Informations de build
           - **Version**: ${{ steps.version.outputs.version }}
           - **Build number**: ${{ github.run_number }}
-          - **Date**: $(date +'%Y-%m-%d %H:%M:%S UTC')
+          - **Date**: ${BUILD_DATE}
           - **Commit**: ${{ github.sha }}
 
           ### Téléchargement
