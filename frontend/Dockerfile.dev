@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies for Flutter development
+# Install dependencies for Flutter development and automatic hot reload
 RUN apt update && apt install -y \
     curl \
     git \
@@ -10,6 +10,7 @@ RUN apt update && apt install -y \
     xz-utils \
     libglu1-mesa \
     wget \
+    inotify-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Flutter SDK
@@ -33,10 +34,14 @@ RUN flutter pub get
 # Copy the rest of the application
 COPY time_manager/ ./
 
+# Copy entrypoint script for Flutter web server
+COPY entrypoint.dev.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Expose port for Flutter web dev server
 EXPOSE 8080
 
-# Run Flutter web in debug mode with hot reload
+# Run Flutter web with automatic hot reload via file watcher
 # Note: Running as root in DEV for better DX (hot reload, no permission issues)
 # Production Dockerfile uses non-root user for security
-CMD ["flutter", "run", "-d", "web-server", "--web-hostname", "0.0.0.0", "--web-port", "8080"]
+CMD ["/entrypoint.sh"]
