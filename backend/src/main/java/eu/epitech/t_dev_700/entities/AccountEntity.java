@@ -84,4 +84,12 @@ public class AccountEntity implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public boolean hasFlag(byte flag) {
+        return (flags & flag) != 0;
+    }
+
+    public boolean isAdmin() {
+        return this.hasFlag((byte) 0xFF);
+    }
 }
