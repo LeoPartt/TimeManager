@@ -5,6 +5,7 @@ import eu.epitech.t_dev_700.models.TeamModels;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Mapper(componentModel = "spring")
 public interface TeamMapper extends CRUDMapper<
@@ -20,7 +21,12 @@ public interface TeamMapper extends CRUDMapper<
 
     @Override
     default TeamModels.TeamModel[] listEntity(List<TeamEntity> entities) {
-        return entities.stream().map(this::toModel).toArray(TeamModels.TeamModel[]::new);
+        return listEntity(entities.stream());
+    }
+
+    @Override
+    default TeamModels.TeamModel[] listEntity(Stream<TeamEntity> stream) {
+        return stream.map(this::toModel).toArray(TeamModels.TeamModel[]::new);
     }
 
     @Override

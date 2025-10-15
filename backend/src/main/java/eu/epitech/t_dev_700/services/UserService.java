@@ -1,11 +1,11 @@
 package eu.epitech.t_dev_700.services;
 
-import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.mappers.UserMapper;
+import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.repositories.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
+import eu.epitech.t_dev_700.services.components.UserAuthorization;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,20 +19,12 @@ public class UserService extends CRUDService<
 
     private final UserMapper userMapper;
 
-    public static UserEntity currentUser() {
-        return ((AccountEntity) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal())
-                .getUser();
-    }
-
-    public UserService(UserRepository repo, UserMapper mapper) {
-        super(repo, mapper, "User");
-        this.userMapper = mapper;
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
+        super(userRepository, userMapper, "User");
+        this.userMapper = userMapper;
     }
 
     public UserModels.UserModel getCurrentUser() {
-        return userMapper.toModel(currentUser());
+        return userMapper.toModel(UserAuthorization.getCurrentUser());
     }
 }

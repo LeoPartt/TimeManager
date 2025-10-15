@@ -1,8 +1,11 @@
 package eu.epitech.t_dev_700.mappers;
 
+import eu.epitech.t_dev_700.entities.TeamEntity;
+import eu.epitech.t_dev_700.models.TeamModels;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * A small mapping contract your MapStruct CRUDMapper can implement.
@@ -15,6 +18,8 @@ import java.util.List;
  */
 public interface CRUDMapper<E, M, C, R, U> {
     M toModel(E entity);
+
+    TeamModels.TeamModel[] listEntity(Stream<TeamEntity> stream);
 
     E createEntity(C request);
 

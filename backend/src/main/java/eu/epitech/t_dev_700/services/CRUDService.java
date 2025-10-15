@@ -37,7 +37,7 @@ public abstract class CRUDService<E, M, C, R, U> {
 
     @Transactional(readOnly = true)
     public M get(Long id) {
-        return CRUDMapper.toModel(getOrThrow(id));
+        return CRUDMapper.toModel(findEntityOrThrow(id));
     }
 
     @Transactional
@@ -51,7 +51,7 @@ public abstract class CRUDService<E, M, C, R, U> {
 
     @Transactional
     public M replace(Long id, R request) {
-        E entity = getOrThrow(id);
+        E entity = findEntityOrThrow(id);
         CRUDMapper.replaceEntity(entity, request);
         CRUDHookUtils.beforeReplace(this, entity, request);
         E saved = repository.save(entity);
@@ -61,7 +61,7 @@ public abstract class CRUDService<E, M, C, R, U> {
 
     @Transactional
     public M update(Long id, U request) {
-        E entity = getOrThrow(id);
+        E entity = findEntityOrThrow(id);
         CRUDMapper.updateEntity(entity, request);
         CRUDHookUtils.beforeUpdate(this, entity, request);
         E saved = repository.save(entity);
@@ -71,13 +71,13 @@ public abstract class CRUDService<E, M, C, R, U> {
 
     @Transactional
     public void delete(Long id) {
-        E entity = getOrThrow(id);
+        E entity = findEntityOrThrow(id);
         CRUDHookUtils.beforeDelete(this, entity);
         repository.delete(entity);
         CRUDHookUtils.afterDelete(this, entity);
     }
 
-    protected E getOrThrow(Long id) {
+    public E findEntityOrThrow(Long id) {
         return repository.findById(id).orElseThrow(new ResourceNotFound(this.entityName, id));
     }
 
