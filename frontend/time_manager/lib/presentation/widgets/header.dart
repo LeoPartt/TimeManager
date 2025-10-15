@@ -13,8 +13,9 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final w = AppSizes.dashboardWidth(context);
-    final h = AppSizes.dashboardHeight(context);
+    final isLandscape = size.width > size.height;
+    final w = AppSizes.responsiveWidth(context, 0.9 * MediaQuery.of(context).size.width);
+    final h = AppSizes.responsiveHeight(context, isLandscape ? 0.1 * MediaQuery.of(context).size.height : 0.06 * MediaQuery.of(context).size.height );
 
     return Container(   
       width: w,
@@ -28,7 +29,7 @@ class Header extends StatelessWidget {
                           blurRadius: 12,
                         ),]
       ),
-      margin: EdgeInsets.only(top : size.height * 0.05),
+      margin: EdgeInsets.only(top : AppSizes.responsiveHeight(context, 0.03 * MediaQuery.of(context).size.height)),
       child: Center(
         child: FittedBox(
           fit: BoxFit.scaleDown,

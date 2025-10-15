@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
+import 'package:time_manager/core/constants/app_sizes.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
 import 'package:time_manager/core/widgets/app_label_container.dart';
 import 'package:time_manager/l10n/app_localizations.dart';
@@ -14,23 +15,22 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     final tr = AppLocalizations.of(context)!;
 
   return Scaffold(
         bottomNavigationBar: const NavBar(),
         body: SafeArea(
-          child: SingleChildScrollView( 
-            child: Column(
+          child: ListView( 
+            children: [ Column(
               children: [
                 Header(label: tr.me),
-                SizedBox(height: size.height * 0.04),
+                SizedBox(height: AppSizes.responsiveHeight(context, AppSizes.p32)),
                 Center(
                   child: Container(
-                    width: size.width * 0.9,
+                    width: AppSizes.responsiveWidth(context, 0.9 * MediaQuery.of(context).size.width),
                     padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.06,
-                      vertical: size.height * 0.03,
+                      horizontal: AppSizes.responsiveWidth(context, 0.06 * MediaQuery.of(context).size.width),
+                      vertical: AppSizes.responsiveHeight(context, 0.03 * MediaQuery.of(context).size.height),
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.accent,
@@ -53,7 +53,9 @@ class UserScreen extends StatelessWidget {
                           child: Builder(
                             builder: (context) {
                               final size = MediaQuery.sizeOf(context);
-                              final double r = size.width * 0.10; 
+                              final isLandscape = size.width > size.height;
+                              final double base = isLandscape ? size.height : size.width;
+                              final double r = AppSizes.responsiveWidth(context, 0.1 * base); 
 
                               return Container(
                                 width: r * 2,
@@ -82,17 +84,17 @@ class UserScreen extends StatelessWidget {
                             },
                           ),
                         ),
-                        SizedBox(height: size.height * 0.03),
+                        SizedBox(height: AppSizes.responsiveHeight(context, 0.03 * MediaQuery.of(context).size.height)),
 
                         // champs
                         AppLabelContainer(label: "First name", fullSize: true),
-                        SizedBox(height: size.height * 0.015),
+                        SizedBox(height: AppSizes.responsiveHeight(context, 0.015 * MediaQuery.of(context).size.height)),
                         AppLabelContainer(label: "Last name", fullSize: true),
-                        SizedBox(height: size.height * 0.015),
+                        SizedBox(height: AppSizes.responsiveHeight(context, 0.015 * MediaQuery.of(context).size.height)),
                         AppLabelContainer(label: "Email", fullSize: true),
-                        SizedBox(height: size.height * 0.015),
+                        SizedBox(height: AppSizes.responsiveHeight(context, 0.015 * MediaQuery.of(context).size.height)),
                         AppLabelContainer(label: "Phone number", fullSize: true),
-                        SizedBox(height: size.height * 0.03),
+                        SizedBox(height: AppSizes.responsiveHeight(context, 0.03 * MediaQuery.of(context).size.height)),
 
                         Row(
                           children: [
@@ -103,7 +105,7 @@ class UserScreen extends StatelessWidget {
                                 onPressed: () => context.pushRoute(const SettingsRoute()),
                               ),
                             ),
-                            SizedBox(width: size.width * 0.04),
+                            SizedBox(width: AppSizes.responsiveWidth(context, 0.04 * MediaQuery.of(context).size.width)),
                             Expanded(
                               child: AppButton(
                                 label: tr.delete,
@@ -118,10 +120,10 @@ class UserScreen extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: size.height * 0.02),
+                SizedBox(height: AppSizes.responsiveHeight(context, 0.02 * MediaQuery.of(context).size.height)),
               ],
             ),
-          ),
+          ]),
         ),
       );
   }
