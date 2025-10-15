@@ -139,6 +139,50 @@ class SettingsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [UserEditScreen]
+class UserEditRoute extends PageRouteInfo<UserEditRouteArgs> {
+  UserEditRoute({Key? key, required int userId, List<PageRouteInfo>? children})
+    : super(
+        UserEditRoute.name,
+        args: UserEditRouteArgs(key: key, userId: userId),
+        initialChildren: children,
+      );
+
+  static const String name = 'UserEditRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<UserEditRouteArgs>();
+      return UserEditScreen(key: args.key, userId: args.userId);
+    },
+  );
+}
+
+class UserEditRouteArgs {
+  const UserEditRouteArgs({this.key, required this.userId});
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'UserEditRouteArgs{key: $key, userId: $userId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! UserEditRouteArgs) return false;
+    return key == other.key && userId == other.userId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ userId.hashCode;
+}
+
+/// generated route for
 /// [UserScreen]
 class UserRoute extends PageRouteInfo<void> {
   const UserRoute({List<PageRouteInfo>? children})

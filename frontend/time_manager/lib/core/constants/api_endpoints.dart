@@ -27,7 +27,7 @@ class ApiEndpoints {
   static String get users => '$_api/users';
   static String get userProfile => '$_api/users/me';
   static String userById(int id) => '$_api/users/$id';
-  static String get updateProfile => '$_api/users/update';
+  static String get updateProfile => '$_api/users';
 
   // ───────────────────────────────
   //  TEAMS endpoints
@@ -47,9 +47,11 @@ class ApiEndpoints {
   // ───────────────────────────────
   static String get schedules => '$_api/schedules';
   static String scheduleById(int id) => '$_api/schedules/$id';
-  static String get clockIn => '$_api/schedules/clock-in';
-  static String get clockOut => '$_api/schedules/clock-out';
+  static String get clockIn => '$_api/clock/in';
+  static String get clockOut => '$_api/clock/out';
   static String get history => '$_api/schedules/history';
+   
+  static String get clockStatus => '$_api/clock/status';
 
   // ───────────────────────────────
   // REPORTS / KPI endpoints

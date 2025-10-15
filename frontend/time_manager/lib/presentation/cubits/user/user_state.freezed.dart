@@ -55,13 +55,15 @@ extension UserStatePatterns on UserState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( UserLoading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _Error value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( UserLoading value)?  loading,TResult Function( UserLoaded value)?  loaded,TResult Function( UserListLoaded value)?  listLoaded,TResult Function( UserDeleted value)?  deleted,TResult Function( _Error value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case UserLoading() when loading != null:
-return loading(_that);case _Loaded() when loaded != null:
-return loaded(_that);case _Error() when error != null:
+return loading(_that);case UserLoaded() when loaded != null:
+return loaded(_that);case UserListLoaded() when listLoaded != null:
+return listLoaded(_that);case UserDeleted() when deleted != null:
+return deleted(_that);case _Error() when error != null:
 return error(_that);case _:
   return orElse();
 
@@ -80,13 +82,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( UserLoading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _Error value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( UserLoading value)  loading,required TResult Function( UserLoaded value)  loaded,required TResult Function( UserListLoaded value)  listLoaded,required TResult Function( UserDeleted value)  deleted,required TResult Function( _Error value)  error,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case UserLoading():
-return loading(_that);case _Loaded():
-return loaded(_that);case _Error():
+return loading(_that);case UserLoaded():
+return loaded(_that);case UserListLoaded():
+return listLoaded(_that);case UserDeleted():
+return deleted(_that);case _Error():
 return error(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -104,13 +108,15 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( UserLoading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _Error value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( UserLoading value)?  loading,TResult? Function( UserLoaded value)?  loaded,TResult? Function( UserListLoaded value)?  listLoaded,TResult? Function( UserDeleted value)?  deleted,TResult? Function( _Error value)?  error,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case UserLoading() when loading != null:
-return loading(_that);case _Loaded() when loaded != null:
-return loaded(_that);case _Error() when error != null:
+return loading(_that);case UserLoaded() when loaded != null:
+return loaded(_that);case UserListLoaded() when listLoaded != null:
+return listLoaded(_that);case UserDeleted() when deleted != null:
+return deleted(_that);case _Error() when error != null:
 return error(_that);case _:
   return null;
 
@@ -128,12 +134,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( User user)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( User user)?  loaded,TResult Function( List<User> users)?  listLoaded,TResult Function()?  deleted,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case UserLoading() when loading != null:
-return loading();case _Loaded() when loaded != null:
-return loaded(_that.user);case _Error() when error != null:
+return loading();case UserLoaded() when loaded != null:
+return loaded(_that.user);case UserListLoaded() when listLoaded != null:
+return listLoaded(_that.users);case UserDeleted() when deleted != null:
+return deleted();case _Error() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -152,12 +160,14 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( User user)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( User user)  loaded,required TResult Function( List<User> users)  listLoaded,required TResult Function()  deleted,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case UserLoading():
-return loading();case _Loaded():
-return loaded(_that.user);case _Error():
+return loading();case UserLoaded():
+return loaded(_that.user);case UserListLoaded():
+return listLoaded(_that.users);case UserDeleted():
+return deleted();case _Error():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +185,14 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( User user)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( User user)?  loaded,TResult? Function( List<User> users)?  listLoaded,TResult? Function()?  deleted,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case UserLoading() when loading != null:
-return loading();case _Loaded() when loaded != null:
-return loaded(_that.user);case _Error() when error != null:
+return loading();case UserLoaded() when loaded != null:
+return loaded(_that.user);case UserListLoaded() when listLoaded != null:
+return listLoaded(_that.users);case UserDeleted() when deleted != null:
+return deleted();case _Error() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -256,8 +268,8 @@ String toString() {
 /// @nodoc
 
 
-class _Loaded implements UserState {
-  const _Loaded(this.user);
+class UserLoaded implements UserState {
+  const UserLoaded(this.user);
   
 
  final  User user;
@@ -266,13 +278,13 @@ class _Loaded implements UserState {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+$UserLoadedCopyWith<UserLoaded> get copyWith => _$UserLoadedCopyWithImpl<UserLoaded>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.user, user) || other.user == user));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserLoaded&&(identical(other.user, user) || other.user == user));
 }
 
 
@@ -288,8 +300,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class _$LoadedCopyWith<$Res> implements $UserStateCopyWith<$Res> {
-  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
+abstract mixin class $UserLoadedCopyWith<$Res> implements $UserStateCopyWith<$Res> {
+  factory $UserLoadedCopyWith(UserLoaded value, $Res Function(UserLoaded) _then) = _$UserLoadedCopyWithImpl;
 @useResult
 $Res call({
  User user
@@ -300,17 +312,17 @@ $UserCopyWith<$Res> get user;
 
 }
 /// @nodoc
-class __$LoadedCopyWithImpl<$Res>
-    implements _$LoadedCopyWith<$Res> {
-  __$LoadedCopyWithImpl(this._self, this._then);
+class _$UserLoadedCopyWithImpl<$Res>
+    implements $UserLoadedCopyWith<$Res> {
+  _$UserLoadedCopyWithImpl(this._self, this._then);
 
-  final _Loaded _self;
-  final $Res Function(_Loaded) _then;
+  final UserLoaded _self;
+  final $Res Function(UserLoaded) _then;
 
 /// Create a copy of UserState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? user = null,}) {
-  return _then(_Loaded(
+  return _then(UserLoaded(
 null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as User,
   ));
@@ -327,6 +339,110 @@ $UserCopyWith<$Res> get user {
   });
 }
 }
+
+/// @nodoc
+
+
+class UserListLoaded implements UserState {
+  const UserListLoaded(final  List<User> users): _users = users;
+  
+
+ final  List<User> _users;
+ List<User> get users {
+  if (_users is EqualUnmodifiableListView) return _users;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_users);
+}
+
+
+/// Create a copy of UserState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UserListLoadedCopyWith<UserListLoaded> get copyWith => _$UserListLoadedCopyWithImpl<UserListLoaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserListLoaded&&const DeepCollectionEquality().equals(other._users, _users));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_users));
+
+@override
+String toString() {
+  return 'UserState.listLoaded(users: $users)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UserListLoadedCopyWith<$Res> implements $UserStateCopyWith<$Res> {
+  factory $UserListLoadedCopyWith(UserListLoaded value, $Res Function(UserListLoaded) _then) = _$UserListLoadedCopyWithImpl;
+@useResult
+$Res call({
+ List<User> users
+});
+
+
+
+
+}
+/// @nodoc
+class _$UserListLoadedCopyWithImpl<$Res>
+    implements $UserListLoadedCopyWith<$Res> {
+  _$UserListLoadedCopyWithImpl(this._self, this._then);
+
+  final UserListLoaded _self;
+  final $Res Function(UserListLoaded) _then;
+
+/// Create a copy of UserState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? users = null,}) {
+  return _then(UserListLoaded(
+null == users ? _self._users : users // ignore: cast_nullable_to_non_nullable
+as List<User>,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class UserDeleted implements UserState {
+  const UserDeleted();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserDeleted);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'UserState.deleted()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 

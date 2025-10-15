@@ -12,6 +12,6 @@ abstract class User with _$User {
     String? phoneNumber,
     required final String firstName,
     required final String lastName,
-   // String? role,
+    String? role,
   }) = _User;
 }

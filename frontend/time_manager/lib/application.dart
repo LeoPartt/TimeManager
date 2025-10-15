@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:time_manager/core/theme/local_provider.dart';
 import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/cubits/account/auth_cubit.dart';
+import 'package:time_manager/presentation/cubits/clock/clock_cubit.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
 import 'package:time_manager/presentation/cubits/navigation/navbar_cubit.dart';
 import 'core/theme/theme_switcher.dart';
@@ -31,6 +32,9 @@ class Application extends StatelessWidget {
             ),
             BlocProvider<NavCubit>(
               create: (_) => NavCubit(),
+            ),
+            BlocProvider<ClockCubit>(
+              create: (_) => locator<ClockCubit>(),
             ),
           ],
           child: MaterialApp.router(

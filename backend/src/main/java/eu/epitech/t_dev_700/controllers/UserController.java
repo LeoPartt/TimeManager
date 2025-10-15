@@ -18,6 +18,8 @@ import static eu.epitech.t_dev_700.services.components.UserAuthorization.getCurr
 
 @RestController
 @RequestMapping("api/users")
+@RequiredArgsConstructor
+
 @Tag(name = "User Management")
 public class UserController implements CRUDController<
         UserModels.UserModel,
