@@ -203,7 +203,7 @@ class TeamServiceTest {
     void testGetOrThrow_whenTeamExists_shouldReturnTeam() {
         when(teamRepository.findById(1L)).thenReturn(Optional.of(teamEntity));
 
-        TeamEntity result = teamService.getOrThrow(1L);
+        TeamEntity result = teamService.findEntityOrThrow(1L);
 
         assertThat(result).isEqualTo(teamEntity);
         verify(teamRepository).findById(1L);
@@ -213,7 +213,7 @@ class TeamServiceTest {
     void testGetOrThrow_whenTeamNotExists_shouldThrowException() {
         when(teamRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> teamService.getOrThrow(999L))
+        assertThatThrownBy(() -> teamService.findEntityOrThrow(999L))
                 .isInstanceOf(ResourceNotFound.class)
                 .hasMessageContaining("TeamModel")
                 .hasMessageContaining("999");

@@ -1,5 +1,6 @@
 package eu.epitech.t_dev_700.controllers;
 
+import eu.epitech.t_dev_700.services.TeamService;
 import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.ClockService;
@@ -31,6 +32,9 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private TeamService teamService;
 
     @MockitoBean
     private ClockService clockService;

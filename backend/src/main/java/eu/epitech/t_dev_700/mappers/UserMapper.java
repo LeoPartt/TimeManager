@@ -3,9 +3,8 @@ package eu.epitech.t_dev_700.mappers;
 import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.UserModels;
+import eu.epitech.t_dev_700.services.components.PasswordMapper;
 import org.mapstruct.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -35,15 +34,6 @@ public interface UserMapper extends CRUDMapper<
     @Mapping(target = "account.password", source = "password", qualifiedByName = "encodePassword")
     UserEntity createEntity(UserModels.PostUserRequest req);
 
-    /*@AfterMapping
-    default void attachAccount(UserModels.PostUserRequest body,
-                               @MappingTarget UserEntity user) {
-        var acc = new AccountEntity();
-        acc.setUsername(body.username());
-        user.setAccount(acc);
-        acc.setUser(user);
-    }*/
-
     @Override
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
@@ -67,18 +57,6 @@ public interface UserMapper extends CRUDMapper<
     default void updateAccountUsername(UserModels.PatchUserRequest req, @MappingTarget UserEntity user) {
         AccountEntity acc = user.getAccount();
         acc.setUsername(req.username());
-    }
-
-    @Component
-    class PasswordMapper {
-        private final PasswordEncoder encoder;
-        public PasswordMapper(PasswordEncoder encoder) { this.encoder = encoder; }
-
-        @Named("encodePassword")
-        public String encodePassword(String raw) {
-            if (raw == null || raw.isBlank()) return raw;
-            return encoder.encode(raw);
-        }
     }
 
 }

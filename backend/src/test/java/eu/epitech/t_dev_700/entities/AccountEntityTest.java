@@ -46,8 +46,8 @@ class AccountEntityTest {
         account.setFlags((byte) 1);
         assertThat(account.getFlags()).isEqualTo((byte) 1);
 
-        account.setFlags((byte) 127);
-        assertThat(account.getFlags()).isEqualTo((byte) 127);
+        account.setFlags((byte) 0xFF);
+        assertThat(account.getFlags()).isEqualTo((byte) 0xFF);
     }
 
     @Test

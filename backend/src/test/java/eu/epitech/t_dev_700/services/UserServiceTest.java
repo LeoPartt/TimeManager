@@ -225,7 +225,7 @@ class UserServiceTest {
     void testGetOrThrow_whenUserExists_shouldReturnUser() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
 
-        UserEntity result = userService.getOrThrow(1L);
+        UserEntity result = userService.findEntityOrThrow(1L);
 
         assertThat(result).isEqualTo(userEntity);
         verify(userRepository).findById(1L);
@@ -235,7 +235,7 @@ class UserServiceTest {
     void testGetOrThrow_whenUserNotExists_shouldThrowException() {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.getOrThrow(999L))
+        assertThatThrownBy(() -> userService.findEntityOrThrow(999L))
                 .isInstanceOf(ResourceNotFound.class)
                 .hasMessageContaining("User")
                 .hasMessageContaining("999");

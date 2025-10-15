@@ -1,4 +1,4 @@
-package eu.epitech.t_dev_700.mappers;
+package eu.epitech.t_dev_700.services.components;
 
 import org.mapstruct.Named;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,7 +11,7 @@ public class PasswordMapper {
 
     @Named("encodePassword")
     public String encodePassword(String raw) {
-        if (raw == null || raw.isBlank()) return raw; // let Bean Validation catch blanks if required
+        if (raw == null || raw.isBlank()) return raw;
         return encoder.encode(raw);
     }
 }
