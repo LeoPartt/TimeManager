@@ -7,6 +7,7 @@ import eu.epitech.t_dev_700.services.components.PasswordMapper;
 import org.mapstruct.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Mapper(componentModel = "spring", uses = PasswordMapper.class)
 public interface UserMapper extends CRUDMapper<
@@ -24,6 +25,11 @@ public interface UserMapper extends CRUDMapper<
     @Override
     default UserModels.UserModel[] listEntity(List<UserEntity> entities) {
         return entities.stream().map(this::toModel).toArray(UserModels.UserModel[]::new);
+    }
+
+    @Override
+    default UserModels.UserModel[] listEntity(Stream<UserEntity> stream) {
+        return stream.map(this::toModel).toArray(UserModels.UserModel[]::new);
     }
 
     @Override
@@ -58,6 +64,5 @@ public interface UserMapper extends CRUDMapper<
         AccountEntity acc = user.getAccount();
         acc.setUsername(req.username());
     }
-
 }
 
