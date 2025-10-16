@@ -17,7 +17,7 @@ import java.util.Optional;
 import static eu.epitech.t_dev_700.services.components.UserAuthorization.getCurrentUser;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("users")
 @RequiredArgsConstructor
 
 @Tag(name = "User Management")

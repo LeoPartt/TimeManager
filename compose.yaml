@@ -23,6 +23,8 @@ services:
   backend:
     build: backend
     image: time-manager-backend:dev
+    ports:
+      - "127.0.0.1:${SERVER_PORT:-8080}:8080"
     restart: unless-stopped
     depends_on:
       db:
@@ -33,7 +35,9 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD} 
       SPRING_PROFILES_ACTIVE: dev
+      JWT_SECRET: ${JWT_SECRET}  
     networks:
       - internal
     healthcheck:
@@ -55,16 +59,36 @@ services:
     environment:
       BACKEND_URL: http://backend:8080
     volumes:
+      # Only cache pub dependencies - Docker Compose watch handles source sync
       - ./frontend/time_manager:/app:delegated
+
       - flutter_pub_cache:/root/.pub-cache
+
     networks:
       - internal
     healthcheck:
       test: ["CMD", "sh", "-c", "curl -s -o /dev/null http://localhost:8080 || exit 0"]
-      interval: 30s
+      interval: 50s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 50s
+    develop:
+      watch:
+        # Sync Dart source files and trigger hot reload
+        - action: sync+restart
+          path: ./frontend/time_manager/lib
+          target: /app/lib
+          ignore:
+            - "**/*.tmp"
+            - "**/*.dart_tool"
+        # Sync web assets (HTML, manifest, etc.)
+        - action: sync+restart
+          path: ./frontend/time_manager/web
+          target: /app/web
+        # Rebuild when dependencies change
+        - action: rebuild
+          path: ./frontend/time_manager/pubspec.yaml
+          target: /app/pubspec.yaml
 
   nginx:
     image: nginx:alpine
