@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Centralizes all paddings, radius, icon, text and layout sizes.
 class AppSizes {
   // ───────────────────────────────
-  // 🔹 Padding & Margins
+  //  Padding & Margins
   // ───────────────────────────────
   static const double p2 = 2.0;
   static const double p4 = 4.0;
@@ -17,7 +17,7 @@ class AppSizes {
   static const double p32 = 32.0;
 
   // ───────────────────────────────
-  // 🔹 Border Radius
+  //  Border Radius
   // ───────────────────────────────
   static const double r4 = 4.0;
   static const double r8 = 8.0;
@@ -27,7 +27,7 @@ class AppSizes {
   static const double r32 = 32.0;
 
   // ───────────────────────────────
-  // 🔹 Icon sizes
+  //  Icon sizes
   // ───────────────────────────────
   static const double iconSmall = 16.0;
   static const double iconMedium = 24.0;
@@ -43,7 +43,7 @@ class AppSizes {
   }
 
   // ───────────────────────────────
-  // 🔹 Text sizes (base, scalable)
+  //  Text sizes (base, scalable)
   // ───────────────────────────────
   static const double textXs = 10.0;
   static const double textSm = 12.0;
@@ -53,16 +53,32 @@ class AppSizes {
   static const double textXxl = 24.0;
   static const double textDisplay = 32.0;
 
-  /// Responsive text scaling
-  static double responsiveText(BuildContext context, double size) {
-    if (size <= 0) return size;
-    final ts = MediaQuery.textScalerOf(context);
-    final scaled = ts.scale(size);
-    return scaled.clamp(size * 0.9, size * 1.2).toDouble();
+  // ───────────────────────────────
+  //  Container sizes 
+  // ───────────────────────────────
+  static double appContainerWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width * 0.7 ;
+  }  
+  static double appContainerHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height * 0.08 ;
+  }
+  static double appSmallContainerWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width * 0.35 ;
+  }  
+  static double appSmallContainerHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height * 0.08 ;
+  }
+
+  static double dashboardHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height * 0.06 ;
+  }
+
+  static double dashboardWidth(BuildContext context) {
+    return MediaQuery.of(context).size.width * 0.9 ;
   }
 
   // ───────────────────────────────
-  // 🔹 Layout helpers (width/height)
+  //  Layout helpers (width/height)
   // ───────────────────────────────
   static double responsiveWidth(BuildContext context, double size) {
     final width = MediaQuery.of(context).size.width;
@@ -89,4 +105,9 @@ class AppSizes {
 
   static double buttonHeight(BuildContext context) =>
       responsiveHeight(context, 48);
+  /// Returns a responsive text size using MediaQuery scaling.
+  static double responsiveText(BuildContext context, double size) {
+    final scale = MediaQuery.of(context).textScaleFactor;
+    return size * scale.clamp(0.9, 1.2);
+  }
 }

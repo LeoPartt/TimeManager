@@ -17,8 +17,9 @@ import java.util.Optional;
 import static eu.epitech.t_dev_700.services.components.UserAuthorization.getCurrentUser;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 @RequiredArgsConstructor
+
 @Tag(name = "User Management")
 public class UserController implements CRUDController<
         UserModels.UserModel,

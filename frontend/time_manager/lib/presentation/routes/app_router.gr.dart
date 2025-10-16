@@ -27,6 +27,38 @@ class ClockingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CreateUserScreen]
+class CreateUserRoute extends PageRouteInfo<void> {
+  const CreateUserRoute({List<PageRouteInfo>? children})
+    : super(CreateUserRoute.name, initialChildren: children);
+
+  static const String name = 'CreateUserRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CreateUserScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [DashboardScreen]
+class DashboardRoute extends PageRouteInfo<void> {
+  const DashboardRoute({List<PageRouteInfo>? children})
+    : super(DashboardRoute.name, initialChildren: children);
+
+  static const String name = 'DashboardRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DashboardScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -104,6 +136,50 @@ class SettingsRoute extends PageRouteInfo<void> {
       return const SettingsScreen();
     },
   );
+}
+
+/// generated route for
+/// [UserEditScreen]
+class UserEditRoute extends PageRouteInfo<UserEditRouteArgs> {
+  UserEditRoute({Key? key, required int userId, List<PageRouteInfo>? children})
+    : super(
+        UserEditRoute.name,
+        args: UserEditRouteArgs(key: key, userId: userId),
+        initialChildren: children,
+      );
+
+  static const String name = 'UserEditRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<UserEditRouteArgs>();
+      return UserEditScreen(key: args.key, userId: args.userId);
+    },
+  );
+}
+
+class UserEditRouteArgs {
+  const UserEditRouteArgs({this.key, required this.userId});
+
+  final Key? key;
+
+  final int userId;
+
+  @override
+  String toString() {
+    return 'UserEditRouteArgs{key: $key, userId: $userId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! UserEditRouteArgs) return false;
+    return key == other.key && userId == other.userId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ userId.hashCode;
 }
 
 /// generated route for

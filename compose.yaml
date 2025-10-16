@@ -35,7 +35,9 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD} 
       SPRING_PROFILES_ACTIVE: dev
+      JWT_SECRET: ${JWT_SECRET}  
     networks:
       - internal
     healthcheck:
@@ -58,15 +60,25 @@ services:
       BACKEND_URL: http://backend:8080
     volumes:
       # Only cache pub dependencies - Docker Compose watch handles source sync
+<<<<<<< HEAD
+=======
+      - ./frontend/time_manager:/app:delegated
+
+>>>>>>> 90adba150e1a355a80d5adecd35c02faaa1421f2
       - flutter_pub_cache:/root/.pub-cache
+
     networks:
       - internal
     healthcheck:
       test: ["CMD", "sh", "-c", "curl -s -o /dev/null http://localhost:8080 || exit 0"]
-      interval: 30s
+      interval: 50s
       timeout: 10s
       retries: 3
+<<<<<<< HEAD
       start_period: 30s
+=======
+      start_period: 50s
+>>>>>>> 90adba150e1a355a80d5adecd35c02faaa1421f2
     develop:
       watch:
         # Sync Dart source files and trigger hot reload

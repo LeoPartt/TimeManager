@@ -42,13 +42,13 @@ class ManagementScreen extends StatelessWidget {
               AppButton(
                 label: tr.addanewuser,
                 fullSize: true,
-                onPressed: () => context.pushRoute(const SettingsRoute()),
+                onPressed: () => context.pushRoute(const CreateUserRoute()),
               ),
               SizedBox(height: size.height * 0.03),
               AppButton(
                 label: tr.addanewteam,
                 fullSize: true,
-                onPressed: () => context.pushRoute(const SettingsRoute()),
+                onPressed: () => context.pushRoute(const CreateUserRoute()),
               ),
             ],
           ),

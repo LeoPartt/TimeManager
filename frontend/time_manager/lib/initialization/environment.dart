@@ -10,7 +10,7 @@ class Environment {
       case 'staging':
         return 'https://staging.time-manager.com';
       default:
-        return 'http://localhost:8080';
+        return 'http://localhost';
     }
   }
 
