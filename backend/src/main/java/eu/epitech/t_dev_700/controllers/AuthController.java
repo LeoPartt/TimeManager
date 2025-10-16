@@ -24,7 +24,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     @Operation(summary = "Authenticate user")
-    @SecurityRequirements // No security required for this endpoint
+    @SecurityRequirements
     @PostMapping("/login")
     public AuthModels.LoginResponse PostLogin(@Valid @RequestBody AuthModels.LoginRequest body) {
         String jwtToken = authService.authenticate(body);

@@ -1,5 +1,8 @@
 package eu.epitech.t_dev_700.services;
 
+import eu.epitech.t_dev_700.entities.AccountEntity;
+import eu.epitech.t_dev_700.entities.UserEntity;
+import eu.epitech.t_dev_700.services.components.UserComponent;
 import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.mappers.TeamMapper;
@@ -11,6 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +37,14 @@ class TeamServiceTest {
     @Mock
     private TeamMapper teamMapper;
 
+    @Mock
+    private MembershipService membershipService;
+
     @InjectMocks
     private TeamService teamService;
+
+    @InjectMocks
+    private UserComponent userComponent;
 
     private TeamEntity teamEntity;
     private TeamModels.TeamModel teamModel;
@@ -66,6 +79,14 @@ class TeamServiceTest {
                 null,
                 "Patched description"
         );
+
+        UserEntity user = new UserEntity();
+        user.setAccount(new AccountEntity());
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(
+                new UsernamePasswordAuthenticationToken(user.getAccount(), null, List.of())
+        );
+        SecurityContextHolder.setContext(context);
     }
 
     @Test

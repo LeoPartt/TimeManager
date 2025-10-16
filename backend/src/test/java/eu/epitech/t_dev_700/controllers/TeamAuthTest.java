@@ -31,7 +31,7 @@ public class TeamAuthTest extends AbstractAuthTest {
                 "description": "Web front development team"
             }
             """;
-    
+
     @TestConfiguration
     @EnableMethodSecurity(proxyTargetClass = true)
     public static class MethodSecurityTestConfig {
@@ -201,6 +201,15 @@ public class TeamAuthTest extends AbstractAuthTest {
                 status().isForbidden());
     }
 
+
+    @Test
+    void testAuth_deleteTeam_admin() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForAdmin(),
+                delete("/teams/1"),
+                status().isOk());
+    }
+
     @Test
     void testAuth_patchTeam_self_manager() throws Exception {
         doTestRequestForAuthExpectCode(
@@ -215,14 +224,6 @@ public class TeamAuthTest extends AbstractAuthTest {
                 authForManager(),
                 patch("/teams/2").contentType(MediaType.APPLICATION_JSON).content("{\"firstName\": \"John\"}"),
                 status().isForbidden());
-    }
-
-    @Test
-    void testAuth_deleteTeam_admin() throws Exception {
-        doTestRequestForAuthExpectCode(
-                authForAdmin(),
-                delete("/teams/1"),
-                status().isOk());
     }
 
     @Test
@@ -257,4 +258,244 @@ public class TeamAuthTest extends AbstractAuthTest {
                 status().isForbidden());
     }
 
+    @Test
+    void testAuth_getMembers_admin() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForAdmin(),
+                get("/teams/1/members"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getMembers_self_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                get("/teams/1/members"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getMembers_other_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                get("/teams/2/members"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getMembers_self_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                get("/teams/1/members"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getMembers_other_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                get("/teams/2/members"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_postMember_admin() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForAdmin(),
+                post("/teams/1/members/3"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_postMember_self_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                post("/teams/1/members/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_postMember_other_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                post("/teams/2/members/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_postMember_self_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                post("/teams/1/members/3"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_postMember_other_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                post("/teams/2/members/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_deleteMember_admin() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForAdmin(),
+                delete("/teams/1/members/3"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_deleteMember_self_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                delete("/teams/1/members/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_deleteMember_other_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                delete("/teams/2/members/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_deleteMember_self_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                delete("/teams/1/members/3"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_deleteMember_other_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                delete("/teams/2/members/3"),
+                status().isForbidden());
+    }
+
+
+    @Test
+    void testAuth_getManager_admin() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForAdmin(),
+                get("/teams/1/manager"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getManager_self_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                get("/teams/1/manager"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getManager_other_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                get("/teams/2/manager"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getManager_self_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                get("/teams/1/manager"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_getManager_other_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                get("/teams/2/manager"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_patchManager_admin() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForAdmin(),
+                patch("/teams/1/manager/3"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_patchManager_self_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                patch("/teams/1/manager/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_patchManager_other_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                patch("/teams/2/manager/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_patchManager_self_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                patch("/teams/1/manager/3"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_patchManager_other_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                patch("/teams/2/manager/3"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_deleteManager_admin() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForAdmin(),
+                delete("/teams/1/manager"),
+                status().isOk());
+    }
+
+    @Test
+    void testAuth_deleteManager_self_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                delete("/teams/1/manager"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_deleteManager_other_member() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForMember(),
+                delete("/teams/2/manager"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_deleteManager_self_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                delete("/teams/1/manager"),
+                status().isForbidden());
+    }
+
+    @Test
+    void testAuth_deleteManager_other_manager() throws Exception {
+        doTestRequestForAuthExpectCode(
+                authForManager(),
+                delete("/teams/2/manager"),
+                status().isForbidden());
+    }
 }

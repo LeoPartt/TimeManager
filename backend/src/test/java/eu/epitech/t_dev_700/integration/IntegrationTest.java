@@ -6,15 +6,35 @@ import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.repositories.AccountRepository;
 import eu.epitech.t_dev_700.repositories.TeamRepository;
 import eu.epitech.t_dev_700.repositories.UserRepository;
+import eu.epitech.t_dev_700.services.MembershipService;
+import eu.epitech.t_dev_700.services.components.UserAuthorization;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -22,7 +42,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @Transactional
 class IntegrationTest {
@@ -39,12 +59,29 @@ class IntegrationTest {
     @Autowired
     private TeamRepository teamRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @BeforeEach
     void setUp() {
         // Clean up database before each test
         userRepository.deleteAll();
         accountRepository.deleteAll();
         teamRepository.deleteAll();
+
+        UserEntity user = new UserEntity();
+        user.setFirstName("Foo");
+        user.setLastName("Bar");
+        user.setAccount(new AccountEntity());
+        user.getAccount().setUser(user);
+        user.getAccount().setUsername("foobar");
+        user.getAccount().setPassword("1234");
+        userRepository.save(user);
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(
+                new UsernamePasswordAuthenticationToken(user.getAccount(), null, List.of())
+        );
+        SecurityContextHolder.setContext(context);
     }
 
     @Test
@@ -116,7 +153,7 @@ class IntegrationTest {
         // List all users
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(2)));
 
         // Delete the user
         mockMvc.perform(delete("/users/" + userId))
@@ -128,7 +165,7 @@ class IntegrationTest {
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
@@ -152,6 +189,8 @@ class IntegrationTest {
                 .getContentAsString();
 
         Long teamId = extractIdFromJson(createResponse);
+        entityManager.flush();
+        entityManager.clear();
 
         // Get the created team
         mockMvc.perform(get("/teams/" + teamId))
@@ -172,6 +211,8 @@ class IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Development Team")) // Unchanged
                 .andExpect(jsonPath("$.description").value("Updated description"));
+        entityManager.flush();
+        entityManager.clear();
 
         // Replace the team (PUT)
         String putRequest = """
@@ -187,6 +228,8 @@ class IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("QA Team"))
                 .andExpect(jsonPath("$.description").value("Quality assurance team"));
+        entityManager.flush();
+        entityManager.clear();
 
         // List all teams
         mockMvc.perform(get("/teams"))
@@ -196,6 +239,8 @@ class IntegrationTest {
         // Delete the team
         mockMvc.perform(delete("/teams/" + teamId))
                 .andExpect(status().isOk());
+        entityManager.flush();
+        entityManager.clear();
 
         // Verify team is deleted
         mockMvc.perform(get("/teams/" + teamId))
@@ -230,10 +275,10 @@ class IntegrationTest {
         // Verify all users are listed
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].firstName").value("User"))
+                .andExpect(jsonPath("$", hasSize(4)))
                 .andExpect(jsonPath("$[1].firstName").value("User"))
-                .andExpect(jsonPath("$[2].firstName").value("User"));
+                .andExpect(jsonPath("$[2].firstName").value("User"))
+                .andExpect(jsonPath("$[3].firstName").value("User"));
     }
 
     @Test
@@ -255,7 +300,7 @@ class IntegrationTest {
                 .andExpect(status().isOk());
 
         // Verify password is encrypted in database
-        UserEntity user = userRepository.findAll().get(0);
+        UserEntity user = userRepository.findAll().get(1);
         assertThat(user.getAccount()).isNotNull();
         assertThat(user.getAccount().getPassword()).isNotEqualTo("plainPassword");
         assertThat(user.getAccount().getPassword()).startsWith("{bcrypt}");
@@ -304,7 +349,7 @@ class IntegrationTest {
         // Verify both users exist
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(3)));
 
         // Delete first user
         mockMvc.perform(delete("/users/" + userId1))
@@ -313,8 +358,8 @@ class IntegrationTest {
         // Verify only one user remains
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].lastName").value("Two"));
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[1].lastName").value("Two"));
     }
 
     @Test

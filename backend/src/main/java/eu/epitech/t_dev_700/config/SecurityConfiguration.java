@@ -52,7 +52,7 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(
                                 (req, res, e) -> res.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
                         .accessDeniedHandler(
-                                (req, res, e) -> res.setStatus(HttpServletResponse.SC_FORBIDDEN))
+                                (req, res, e) -> res.setStatus(HttpServletResponse.SC_BAD_REQUEST))
                 )
                 .authenticationProvider(authenticationProvider) // if you log in with username/password
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
