@@ -4,10 +4,10 @@ import eu.epitech.t_dev_700.entities.ScheduleEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.ClockModels;
 import eu.epitech.t_dev_700.repositories.ScheduleRepository;
-import eu.epitech.t_dev_700.repositories.UserRepository;
 import eu.epitech.t_dev_700.services.components.UserAuthorization;
+import eu.epitech.t_dev_700.services.components.UserComponent;
 import eu.epitech.t_dev_700.services.exceptions.InvalidClocking;
-import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
+import eu.epitech.t_dev_700.utils.SelectorSupplier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,29 +16,28 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class ClockService {
 
-    private final UserRepository userRepository;
+    private final UserComponent userComponent;
     private final ScheduleRepository scheduleRepository;
 
     public Long[] getUserClocks(Long id, Optional<Long> from, Optional<Long> to) {
-        return getUserClocks(
-                (from.isEmpty() && to.isEmpty()) ?
-                    () -> scheduleRepository.findByUser(this.getUser(id)) :
-                (from.isEmpty()) ?
-                    () -> scheduleRepository.findByUserAndArrivalTsBefore(this.getUser(id), getDT(to.get())) :
-                (to.isEmpty()) ?
-                    () -> scheduleRepository.findByUserAndDepartureTsAfter(this.getUser(id), getDT(from.get())) :
-                    () -> scheduleRepository.findByUserAndDepartureTsAfterAndArrivalTsBefore(this.getUser(id), getDT(from.get()), getDT(to.get())));
+        UserEntity user = userComponent.getUser(id);
+        return getUserClocks(new SelectorSupplier<Long, List<ScheduleEntity>>()
+                .ifBoth((f, t) -> scheduleRepository.findByUserAndDepartureTsAfterAndArrivalTsBefore(user, getDT(f), getDT(t)))
+                .ifLeft(f -> scheduleRepository.findByUserAndDepartureTsAfter(user, getDT(f)))
+                .ifRight(t -> scheduleRepository.findByUserAndArrivalTsBefore(user, getDT(t)))
+                .ifNone(() -> scheduleRepository.findByUser(user))
+                .apply(from, to)
+        );
     }
 
-    public Long[] getUserClocks(Supplier<List<ScheduleEntity>> supplier) {
-        return supplier.get()
+    public Long[] getUserClocks(List<ScheduleEntity> supplier) {
+        return supplier
                 .stream()
                 .flatMap(scheduleEntity -> scheduleEntity.getDepartureTs() == null ?
                         Stream.of(scheduleEntity.getArrivalTs().toEpochSecond()) :
@@ -47,15 +46,23 @@ public class ClockService {
     }
 
     public void postClock(ClockModels.PostClockRequest body) {
+        this.postClock(body, UserAuthorization.getCurrentUser());
+    }
+
+    public void postClock(ClockModels.PostClockRequest body, Long id) {
+        this.postClock(body, userComponent.getUser(id));
+    }
+
+    public void postClock(ClockModels.PostClockRequest body, UserEntity user) {
         switch (body.io()) {
             case IN -> scheduleRepository
-                    .findByUserAndDepartureTsIsNull(UserAuthorization.getCurrentUser())
+                    .findByUserAndDepartureTsIsNull(user)
                     .ifPresentOrElse(
                             new InvalidClocking(),
                             () -> scheduleRepository.save(scheduleRepository
-                                    .createFromUserAndArrivalTs(UserAuthorization.getCurrentUser(), body.timestamp())));
+                                    .createFromUserAndArrivalTs(user, body.timestamp())));
             case OUT -> scheduleRepository
-                    .findByUserAndDepartureTsIsNull(UserAuthorization.getCurrentUser())
+                    .findByUserAndDepartureTsIsNull(user)
                     .ifPresentOrElse(
                             scheduleEntity -> {
                                 scheduleEntity.setDepartureTs(body.timestamp());
@@ -63,12 +70,6 @@ public class ClockService {
                             },
                             new InvalidClocking());
         }
-    }
-
-    private UserEntity getUser(Long id) {
-        return userRepository
-                .findById(id)
-                .orElseThrow(new ResourceNotFound("User", id));
     }
 
     private static OffsetDateTime getDT(Long timestamp) {

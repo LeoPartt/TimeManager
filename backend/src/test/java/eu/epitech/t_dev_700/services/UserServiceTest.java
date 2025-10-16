@@ -1,5 +1,6 @@
 package eu.epitech.t_dev_700.services;
 
+import eu.epitech.t_dev_700.services.components.UserComponent;
 import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
@@ -33,6 +34,8 @@ class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
+    @InjectMocks
+    private UserComponent userComponent;
 
     private UserEntity userEntity;
     private UserModels.UserModel userModel;

@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/clocks")
@@ -24,6 +21,13 @@ public class ClockController {
     @PostMapping
     public void PostClock(@Valid @RequestBody ClockModels.PostClockRequest body) {
         this.clockService.postClock(body);
+    }
+
+    @Operation(summary = "Record clock event for user")
+    @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
+    @PostMapping("/{id}")
+    public void PostClock(@PathVariable Long id, @Valid @RequestBody ClockModels.PostClockRequest body) {
+        this.clockService.postClock(body, id);
     }
 
 }

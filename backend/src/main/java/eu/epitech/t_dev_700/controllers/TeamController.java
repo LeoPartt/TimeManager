@@ -1,7 +1,9 @@
 package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.models.TeamModels;
+import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.TeamService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -61,4 +63,37 @@ public class TeamController implements CRUDController<
         teamService.delete(id);
     }
 
+    @GetMapping("{id}/members")
+    public UserModels.User[] GetMemberships(@PathVariable Long id) {
+        return teamService.getByTeam(id);
+    }
+
+    @PreAuthorize("@userAuth.isTeamManager(authentication, #id)")
+    @PostMapping("{id}/members/{userId}")
+    public void PostMembership(@PathVariable Long id, @PathVariable Long userId) {
+        teamService.postMembership(id, userId);
+    }
+
+    @PreAuthorize("@userAuth.isTeamManager(authentication, #id)")
+    @DeleteMapping("{id}/members/{userId}")
+    public void DeleteMembership(@PathVariable Long id, @PathVariable Long userId) {
+        teamService.deleteMembership(id, userId);
+    }
+
+    @GetMapping("{id}/manager")
+    public UserModels.User GetManager(@PathVariable Long id) {
+        return teamService.getManager(id);
+    }
+
+    @PreAuthorize("@userAuth.isTeamManager(authentication, #id)")
+    @PatchMapping("{id}/manager/{userId}")
+    public void PatchManager(@PathVariable Long id, @PathVariable Long userId) {
+        teamService.updateManager(id, userId);
+    }
+
+    @PreAuthorize("@userAuth.isAdmin(authentication)")
+    @DeleteMapping("{id}/manager")
+    public void DeleteManager(@PathVariable Long id) {
+        teamService.deleteManager(id);
+    }
 }

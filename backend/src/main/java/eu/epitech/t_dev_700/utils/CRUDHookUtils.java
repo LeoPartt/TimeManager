@@ -18,7 +18,7 @@ public record CRUDHookUtils<E>(
         Action action,
         E entity,
         Object request
-) implements Runnable, Predicate<Method>, Consumer<Method> {
+) implements Runnable {
 
     public static <E> void beforeCreate(CRUDService<E, ?, ?, ?, ?> service, E entity, Object request) {
         new CRUDHookUtils<>(service, Moment.BEFORE, Action.CREATE, entity, request).run();
@@ -60,21 +60,20 @@ public record CRUDHookUtils<E>(
     public void run() {
         try {
             Arrays.stream(service.getClass().getMethods())
-                    .filter(this)
-                    .forEach(this);
+                    .filter(this::test)
+                    .forEach(this::invoke);
         } catch (Exception e) {
             throw new RuntimeException("Failed to invoke CRUD hooks", e);
         }
     }
 
-    @Override
-    public boolean test(Method method) {
+    private boolean test(Method method) {
         return method.isAnnotationPresent(CRUDHook.class)
                && (method.getAnnotation(CRUDHook.class)).moment() == moment
                && (method.getAnnotation(CRUDHook.class)).action() == action;
     }
 
-    public void accept(Method method) {
+    private void invoke(Method method) {
         try {
             method.setAccessible(true);
             Class<?>[] params = method.getParameterTypes();
@@ -86,8 +85,10 @@ public record CRUDHookUtils<E>(
             } else {
                 throw new InvalidMethodSignature(method);
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("Exception in hook", e.getTargetException());
         }
     }
 

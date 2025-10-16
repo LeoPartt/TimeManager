@@ -75,16 +75,24 @@ Passwords are hashed and user data is validated server-side.
 ## Docker Setup
 
 ### Development
-Create a `docker-compose.yml` file with services for:
-- `backend` (Spring Boot)
-- `frontend` (Flutter build or web)
-- `db` (PostgreSQL)
-- `proxy` (Nginx)
 
-Run all containers:
+**Start the development environment with hot reload:**
 ```bash
-  docker-compose up --build
+docker compose watch
 ```
+
+This command:
+- Starts all containers (database, backend, frontend, nginx)
+- Watches for file changes in `lib/` and `web/` directories
+- Automatically restarts the Flutter application when files change
+- Rebuilds the container when `pubspec.yaml` is modified
+
+**First time setup or when changing dependencies:**
+```bash
+docker compose up --build
+```
+
+Then switch to `docker compose watch` for active development.
 
 ### Production
 

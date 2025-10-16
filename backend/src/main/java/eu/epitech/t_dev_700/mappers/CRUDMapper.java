@@ -1,7 +1,9 @@
 package eu.epitech.t_dev_700.mappers;
 
 import eu.epitech.t_dev_700.entities.TeamEntity;
+import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.TeamModels;
+import eu.epitech.t_dev_700.models.UserModels;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -19,12 +21,11 @@ import java.util.stream.Stream;
 public interface CRUDMapper<E, M, C, R, U> {
     M toModel(E entity);
 
-    TeamModels.TeamModel[] listEntity(Stream<TeamEntity> stream);
+    M[] listEntity(List<E> entities);
+    M[] listEntity(Stream<E> stream);
 
     E createEntity(C request);
-
     void replaceEntity(@MappingTarget E entity, R request);
-    void updateEntity(@MappingTarget E entity, U request);
 
-    M[] listEntity(List<E> entities);
+    void updateEntity(@MappingTarget E entity, U request);
 }
