@@ -27,6 +27,22 @@ class ClockingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CreateTeamScreen]
+class CreateTeamRoute extends PageRouteInfo<void> {
+  const CreateTeamRoute({List<PageRouteInfo>? children})
+    : super(CreateTeamRoute.name, initialChildren: children);
+
+  static const String name = 'CreateTeamRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CreateTeamScreen();
+    },
+  );
+}
+
+/// generated route for
 /// [CreateUserScreen]
 class CreateUserRoute extends PageRouteInfo<void> {
   const CreateUserRoute({List<PageRouteInfo>? children})

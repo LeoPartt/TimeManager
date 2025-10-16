@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:time_manager/presentation/screens/auth/login_screen.dart';
+import 'package:time_manager/presentation/screens/management/create_team_screen.dart';
 import 'package:time_manager/presentation/screens/schedule/clocking.dart';
 import 'package:time_manager/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:time_manager/presentation/screens/home_screen.dart';
@@ -27,6 +28,7 @@ class AppRouter extends RootStackRouter   {
      AutoRoute(page: UserRoute.page, initial: false),
      AutoRoute(page: CreateUserRoute.page, initial: false),
      AutoRoute(page: ClockingRoute.page, initial: false),
-     AutoRoute(page: ManagementRoute.page, initial: false)
+     AutoRoute(page: ManagementRoute.page, initial: false),
+     AutoRoute(page: CreateTeamRoute.page, initial: false)
   ];
 }

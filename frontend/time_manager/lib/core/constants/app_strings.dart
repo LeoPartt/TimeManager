@@ -25,6 +25,9 @@ class AppStrings {
   // ───────────────────────────────
   static const String teams = "Teams";
   static const String teamDetails = "Team Details";
+  static const String createTeam = "Create team";
+  static const String teamNameLabel = "Name :" ;
+  static const String teamDescriptionLabel = "Description :";
 
   // ───────────────────────────────
   // Schedule
