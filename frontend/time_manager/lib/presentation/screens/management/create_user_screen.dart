@@ -10,6 +10,7 @@ import 'package:time_manager/core/widgets/app_card.dart';
 import 'package:time_manager/core/widgets/app_input_field.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
 import 'package:time_manager/presentation/cubits/user/user_state.dart';
+import 'package:time_manager/presentation/routes/app_router.dart';
 
 @RoutePage()
 class CreateUserScreen extends StatefulWidget {
@@ -61,10 +62,11 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         child: BlocConsumer<UserCubit, UserState>(
           listener: (context, state) {
             state.whenOrNull(
-              loaded: (user) => context.showSnack(
+              loaded: (user) {context.showSnack(
                 "✅ User ${user.username} created successfully!",
-              ),
-
+              );
+              context.router.push(ManagementRoute());
+              },
               error: (message) => context.showSnack(message, isError: true),
             );
           },

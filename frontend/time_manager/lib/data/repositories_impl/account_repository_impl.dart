@@ -61,11 +61,5 @@ class AccountRepositoryImpl implements AccountRepository {
     await storage.clear();
   }
 
-  @override
-  Future<User?> getCurrentUser() async {
-    final token = await storage.getToken();
-    if (token == null) return null;
-    // Could later decode token or call /api/users/me
-    return null;
-  }
+ 
 }

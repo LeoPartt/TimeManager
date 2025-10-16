@@ -60,7 +60,8 @@ class UserCubit extends Cubit<UserState> {
     emit(const UserState.loading());
     try {
       final user = await updateUserProfile(params);
-      emit(UserState.loaded(user));
+         emit(UserState.updated(user)); // ✅ succès explicite
+
     } catch (e) {
       emit(UserState.error(e.toString()));
     }

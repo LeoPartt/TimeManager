@@ -47,11 +47,11 @@ class ApiEndpoints {
   // ───────────────────────────────
   static String get schedules => '$_api/schedules';
   static String scheduleById(int id) => '$_api/schedules/$id';
-  static String get clockIn => '$_api/clock/in';
-  static String get clockOut => '$_api/clock/out';
+  static String get clockIn => '$_api/clocks';
+  static String get clockOut => '$_api/clocks';
   static String get history => '$_api/schedules/history';
    
-  static String get clockStatus => '$_api/clock/status';
+  static String get clockStatus => '$_api/clocks/status';
 
   // ───────────────────────────────
   // REPORTS / KPI endpoints

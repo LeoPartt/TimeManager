@@ -88,4 +88,5 @@ class UserRepositoryImpl implements UserRepository {
     await api.deleteUser(id);
     await storage.clear(); // efface user et token
   }
+  
 }

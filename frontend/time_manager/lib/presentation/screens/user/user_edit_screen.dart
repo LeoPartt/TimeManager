@@ -9,6 +9,7 @@ import 'package:time_manager/core/widgets/app_loader.dart';
 import 'package:time_manager/domain/usecases/user/update_user_profile.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
 import 'package:time_manager/presentation/cubits/user/user_state.dart';
+import 'package:time_manager/presentation/routes/app_router.dart';
 
 @RoutePage()
 class UserEditScreen extends StatefulWidget {
@@ -65,8 +66,11 @@ class _UserEditScreenState extends State<UserEditScreen> {
       body: BlocConsumer<UserCubit, UserState>(
         listener: (context, state) {
           state.whenOrNull(
-            loaded: (user) =>
-                context.showSnack("✅ User updated successfully!"),
+            
+              updated: (user) {
+              context.showSnack("✅ User updated successfully!");
+              context.router.push(UserRoute());
+            },
             error: (msg) => context.showSnack(msg, isError: true),
           );
         },

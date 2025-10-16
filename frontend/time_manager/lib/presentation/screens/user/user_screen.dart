@@ -27,8 +27,8 @@ class _UserScreenState extends State<UserScreen> {
   @override
   void initState() {
     super.initState();
-    // Charge le profil de l'utilisateur connecté (ID extrait du token ou stockage local)
-    context.read<UserCubit>().getUser(1); // TODO: remplacer 1 par le vrai ID
+    
+    context.read<UserCubit>().loadProfile(); 
   }
 
   @override
@@ -56,7 +56,7 @@ class _UserScreenState extends State<UserScreen> {
             if (state is UserLoaded) {
               final user = state.user;
               //final isPrivileged = user.role == 'ADMIN' || user.role == 'MANAGER';
-              final isPrivileged =  true;
+              //final isPrivileged =  true;
 
               return ListView(
                 children: [
@@ -131,7 +131,7 @@ class _UserScreenState extends State<UserScreen> {
                                   ),
 
                                   // ✅ On affiche le bouton Delete seulement pour admin/manager
-                                  if (isPrivileged) ...[
+                                 
                                     SizedBox(
                                       width: AppSizes.responsiveWidth(
                                           context,
@@ -145,11 +145,11 @@ class _UserScreenState extends State<UserScreen> {
                                         isLoading: state is UserLoading,
                                         onPressed: () => context
                                             .read<UserCubit>()
-                                            .deleteUser(user.id),
+                                            .removeAccount(user.id),
                                       ),
                                     ),
                                   ],
-                                ],
+                                
                               ),
                             ],
                           ),
