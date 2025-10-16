@@ -13,7 +13,7 @@ abstract class UserModel with _$UserModel {
      required String firstName,
     required String lastName,
     //String? avatarUrl,
-    String? role,
+    //String? role,
     String? phoneNumber,
 
     //String? token,
@@ -31,7 +31,7 @@ extension UserModelX on UserModel {
         firstName:firstName,
         lastName:lastName,
         //avatarUrl: avatarUrl,
-        role: role,
+        //role: role,
         phoneNumber: phoneNumber,
        // token: token,
       );
