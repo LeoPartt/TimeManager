@@ -1,51 +1,40 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-echo "Starting Flutter web server with automatic hot reload"
-echo "Watching: /app/lib/ and /app/pubspec.yaml"
-echo ""
+echo "=== Flutter Development Mode with Hot Reload ==="
 
-# Create named pipe for Flutter input
-PIPE="/tmp/flutter_input"
-rm -f "$PIPE"
-mkfifo "$PIPE"
+# Install inotify-tools if not present
+if ! command -v inotifywait >/dev/null 2>&1; then
+    echo "Installing inotify-tools..."
+    apt-get update -qq && apt-get install -y -qq inotify-tools >/dev/null 2>&1
+fi
 
-# Start Flutter in background with hot reload capability
-# Flutter 3.35+ supports hot reload on web (no experimental flag needed)
-tail -f "$PIPE" | flutter run -d web-server \
-    --web-hostname 0.0.0.0 \
-    --web-port 8080 &
+# Create a named pipe for communication
+PIPE=/tmp/flutter_input
+mkfifo $PIPE || true
+
+# Start Flutter with the pipe as input
+echo "Starting Flutter web server..."
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080 < $PIPE &
 FLUTTER_PID=$!
 
-# Cleanup handler
-cleanup() {
-    echo ""
-    echo "Stopping Flutter web server..."
-    kill $FLUTTER_PID 2>/dev/null || true
-    rm -f "$PIPE"
-    exit
-}
-trap cleanup SIGTERM SIGINT EXIT
+# Give Flutter time to initialize
+sleep 15
 
-# Wait for Flutter to be ready
-echo "⏳ Initializing Flutter..."
-sleep 8
+echo "Hot reload watcher active - watching /app/lib for changes"
 
-echo "✅ File watcher active - changes will trigger hot reload automatically"
-echo ""
+# Watch for file changes and send 'r' to trigger hot reload
+while true; do
+    inotifywait -r -e modify,create,delete,move \
+        --exclude '.*\.(swp|tmp|log)$' \
+        /app/lib 2>/dev/null || true
 
-# Watch for file changes and trigger hot reload
-while kill -0 $FLUTTER_PID 2>/dev/null; do
-    # Watch lib/ directory and pubspec.yaml
-    if inotifywait -q -r -e modify,create,delete,move \
-        --exclude '\.tmp\.|\.dart_tool' \
-        --timeout 300 \
-        /app/lib /app/pubspec.yaml 2>/dev/null; then
+    echo "File change detected at $(date '+%H:%M:%S')"
+    echo "Triggering hot reload..."
 
-        # Trigger hot reload
-        echo "r" >> "$PIPE"
-        echo "🔥 [$(date '+%H:%M:%S')] Hot reload triggered"
-    fi
+    # Send 'r' command to Flutter via the named pipe
+    echo "r" > $PIPE
+
+    # Debounce - wait a bit before watching again
+    sleep 2
 done
-
-wait $FLUTTER_PID
