@@ -5,9 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.http.ResponseEntity;
-
-import java.net.URI;
 
 public class UserModels {
 
@@ -23,8 +20,8 @@ public class UserModels {
         String phoneNumber();
     }
 
-    @Schema(description = "User information model")
-    public record UserModel(
+    @Schema(description = "User information model", contentMediaType = "application/json")
+    public record UserResponse(
             @Schema(description = "Unique user identifier", example = "1")
             Long id,
 
@@ -45,7 +42,7 @@ public class UserModels {
     ) implements User, HasId {}
 
     //REQUESTS
-    @Schema(description = "Request body for creating a new user")
+    @Schema(description = "Request body for creating a new user", contentMediaType = "application/json")
     public record PostUserRequest(
             @Schema(description = "Username for the new user", example = "john.doe")
             @NotBlank String username,
@@ -67,7 +64,7 @@ public class UserModels {
     ) implements User {
     }
 
-    @Schema(description = "Request body for completely replacing a user (PUT)")
+    @Schema(description = "Request body for completely replacing a user (PUT)", contentMediaType = "application/json")
     public record PutUserRequest(
             @Schema(description = "Username", example = "john.doe")
             @NotBlank String username,
@@ -86,7 +83,7 @@ public class UserModels {
     ) implements User {
     }
 
-    @Schema(description = "Request body for partially updating a user (PATCH)")
+    @Schema(description = "Request body for partially updating a user (PATCH)", contentMediaType = "application/json")
     public record PatchUserRequest(
             @Schema(description = "Username (optional)", example = "john.doe")
             @NullableNotBlank String username,

@@ -47,7 +47,7 @@ class UserMapperTest {
 
     @Test
     void testToModel_shouldMapEntityToModel() {
-        UserModels.UserModel model = userMapper.toModel(userEntity);
+        UserModels.UserResponse model = userMapper.toModel(userEntity);
 
         assertThat(model).isNotNull();
         assertThat(model.id()).isEqualTo(1L);
@@ -75,7 +75,7 @@ class UserMapperTest {
 
         List<UserEntity> entities = Arrays.asList(userEntity, user2);
 
-        UserModels.UserModel[] models = userMapper.listEntity(entities);
+        UserModels.UserResponse[] models = userMapper.listEntity(entities);
 
         assertThat(models).hasSize(2);
         assertThat(models[0].id()).isEqualTo(1L);

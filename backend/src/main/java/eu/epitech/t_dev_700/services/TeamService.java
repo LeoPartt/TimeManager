@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TeamService extends CRUDService<
         TeamEntity,
-        TeamModels.TeamModel,
+        TeamModels.TeamResponse,
         TeamModels.PostTeamRequest,
         TeamModels.PutTeamRequest,
         TeamModels.PatchTeamRequest
@@ -47,7 +47,7 @@ public class TeamService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public TeamModels.TeamModel[] getByUser(UserEntity user) {
+    public TeamModels.TeamResponse[] getByUser(UserEntity user) {
         return teamMapper.listEntity(membershipService
                         .getMembershipsOfUser(user)
                         .stream()
@@ -55,7 +55,7 @@ public class TeamService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public UserModels.UserModel[] getByTeam(TeamEntity entity) {
+    public UserModels.UserResponse[] getByTeam(TeamEntity entity) {
         return userMapper.listEntity(membershipService
                 .getMembershipsOfTeam(entity)
                 .stream()
@@ -63,7 +63,7 @@ public class TeamService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public UserModels.UserModel[] getByTeam(Long id) {
+    public UserModels.UserResponse[] getByTeam(Long id) {
         return this.getByTeam(this.findEntityOrThrow(id));
     }
 
@@ -78,12 +78,12 @@ public class TeamService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public UserModels.UserModel getManager(Long id) {
+    public UserModels.UserResponse getManager(Long id) {
         return userMapper.toModel(this.membershipService.getManagerOfTeam(this.findEntityOrThrow(id)));
     }
 
     @Transactional
-    public UserModels.UserModel updateManager(Long id, Long userId) {
+    public UserModels.UserResponse updateManager(Long id, Long userId) {
         UserEntity user = this.userComponent.getUser(id);
         this.membershipService.updateManagerOfTeam(this.findEntityOrThrow(id), user);
         return userMapper.toModel(user);
