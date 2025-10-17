@@ -2,15 +2,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_sizes.dart';
-import 'package:time_manager/core/constants/app_strings.dart';
 import 'package:time_manager/core/utils/extensions/context_extensions.dart';
 import 'package:time_manager/core/utils/validators.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
 import 'package:time_manager/core/widgets/app_card.dart';
 import 'package:time_manager/core/widgets/app_input_field.dart';
+import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
 import 'package:time_manager/presentation/cubits/user/user_state.dart';
 import 'package:time_manager/presentation/routes/app_router.dart';
+import 'package:time_manager/presentation/widgets/header.dart';
 
 @RoutePage()
 class CreateUserScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class CreateUserScreen extends StatefulWidget {
 
 class _CreateUserScreenState extends State<CreateUserScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
@@ -43,114 +45,133 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   void _onSubmit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       context.read<UserCubit>().createUser(
-        username: _usernameController.text.trim(),
-        password: _passwordController.text.trim(),
-        firstName: _firstNameController.text.trim(),
-        lastName: _lastNameController.text.trim(),
-        email: _emailController.text.trim(),
-        phoneNumber: _phoneController.text.trim(),
-      );
+            username: _usernameController.text.trim(),
+            password: _passwordController.text.trim(),
+            firstName: _firstNameController.text.trim(),
+            lastName: _lastNameController.text.trim(),
+            email: _emailController.text.trim(),
+            phoneNumber: _phoneController.text.trim(),
+          );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(AppStrings.registerTitle)),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSizes.p24),
-        child: BlocConsumer<UserCubit, UserState>(
-          listener: (context, state) {
-            state.whenOrNull(
-              loaded: (user) {context.showSnack(
-                "✅ User ${user.username} created successfully!",
-              );
-              context.router.push(ManagementRoute());
-              },
-              error: (message) => context.showSnack(message, isError: true),
-            );
+    final tr = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
+    final isTablet = size.width >= 600;
+    final padding = AppSizes.responsiveWidth(context, AppSizes.p24);
+
+    return BlocConsumer<UserCubit, UserState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          loaded: (user) {
+            context.showSnack("✅ ${user.username} ${tr.registerButton} !");
+            context.router.replace(const ManagementRoute());
           },
-          builder: (context, state) {
-            final isLoading = state is UserLoading;
-            return Stack(
-              children: [
-                Center(
-                  child: AppCard(
-                    padding: const EdgeInsets.all(AppSizes.p24),
+          error: (message) => context.showSnack(message, isError: true),
+        );
+      },
+      builder: (context, state) {
+        final isLoading = state is UserLoading;
 
-                    child: Form(
-                      key: _formKey,
-                      child: ListView(
-                        children: [
-                          AppInputField(
-                            label: AppStrings.userNameLabel,
-                            controller: _usernameController,
-                            keyboardType: TextInputType.name,
-                            icon: Icons.person,
-                            textInputAction: TextInputAction.next,
-                          ),
-                          const SizedBox(height: AppSizes.p16),
-                          AppInputField(
-                            label: AppStrings.passwordLabel,
-                            controller: _passwordController,
-                            obscureText: true,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.text,
+        return Scaffold(
+          resizeToAvoidBottomInset: true,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: padding,
+                vertical: AppSizes.responsiveHeight(context, AppSizes.p24),
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: isTablet ? 600 : double.infinity,
+                  ),
+                  child: Column(
+                    children: [
+                      Header(label: tr.registerTitle),
+                      SizedBox(height: AppSizes.responsiveHeight(context, AppSizes.p24)),
+
+                      // ────────────── FORM CARD ──────────────
+                      AppCard(
+                        padding: EdgeInsets.all(AppSizes.responsiveWidth(context, AppSizes.p20)),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              AppInputField(
+                                label: tr.userNameLabel,
+                                controller: _usernameController,
+                                icon: Icons.person,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: AppSizes.p16),
+
+                              AppInputField(
+                                label: tr.passwordLabel,
+                                controller: _passwordController,
+                                obscureText: true,
                                 icon: Icons.lock_outline,
+                                textInputAction: TextInputAction.next,
+                                validator: (v) => Validators.validatePassword(context, v),
+                              ),
+                              const SizedBox(height: AppSizes.p16),
 
-                            validator: Validators.validatePassword,
-                          ),
-                          const SizedBox(height: AppSizes.p16),
-                          AppInputField(
-                                                        textInputAction: TextInputAction.next,
-                            icon: Icons.person,
+                              AppInputField(
+                                label: tr.firstNameLabel,
+                                controller: _firstNameController,
+                                icon: Icons.person_outline,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: AppSizes.p16),
 
-                            label: AppStrings.firstNameLabel,
-                            controller: _firstNameController,
-                          ),
-                          const SizedBox(height: AppSizes.p16),
-                          AppInputField(
-                                                        icon: Icons.person,
+                              AppInputField(
+                                label: tr.lastNameLabel,
+                                controller: _lastNameController,
+                                icon: Icons.person_outline,
+                                textInputAction: TextInputAction.next,
+                              ),
+                              const SizedBox(height: AppSizes.p16),
 
-                            label: AppStrings.lastNameLabel,
-                            controller: _lastNameController,
-                                  textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.name,
+                              AppInputField(
+                                label: tr.emailLabel,
+                                controller: _emailController,
+                                icon: Icons.email_outlined,
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                validator: (v) => Validators.validateEmail(context, v),
+                              ),
+                              const SizedBox(height: AppSizes.p16),
+
+                              AppInputField(
+                                label: tr.phoneNumberLabel,
+                                controller: _phoneController,
+                                icon: Icons.phone_outlined,
+                                keyboardType: TextInputType.phone,
+                                textInputAction: TextInputAction.done,
+                              ),
+                              SizedBox(height: AppSizes.responsiveHeight(context, AppSizes.p24)),
+
+                              // ────────────── SUBMIT BUTTON ──────────────
+                              AppButton(
+                                label: tr.registerButton,
+                                fullSize: true,
+                                isLoading: isLoading,
+                                onPressed: () => _onSubmit(context),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: AppSizes.p16),
-                          AppInputField(
-                            icon: Icons.email_outlined,
-                            label: AppStrings.emailLabel,
-                            controller: _emailController,
-                                  textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: Validators.validateEmail,
-                          ),
-                          const SizedBox(height: AppSizes.p16),
-                          AppInputField(
-                            label: AppStrings.phoneNumberLabel,
-                            controller: _phoneController,
-                            icon: Icons.phone_outlined,
-                                   textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.number,
-                          ),
-                          const SizedBox(height: AppSizes.p24),
-                          AppButton(
-                            label: "Create User",
-                            fullSize: true,
-                            isLoading: isLoading,
-                            onPressed: () => _onSubmit(context),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            );
-          },
-        ),
-      ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

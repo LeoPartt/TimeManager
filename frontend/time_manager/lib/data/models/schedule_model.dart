@@ -7,7 +7,7 @@ part 'schedule_model.g.dart';
 @freezed
 abstract class ClockModel with _$ClockModel {
   const factory ClockModel({
-    required int id,
+     int? id,
    required String arrivalTs,
     String? departureTs,
   }) = _ClockModel;

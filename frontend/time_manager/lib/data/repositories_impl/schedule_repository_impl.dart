@@ -10,15 +10,17 @@ class ClockRepositoryImpl implements ClockRepository {
   ClockRepositoryImpl(this.api);
 
   @override
-  Future<Clock> clockIn() async {
-    final res = await api.clockIn();
-    return ClockModel.fromJson(res).toDomain();
+  Future<void> clockIn(DateTime timestamp) async {
+    //final res = await api.clockIn(timestamp);
+   await api.clockIn(timestamp);
+    // ClockModel.fromJson(res).toDomain();
   }
 
   @override
-  Future<Clock> clockOut() async {
-    final res = await api.clockOut();
-    return ClockModel.fromJson(res).toDomain();
+  Future<void> clockOut(DateTime timestamp) async {
+    //final res = await api.clockOut(timestamp);
+    await api.clockOut(timestamp);
+   // return ClockModel.fromJson(res).toDomain();
   }
 
   @override

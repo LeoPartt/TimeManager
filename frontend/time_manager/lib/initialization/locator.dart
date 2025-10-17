@@ -8,6 +8,7 @@ import 'package:time_manager/data/repositories_impl/schedule_repository_impl.dar
 import 'package:time_manager/data/repositories_impl/user_repository_impl.dart';
 import 'package:time_manager/data/services/auth_header_service.dart';
 import 'package:time_manager/data/services/http_client.dart';
+import 'package:time_manager/data/services/navigation_service.dart';
 import 'package:time_manager/domain/repositories/account_repository.dart';
 import 'package:time_manager/domain/repositories/schedule_repository.dart';
 import 'package:time_manager/domain/repositories/user_repository.dart';
@@ -33,9 +34,16 @@ final GetIt locator = GetIt.instance;
 
 /// Dependency injection setup using GetIt.
 Future<void> setupLocator() async {
+  
   // ─────────────────────────────────────────────
   // CORE SERVICES
   // ─────────────────────────────────────────────
+  locator.registerLazySingleton(() => NavigationService());
+    // Router
+locator.registerLazySingleton<AppRouter>(
+  () => AppRouter(navigatorKey: locator<NavigationService>().navigatorKey),
+);
+
   locator.registerLazySingleton<LocalStorageService>(
     () => LocalStorageService(),
   );
@@ -43,7 +51,8 @@ Future<void> setupLocator() async {
     () => AuthHeaderService(locator()),
   );
   locator.registerLazySingleton<ApiClient>(
-    () => ApiClient(authHeaderService: locator<AuthHeaderService>()),
+    () => ApiClient(authHeaderService: locator<AuthHeaderService>(), context: locator<NavigationService>().context,
+),
   );
 
   // ─────────────────────────────────────────────
@@ -115,6 +124,4 @@ locator.registerFactory(() => ClockCubit(
       getStatusUseCase: locator<GetClockStatus>(),
 ));
 
-  // Router
-  locator.registerLazySingleton(() => AppRouter());
 }

@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_sizes.dart';
 import 'package:time_manager/core/utils/extensions/context_extensions.dart';
+import 'package:time_manager/core/utils/validators.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
+import 'package:time_manager/core/widgets/app_card.dart';
 import 'package:time_manager/core/widgets/app_input_field.dart';
 import 'package:time_manager/core/widgets/app_loader.dart';
 import 'package:time_manager/domain/usecases/user/update_user_profile.dart';
+import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
 import 'package:time_manager/presentation/cubits/user/user_state.dart';
 import 'package:time_manager/presentation/routes/app_router.dart';
+import 'package:time_manager/presentation/widgets/header.dart';
 
 @RoutePage()
 class UserEditScreen extends StatefulWidget {
@@ -61,81 +65,138 @@ class _UserEditScreenState extends State<UserEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Edit User")),
-      body: BlocConsumer<UserCubit, UserState>(
-        listener: (context, state) {
-          state.whenOrNull(
-            
-              updated: (user) {
-              context.showSnack("✅ User updated successfully!");
-              context.router.push(UserRoute());
-            },
-            error: (msg) => context.showSnack(msg, isError: true),
-          );
-        },
-        builder: (context, state) {
-          if (state is UserLoading) {
-            return const Center(child: AppLoader());
-          }
+    final tr = AppLocalizations.of(context)!;
+    final size = MediaQuery.sizeOf(context);
+    final isTablet = size.width >= 600;
 
-          if (state is UserLoaded) {
-            final user = state.user;
-            _usernameController.text = user.username;
-            _firstNameController.text = user.firstName;
-            _lastNameController.text = user.lastName;
-            _emailController.text = user.email;
-            _phoneController.text = user.phoneNumber ?? '';
+    return BlocConsumer<UserCubit, UserState>(
+      listener: (context, state) {
+        state.whenOrNull(
+          updated: (user) {
+            context.showSnack("✅ ${tr.modify} ${tr.successful}");
+            context.router.replace(const UserRoute());
+          },
+          error: (msg) => context.showSnack(msg, isError: true),
+        );
+      },
+      builder: (context, state) {
+        if (state is UserLoading) {
+          return const Center(child: AppLoader());
+        }
 
-            return Padding(
-              padding: const EdgeInsets.all(AppSizes.p24),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    AppInputField(
-                      label: "Username",
-                      controller: _usernameController,
-                    ),
-                    const SizedBox(height: AppSizes.p16),
-                    AppInputField(
-                      label: "First Name",
-                      controller: _firstNameController,
-                    ),
-                    const SizedBox(height: AppSizes.p16),
-                    AppInputField(
-                      label: "Last Name",
-                      controller: _lastNameController,
-                    ),
-                    const SizedBox(height: AppSizes.p16),
-                    AppInputField(
-                      label: "Email",
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    const SizedBox(height: AppSizes.p16),
-                    AppInputField(
-                      label: "Phone Number",
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                    ),
-                    const SizedBox(height: AppSizes.p24),
+        if (state is UserLoaded) {
+          final user = state.user;
+          _usernameController.text = user.username;
+          _firstNameController.text = user.firstName;
+          _lastNameController.text = user.lastName;
+          _emailController.text = user.email;
+          _phoneController.text = user.phoneNumber ?? '';
 
-                    AppButton(
-                      label: "Save Changes",
-                      fullSize: true,
-                      isLoading: state is UserLoading,
-                      onPressed: () => _onSubmit(context),
+          return Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.responsiveWidth(context, AppSizes.p24),
+                  vertical: AppSizes.responsiveHeight(context, AppSizes.p24),
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: isTablet ? 600 : double.infinity,
                     ),
-                  ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // ────────────── HEADER ──────────────
+                        Header(label: tr.modify.toUpperCase()),
+
+                        SizedBox(
+                          height: AppSizes.responsiveHeight(
+                            context,
+                            AppSizes.p24,
+                          ),
+                        ),
+
+                        // ────────────── FORM CARD ──────────────
+                        AppCard(
+                          padding: EdgeInsets.all(
+                            AppSizes.responsiveWidth(context, AppSizes.p20),
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                AppInputField(
+                                  label: tr.userNameLabel,
+                                  controller: _usernameController,
+                                  icon: Icons.person,
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                const SizedBox(height: AppSizes.p16),
+
+                                AppInputField(
+                                  label: tr.firstNameLabel,
+                                  controller: _firstNameController,
+                                  icon: Icons.person_outline,
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                const SizedBox(height: AppSizes.p16),
+
+                                AppInputField(
+                                  label: tr.lastNameLabel,
+                                  controller: _lastNameController,
+                                  icon: Icons.person_outline,
+                                  textInputAction: TextInputAction.next,
+                                ),
+                                const SizedBox(height: AppSizes.p16),
+
+                                AppInputField(
+                                  label: tr.emailLabel,
+                                  controller: _emailController,
+                                  icon: Icons.email_outlined,
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.next,
+                                  validator: (v) =>
+                                      Validators.validateEmail(context, v),
+                                ),
+                                const SizedBox(height: AppSizes.p16),
+
+                                AppInputField(
+                                  label: tr.phoneNumberLabel,
+                                  controller: _phoneController,
+                                  icon: Icons.phone_outlined,
+                                  keyboardType: TextInputType.phone,
+                                  textInputAction: TextInputAction.done,
+                                ),
+
+                                SizedBox(
+                                  height: AppSizes.responsiveHeight(
+                                      context, AppSizes.p24),
+                                ),
+
+                                // ────────────── BUTTON ──────────────
+                                AppButton(
+                                  label: tr.validate,
+                                  fullSize: true,
+                                  isLoading: state is UserLoading,
+                                  onPressed: () => _onSubmit(context),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          return const SizedBox.shrink();
-        },
-      ),
+        return const SizedBox.shrink();
+      },
     );
   }
 }

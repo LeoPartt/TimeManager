@@ -7,7 +7,7 @@ part of 'schedule_model.dart';
 // **************************************************************************
 
 _ClockModel _$ClockModelFromJson(Map<String, dynamic> json) => _ClockModel(
-  id: (json['id'] as num).toInt(),
+  id: (json['id'] as num?)?.toInt(),
   arrivalTs: json['arrivalTs'] as String,
   departureTs: json['departureTs'] as String?,
 );
