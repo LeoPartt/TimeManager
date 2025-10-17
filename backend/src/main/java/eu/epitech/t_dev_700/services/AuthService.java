@@ -2,11 +2,13 @@ package eu.epitech.t_dev_700.services;
 
 import eu.epitech.t_dev_700.models.AuthModels;
 import eu.epitech.t_dev_700.repositories.AccountRepository;
+import eu.epitech.t_dev_700.services.exceptions.InvalidCredentials;
 import eu.epitech.t_dev_700.services.exceptions.UnknownAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,9 +27,10 @@ public class AuthService {
                             input.password()
                     )
             );
-        } catch (BadCredentialsException e) {
-            System.out.println(e.getMessage());
-            throw e;
+        } catch (BadCredentialsException ex) {
+            throw new InvalidCredentials("Invalid password", input.username(), ex);
+        } catch (UsernameNotFoundException ex) {
+            throw new InvalidCredentials("Invalid username", input.username(), ex);
         }
         return jwtService
                 .generateToken(accountRepository

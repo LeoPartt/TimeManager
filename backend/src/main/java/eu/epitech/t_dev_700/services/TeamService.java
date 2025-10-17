@@ -34,7 +34,7 @@ public class TeamService extends CRUDService<
             UserMapper userMapper,
             MembershipService membershipService,
             UserComponent userComponent) {
-        super(teamRepository, teamMapper, "TeamModel");
+        super(teamRepository, teamMapper, "team");
         this.teamMapper = teamMapper;
         this.userMapper = userMapper;
         this.membershipService = membershipService;

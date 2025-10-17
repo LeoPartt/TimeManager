@@ -412,7 +412,7 @@ class IntegrationTest {
     }
 
     private Long extractIdFromJson(String json) {
-        // Simple extraction of id from JSON response
+        // Simple extraction of id from JSON toResponse
         String idString = json.split("\"id\":")[1].split(",")[0].trim();
         return Long.parseLong(idString);
     }

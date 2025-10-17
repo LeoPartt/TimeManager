@@ -3,7 +3,6 @@ package eu.epitech.t_dev_700.controllers;
 import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.TeamService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

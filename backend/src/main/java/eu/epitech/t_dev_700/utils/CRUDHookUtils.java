@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public record CRUDHookUtils<E>(
         CRUDService<E, ?, ?, ?, ?> service,

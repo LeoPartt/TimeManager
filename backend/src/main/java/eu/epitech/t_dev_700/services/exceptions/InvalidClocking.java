@@ -1,14 +1,19 @@
 package eu.epitech.t_dev_700.services.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import eu.epitech.t_dev_700.models.ClockModels;
+import eu.epitech.t_dev_700.utils.HasDetails;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
-public final class InvalidClocking extends ResponseStatusException implements Consumer<Object>, Runnable {
+public final class InvalidClocking extends IllegalStateException implements Consumer<Object>, Runnable, HasDetails {
 
-    public InvalidClocking() {
-        super(HttpStatus.BAD_REQUEST, "Invalid clocking");
+    private final Map<String, Object> details = new HashMap<>();
+
+    public InvalidClocking(ClockModels.ClockAction expectedAction) {
+        super("Invalid clocking");
+        this.details.put("expected", expectedAction);
     }
 
     @Override
@@ -19,5 +24,10 @@ public final class InvalidClocking extends ResponseStatusException implements Co
     @Override
     public void run() {
         throw this;
+    }
+
+    @Override
+    public Map<String, Object> details() {
+        return details;
     }
 }
