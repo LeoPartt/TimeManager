@@ -3,10 +3,8 @@ package eu.epitech.t_dev_700.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.springframework.data.jpa.repository.Query;
 
 import java.time.OffsetDateTime;
 

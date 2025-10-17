@@ -101,7 +101,7 @@ class IntegrationTest {
         String createResponse = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createRequest))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.firstName").value("John"))
                 .andExpect(jsonPath("$.lastName").value("Doe"))
@@ -157,7 +157,7 @@ class IntegrationTest {
 
         // Delete the user
         mockMvc.perform(delete("/users/" + userId))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         // Verify user is deleted (soft delete - should not appear in list)
         mockMvc.perform(get("/users/" + userId))
@@ -181,7 +181,7 @@ class IntegrationTest {
         String createResponse = mockMvc.perform(post("/teams")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createRequest))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value("Development Team"))
                 .andReturn()
@@ -238,7 +238,7 @@ class IntegrationTest {
 
         // Delete the team
         mockMvc.perform(delete("/teams/" + teamId))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         entityManager.flush();
         entityManager.clear();
 
@@ -269,7 +269,7 @@ class IntegrationTest {
             mockMvc.perform(post("/users")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(request))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isCreated());
         }
 
         // Verify all users are listed
@@ -297,7 +297,7 @@ class IntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createRequest))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         // Verify password is encrypted in database
         UserEntity user = userRepository.findAll().get(1);
@@ -334,7 +334,7 @@ class IntegrationTest {
         String response1 = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(user1))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -342,7 +342,7 @@ class IntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(user2))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         Long userId1 = extractIdFromJson(response1);
 
@@ -353,7 +353,7 @@ class IntegrationTest {
 
         // Delete first user
         mockMvc.perform(delete("/users/" + userId1))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         // Verify only one user remains
         mockMvc.perform(get("/users"))
@@ -374,7 +374,7 @@ class IntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidRequest))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
 
         // Invalid email
         String invalidEmail = """
@@ -391,7 +391,7 @@ class IntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidEmail))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
 
         // Blank required fields
         String blankFields = """
@@ -408,11 +408,11 @@ class IntegrationTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(blankFields))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     private Long extractIdFromJson(String json) {
-        // Simple extraction of id from JSON response
+        // Simple extraction of id from JSON toResponse
         String idString = json.split("\"id\":")[1].split(",")[0].trim();
         return Long.parseLong(idString);
     }

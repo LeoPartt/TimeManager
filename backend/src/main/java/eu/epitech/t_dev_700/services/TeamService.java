@@ -34,7 +34,7 @@ public class TeamService extends CRUDService<
             UserMapper userMapper,
             MembershipService membershipService,
             UserComponent userComponent) {
-        super(teamRepository, teamMapper, "TeamModel");
+        super(teamRepository, teamMapper, "team");
         this.teamMapper = teamMapper;
         this.userMapper = userMapper;
         this.membershipService = membershipService;
@@ -55,7 +55,7 @@ public class TeamService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public UserModels.User[] getByTeam(TeamEntity entity) {
+    public UserModels.UserModel[] getByTeam(TeamEntity entity) {
         return userMapper.listEntity(membershipService
                 .getMembershipsOfTeam(entity)
                 .stream()
@@ -63,7 +63,7 @@ public class TeamService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public UserModels.User[] getByTeam(Long id) {
+    public UserModels.UserModel[] getByTeam(Long id) {
         return this.getByTeam(this.findEntityOrThrow(id));
     }
 
@@ -78,13 +78,15 @@ public class TeamService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public UserModels.User getManager(Long id) {
+    public UserModels.UserModel getManager(Long id) {
         return userMapper.toModel(this.membershipService.getManagerOfTeam(this.findEntityOrThrow(id)));
     }
 
     @Transactional
-    public void updateManager(Long id, Long userId) {
-        this.membershipService.updateManagerOfTeam(this.findEntityOrThrow(id), this.userComponent.getUser(id));
+    public UserModels.UserModel updateManager(Long id, Long userId) {
+        UserEntity user = this.userComponent.getUser(id);
+        this.membershipService.updateManagerOfTeam(this.findEntityOrThrow(id), user);
+        return userMapper.toModel(user);
     }
 
     @Transactional

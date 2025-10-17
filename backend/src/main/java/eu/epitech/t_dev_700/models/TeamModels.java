@@ -4,6 +4,9 @@ import eu.epitech.t_dev_700.models.constraints.NullableNotBlank;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.http.ResponseEntity;
+
+import java.net.URI;
 
 public class TeamModels {
 
@@ -23,7 +26,7 @@ public class TeamModels {
 
             @Schema(description = "Team description", example = "Main development team for backend services")
             String description
-    ) implements Team {}
+    ) implements Team, HasId {}
 
     //REQUESTS
     @Schema(description = "Request body for creating a new team")

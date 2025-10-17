@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,8 @@ public class AuthController {
     @Operation(summary = "Authenticate user")
     @SecurityRequirements
     @PostMapping("/login")
-    public AuthModels.LoginResponse PostLogin(@Valid @RequestBody AuthModels.LoginRequest body) {
+    public ResponseEntity<AuthModels.LoginResponse> PostLogin(@Valid @RequestBody AuthModels.LoginRequest body) {
         String jwtToken = authService.authenticate(body);
-        return new AuthModels.LoginResponse(jwtToken, jwtService.getExpirationTime());
+        return ResponseEntity.ok(new AuthModels.LoginResponse(jwtToken, jwtService.getExpirationTime()));
     }
 }

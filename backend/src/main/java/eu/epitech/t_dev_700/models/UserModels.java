@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.http.ResponseEntity;
+
+import java.net.URI;
 
 public class UserModels {
 
@@ -39,8 +42,7 @@ public class UserModels {
 
             @Schema(description = "User's phone number", example = "+1234567890")
             String phoneNumber
-    ) implements User {
-    }
+    ) implements User, HasId {}
 
     //REQUESTS
     @Schema(description = "Request body for creating a new user")

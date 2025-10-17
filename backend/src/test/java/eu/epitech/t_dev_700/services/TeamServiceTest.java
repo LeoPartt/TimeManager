@@ -236,7 +236,7 @@ class TeamServiceTest {
 
         assertThatThrownBy(() -> teamService.findEntityOrThrow(999L))
                 .isInstanceOf(ResourceNotFound.class)
-                .hasMessageContaining("TeamModel")
+                .hasMessageContaining("team")
                 .hasMessageContaining("999");
 
         verify(teamRepository).findById(999L);

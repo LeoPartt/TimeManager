@@ -1,7 +1,11 @@
 package eu.epitech.t_dev_700.controllers;
 
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
+import eu.epitech.t_dev_700.models.HasId;
+import eu.epitech.t_dev_700.models.TeamModels;
+import eu.epitech.t_dev_700.models.UserModels;
+import org.springframework.http.ResponseEntity;
+
+import java.net.URI;
 
 /**
  * Generic CRUD service with mapping and template hooks.
@@ -11,17 +15,21 @@ import org.springframework.web.bind.annotation.*;
  * @param <R> DTO PUT type
  * @param <U> DTO Update type
  */
-public interface CRUDController<M, C, R, U> {
+public interface CRUDController<M extends HasId, C, R, U> {
 
-    M Get(Long id);
+    ResponseEntity<M> Get(Long id);
 
-    M[] GetAll();
+    ResponseEntity<M[]> GetAll();
 
-    M Post(C body);
+    ResponseEntity<M> Post(C body);
 
-    M Put(Long id, R body);
+    ResponseEntity<M> Put(Long id, R body);
 
-    M Patch(Long id, U body);
+    ResponseEntity<M> Patch(Long id, U body);
 
-    void Delete(Long id);
+    ResponseEntity<Void> Delete(Long id);
+
+    default ResponseEntity<M> created(String path, M model) {
+        return ResponseEntity.created(URI.create("/%s/%d".formatted(path, (model == null)?0:model.id()))).body(model);
+    }
 }
