@@ -7,15 +7,14 @@ import io.jsonwebtoken.io.DecodingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -73,19 +72,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> MalformedJwtTokenException(JwtException ex, WebRequest request) {
         return (switch (ex) {
-            case ExpiredJwtException ignored ->
-                    new ErrorModel(HttpStatus.UNAUTHORIZED, "Token expired", request);
+            case ExpiredJwtException ignored -> new ErrorModel(HttpStatus.UNAUTHORIZED, "Token expired", request);
             case PrematureJwtException ignored ->
                     new ErrorModel(HttpStatus.UNAUTHORIZED, "Token not active yet", request);
             case MalformedJwtException ignored ->
                     new ErrorModel(HttpStatus.BAD_REQUEST, "Invalid token format", request);
-            case DecodingException ignored ->
-                    new ErrorModel(HttpStatus.BAD_REQUEST, "Invalid token format", request);
+            case DecodingException ignored -> new ErrorModel(HttpStatus.BAD_REQUEST, "Invalid token format", request);
             case InvalidClaimException ignored ->
                     new ErrorModel(HttpStatus.UNAUTHORIZED, "Invalid token claims", request);
-            default ->
-                    new ErrorModel(HttpStatus.UNAUTHORIZED, "Invalid or unauthorized token", request);
+            default -> new ErrorModel(HttpStatus.UNAUTHORIZED, "Invalid or unauthorized token", request);
         }).toResponse();
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleUnexpected(AccessDeniedException ex, WebRequest request) {
+        return new ErrorModel(
+                HttpStatus.FORBIDDEN,
+                (((ServletWebRequest) request).getHttpMethod() == HttpMethod.GET)
+                        ? "You are not allowed to access this resource"
+                        : "You are not allowed to perform this action",
+                request).toResponse();
     }
 
     @ExceptionHandler(Exception.class)
@@ -93,6 +99,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         System.out.println(ex.getClass() + " " + ex.getMessage());
         return new ErrorModel(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request).toResponse();
     }
-
-
 }
