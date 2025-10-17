@@ -97,7 +97,7 @@ class TeamControllerTest {
     }
 
     @Test
-    void testPost_withInvalidData_shouldReturn400() throws Exception {
+    void testPost_withInvalidData_shouldReturn422() throws Exception {
         String requestBody = """
                 {
                     "name": "",
@@ -108,11 +108,11 @@ class TeamControllerTest {
         mockMvc.perform(post("/teams")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    void testPost_withMissingRequiredFields_shouldReturn400() throws Exception {
+    void testPost_withMissingRequiredFields_shouldReturn422() throws Exception {
         String requestBody = """
                 {
                     "description": "Only description"
@@ -122,7 +122,7 @@ class TeamControllerTest {
         mockMvc.perform(post("/teams")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

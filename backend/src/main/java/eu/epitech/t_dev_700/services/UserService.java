@@ -6,7 +6,6 @@ import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.repositories.UserRepository;
 import eu.epitech.t_dev_700.services.components.UserAuthorization;
-import eu.epitech.t_dev_700.services.components.UserComponent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

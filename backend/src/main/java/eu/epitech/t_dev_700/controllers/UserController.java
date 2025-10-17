@@ -2,7 +2,6 @@ package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.models.UserModels;
-import eu.epitech.t_dev_700.services.ClockService;
 import eu.epitech.t_dev_700.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

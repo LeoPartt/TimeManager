@@ -1,9 +1,5 @@
 package eu.epitech.t_dev_700.mappers;
 
-import eu.epitech.t_dev_700.entities.TeamEntity;
-import eu.epitech.t_dev_700.entities.UserEntity;
-import eu.epitech.t_dev_700.models.TeamModels;
-import eu.epitech.t_dev_700.models.UserModels;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;

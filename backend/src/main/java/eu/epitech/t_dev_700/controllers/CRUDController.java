@@ -1,8 +1,5 @@
 package eu.epitech.t_dev_700.controllers;
 
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
-
 /**
  * Generic CRUD service with mapping and template hooks.
  *
