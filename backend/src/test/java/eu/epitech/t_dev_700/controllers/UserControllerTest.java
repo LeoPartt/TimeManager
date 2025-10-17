@@ -115,7 +115,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testPost_withInvalidData_shouldReturn400() throws Exception {
+    void testPost_withInvalidData_shouldReturn422() throws Exception {
         String requestBody = """
                 {
                     "username": "",
@@ -130,11 +130,11 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    void testPost_withMissingRequiredFields_shouldReturn400() throws Exception {
+    void testPost_withMissingRequiredFields_shouldReturn422() throws Exception {
         String requestBody = """
                 {
                     "username": "johndoe"
@@ -144,7 +144,7 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
