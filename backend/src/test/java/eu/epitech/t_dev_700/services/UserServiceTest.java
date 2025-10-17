@@ -38,7 +38,7 @@ class UserServiceTest {
     private UserComponent userComponent;
 
     private UserEntity userEntity;
-    private UserModels.UserModel userModel;
+    private UserModels.UserResponse userResponse;
     private UserModels.PostUserRequest postRequest;
     private UserModels.PutUserRequest putRequest;
     private UserModels.PatchUserRequest patchRequest;
@@ -58,7 +58,7 @@ class UserServiceTest {
         userEntity.setPhoneNumber("+1234567890");
         userEntity.setAccount(account);
 
-        userModel = new UserModels.UserModel(
+        userResponse = new UserModels.UserResponse(
                 1L,
                 "johndoe",
                 "John",
@@ -96,15 +96,15 @@ class UserServiceTest {
     @Test
     void testList_shouldReturnAllUsers() {
         List<UserEntity> entities = Collections.singletonList(userEntity);
-        UserModels.UserModel[] models = new UserModels.UserModel[]{userModel};
+        UserModels.UserResponse[] models = new UserModels.UserResponse[]{userResponse};
 
         when(userRepository.findAll()).thenReturn(entities);
         when(userMapper.listEntity(entities)).thenReturn(models);
 
-        UserModels.UserModel[] result = userService.list();
+        UserModels.UserResponse[] result = userService.list();
 
         assertThat(result).hasSize(1);
-        assertThat(result[0]).isEqualTo(userModel);
+        assertThat(result[0]).isEqualTo(userResponse);
         verify(userRepository).findAll();
         verify(userMapper).listEntity(entities);
     }
@@ -112,11 +112,11 @@ class UserServiceTest {
     @Test
     void testGet_whenUserExists_shouldReturnUser() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
-        when(userMapper.toModel(userEntity)).thenReturn(userModel);
+        when(userMapper.toModel(userEntity)).thenReturn(userResponse);
 
-        UserModels.UserModel result = userService.get(1L);
+        UserModels.UserResponse result = userService.get(1L);
 
-        assertThat(result).isEqualTo(userModel);
+        assertThat(result).isEqualTo(userResponse);
         verify(userRepository).findById(1L);
         verify(userMapper).toModel(userEntity);
     }
@@ -136,11 +136,11 @@ class UserServiceTest {
     void testCreate_shouldCreateUser() {
         when(userMapper.createEntity(postRequest)).thenReturn(userEntity);
         when(userRepository.save(userEntity)).thenReturn(userEntity);
-        when(userMapper.toModel(userEntity)).thenReturn(userModel);
+        when(userMapper.toModel(userEntity)).thenReturn(userResponse);
 
-        UserModels.UserModel result = userService.create(postRequest);
+        UserModels.UserResponse result = userService.create(postRequest);
 
-        assertThat(result).isEqualTo(userModel);
+        assertThat(result).isEqualTo(userResponse);
         verify(userMapper).createEntity(postRequest);
         verify(userRepository).save(userEntity);
         verify(userMapper).toModel(userEntity);
@@ -151,11 +151,11 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
         doNothing().when(userMapper).replaceEntity(userEntity, putRequest);
         when(userRepository.save(userEntity)).thenReturn(userEntity);
-        when(userMapper.toModel(userEntity)).thenReturn(userModel);
+        when(userMapper.toModel(userEntity)).thenReturn(userResponse);
 
-        UserModels.UserModel result = userService.replace(1L, putRequest);
+        UserModels.UserResponse result = userService.replace(1L, putRequest);
 
-        assertThat(result).isEqualTo(userModel);
+        assertThat(result).isEqualTo(userResponse);
         verify(userRepository).findById(1L);
         verify(userMapper).replaceEntity(userEntity, putRequest);
         verify(userRepository).save(userEntity);
@@ -179,11 +179,11 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(userEntity));
         doNothing().when(userMapper).updateEntity(userEntity, patchRequest);
         when(userRepository.save(userEntity)).thenReturn(userEntity);
-        when(userMapper.toModel(userEntity)).thenReturn(userModel);
+        when(userMapper.toModel(userEntity)).thenReturn(userResponse);
 
-        UserModels.UserModel result = userService.update(1L, patchRequest);
+        UserModels.UserResponse result = userService.update(1L, patchRequest);
 
-        assertThat(result).isEqualTo(userModel);
+        assertThat(result).isEqualTo(userResponse);
         verify(userRepository).findById(1L);
         verify(userMapper).updateEntity(userEntity, patchRequest);
         verify(userRepository).save(userEntity);

@@ -10,23 +10,23 @@ import java.util.stream.Stream;
 @Mapper(componentModel = "spring")
 public interface TeamMapper extends CRUDMapper<
         TeamEntity,
-        TeamModels.TeamModel,
+        TeamModels.TeamResponse,
         TeamModels.PostTeamRequest,
         TeamModels.PutTeamRequest,
         TeamModels.PatchTeamRequest
         > {
 
     @Override
-    TeamModels.TeamModel toModel(TeamEntity entity);
+    TeamModels.TeamResponse toModel(TeamEntity entity);
 
     @Override
-    default TeamModels.TeamModel[] listEntity(List<TeamEntity> entities) {
+    default TeamModels.TeamResponse[] listEntity(List<TeamEntity> entities) {
         return listEntity(entities.stream());
     }
 
     @Override
-    default TeamModels.TeamModel[] listEntity(Stream<TeamEntity> stream) {
-        return stream.map(this::toModel).toArray(TeamModels.TeamModel[]::new);
+    default TeamModels.TeamResponse[] listEntity(Stream<TeamEntity> stream) {
+        return stream.map(this::toModel).toArray(TeamModels.TeamResponse[]::new);
     }
 
     @Override

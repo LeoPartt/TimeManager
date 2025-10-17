@@ -31,23 +31,23 @@ class TeamControllerTest {
     @MockitoBean
     private TeamService teamService;
 
-    private TeamModels.TeamModel teamModel;
-    private TeamModels.TeamModel[] teamModels;
+    private TeamModels.TeamResponse teamResponse;
+    private TeamModels.TeamResponse[] teamResponses;
 
     @BeforeEach
     void setUp() {
-        teamModel = new TeamModels.TeamModel(
+        teamResponse = new TeamModels.TeamResponse(
                 1L,
                 "Development Team",
                 "A team of developers"
         );
 
-        teamModels = new TeamModels.TeamModel[]{teamModel};
+        teamResponses = new TeamModels.TeamResponse[]{teamResponse};
     }
 
     @Test
     void testGet_whenTeamExists_shouldReturnTeam() throws Exception {
-        when(teamService.get(1L)).thenReturn(teamModel);
+        when(teamService.get(1L)).thenReturn(teamResponse);
 
         mockMvc.perform(get("/teams/1"))
                 .andExpect(status().isOk())
@@ -67,7 +67,7 @@ class TeamControllerTest {
 
     @Test
     void testGetAll_shouldReturnAllTeams() throws Exception {
-        when(teamService.list()).thenReturn(teamModels);
+        when(teamService.list()).thenReturn(teamResponses);
 
         mockMvc.perform(get("/teams"))
                 .andExpect(status().isOk())
@@ -86,7 +86,7 @@ class TeamControllerTest {
                 }
                 """;
 
-        when(teamService.create(any())).thenReturn(teamModel);
+        when(teamService.create(any())).thenReturn(teamResponse);
 
         mockMvc.perform(post("/teams")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +134,7 @@ class TeamControllerTest {
                 }
                 """;
 
-        TeamModels.TeamModel updatedModel = new TeamModels.TeamModel(
+        TeamModels.TeamResponse updatedModel = new TeamModels.TeamResponse(
                 1L,
                 "Updated Team",
                 "Updated description"
@@ -176,7 +176,7 @@ class TeamControllerTest {
                 }
                 """;
 
-        TeamModels.TeamModel patchedModel = new TeamModels.TeamModel(
+        TeamModels.TeamResponse patchedModel = new TeamModels.TeamResponse(
                 1L,
                 "Development Team",
                 "New description only"
@@ -200,7 +200,7 @@ class TeamControllerTest {
                 }
                 """;
 
-        TeamModels.TeamModel patchedModel = new TeamModels.TeamModel(
+        TeamModels.TeamResponse patchedModel = new TeamModels.TeamResponse(
                 1L,
                 "New Team Name",
                 "A team of developers"

@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 
 public class ClockModels {
 
-    @Schema(description = "Clock action type - IN for clock-in, OUT for clock-out")
+    @Schema(description = "Clock action type - IN for clock-in, OUT for clock-out", contentMediaType = "application/json")
     public enum ClockAction {
         @Schema(description = "Clock in - Start of work period")
         IN,
@@ -15,7 +15,7 @@ public class ClockModels {
         OUT
     }
 
-    @Schema(description = "Request body for recording a clock event")
+    @Schema(description = "Request body for recording a clock event", contentMediaType = "application/json")
     public record PostClockRequest(
             @Schema(description = "Clock action type (IN or OUT)", example = "IN")
             @NotNull ClockModels.ClockAction io,

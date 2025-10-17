@@ -1,8 +1,12 @@
 package eu.epitech.t_dev_700.controllers;
 
+import eu.epitech.t_dev_700.doc.ApiRoleProtected;
 import eu.epitech.t_dev_700.models.ClockModels;
 import eu.epitech.t_dev_700.services.ClockService;
+import eu.epitech.t_dev_700.doc.ApiForbiddenResponse;
+import eu.epitech.t_dev_700.doc.ApiUnauthorizedResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/clocks")
 @RequiredArgsConstructor
+@ApiUnauthorizedResponse
 @Tag(name = "Clock Management")
 public class ClockController {
 
     private final ClockService clockService;
 
     @Operation(summary = "Record clock event")
+    @ApiResponse(responseCode = "204", description = "Successfully clocked in / out")
+    @ApiResponse(responseCode = "409", description = "The action is not valid for the current state")
     @PostMapping
     public ResponseEntity<Void> PostClock(@Valid @RequestBody ClockModels.PostClockRequest body) {
         this.clockService.postClock(body);
@@ -26,6 +33,9 @@ public class ClockController {
     }
 
     @Operation(summary = "Record clock event for user")
+    @ApiResponse(responseCode = "204", description = "Successfully clocked in / out")
+    @ApiResponse(responseCode = "409", description = "The action is not valid for the current state")
+    @ApiRoleProtected(roles = {"Self", "Manager of"})
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @PostMapping("/{id}")
     public ResponseEntity<Void> PostClock(@PathVariable Long id, @Valid @RequestBody ClockModels.PostClockRequest body) {

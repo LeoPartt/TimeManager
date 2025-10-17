@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 public class AuthModels {
 
-    @Schema(description = "User login credentials")
+    @Schema(description = "User login credentials", contentMediaType = "application/json")
     public record LoginRequest(
             @Schema(description = "Username for authentication", example = "john.doe")
             @NotNull String username,
@@ -14,7 +14,7 @@ public class AuthModels {
             @NotNull String password
     ) {}
 
-    @Schema(description = "Authentication response containing JWT token")
+    @Schema(description = "Authentication response containing JWT token", contentMediaType = "application/json")
     public record LoginResponse(
             @Schema(description = "JWT bearer token for API authentication", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
             String token,

@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +46,7 @@ class TeamServiceTest {
     private UserComponent userComponent;
 
     private TeamEntity teamEntity;
-    private TeamModels.TeamModel teamModel;
+    private TeamModels.TeamResponse teamResponse;
     private TeamModels.PostTeamRequest postRequest;
     private TeamModels.PutTeamRequest putRequest;
     private TeamModels.PatchTeamRequest patchRequest;
@@ -59,7 +58,7 @@ class TeamServiceTest {
         teamEntity.setName("Development Team");
         teamEntity.setDescription("A team of developers");
 
-        teamModel = new TeamModels.TeamModel(
+        teamResponse = new TeamModels.TeamResponse(
                 1L,
                 "Development Team",
                 "A team of developers"
@@ -92,15 +91,15 @@ class TeamServiceTest {
     @Test
     void testList_shouldReturnAllTeams() {
         List<TeamEntity> entities = Collections.singletonList(teamEntity);
-        TeamModels.TeamModel[] models = new TeamModels.TeamModel[]{teamModel};
+        TeamModels.TeamResponse[] models = new TeamModels.TeamResponse[]{teamResponse};
 
         when(teamRepository.findAll()).thenReturn(entities);
         when(teamMapper.listEntity(entities)).thenReturn(models);
 
-        TeamModels.TeamModel[] result = teamService.list();
+        TeamModels.TeamResponse[] result = teamService.list();
 
         assertThat(result).hasSize(1);
-        assertThat(result[0]).isEqualTo(teamModel);
+        assertThat(result[0]).isEqualTo(teamResponse);
         verify(teamRepository).findAll();
         verify(teamMapper).listEntity(entities);
     }
@@ -108,11 +107,11 @@ class TeamServiceTest {
     @Test
     void testGet_whenTeamExists_shouldReturnTeam() {
         when(teamRepository.findById(1L)).thenReturn(Optional.of(teamEntity));
-        when(teamMapper.toModel(teamEntity)).thenReturn(teamModel);
+        when(teamMapper.toModel(teamEntity)).thenReturn(teamResponse);
 
-        TeamModels.TeamModel result = teamService.get(1L);
+        TeamModels.TeamResponse result = teamService.get(1L);
 
-        assertThat(result).isEqualTo(teamModel);
+        assertThat(result).isEqualTo(teamResponse);
         verify(teamRepository).findById(1L);
         verify(teamMapper).toModel(teamEntity);
     }
@@ -132,11 +131,11 @@ class TeamServiceTest {
     void testCreate_shouldCreateTeam() {
         when(teamMapper.createEntity(postRequest)).thenReturn(teamEntity);
         when(teamRepository.save(teamEntity)).thenReturn(teamEntity);
-        when(teamMapper.toModel(teamEntity)).thenReturn(teamModel);
+        when(teamMapper.toModel(teamEntity)).thenReturn(teamResponse);
 
-        TeamModels.TeamModel result = teamService.create(postRequest);
+        TeamModels.TeamResponse result = teamService.create(postRequest);
 
-        assertThat(result).isEqualTo(teamModel);
+        assertThat(result).isEqualTo(teamResponse);
         verify(teamMapper).createEntity(postRequest);
         verify(teamRepository).save(teamEntity);
         verify(teamMapper).toModel(teamEntity);
@@ -147,11 +146,11 @@ class TeamServiceTest {
         when(teamRepository.findById(1L)).thenReturn(Optional.of(teamEntity));
         doNothing().when(teamMapper).replaceEntity(teamEntity, putRequest);
         when(teamRepository.save(teamEntity)).thenReturn(teamEntity);
-        when(teamMapper.toModel(teamEntity)).thenReturn(teamModel);
+        when(teamMapper.toModel(teamEntity)).thenReturn(teamResponse);
 
-        TeamModels.TeamModel result = teamService.replace(1L, putRequest);
+        TeamModels.TeamResponse result = teamService.replace(1L, putRequest);
 
-        assertThat(result).isEqualTo(teamModel);
+        assertThat(result).isEqualTo(teamResponse);
         verify(teamRepository).findById(1L);
         verify(teamMapper).replaceEntity(teamEntity, putRequest);
         verify(teamRepository).save(teamEntity);
@@ -175,11 +174,11 @@ class TeamServiceTest {
         when(teamRepository.findById(1L)).thenReturn(Optional.of(teamEntity));
         doNothing().when(teamMapper).updateEntity(teamEntity, patchRequest);
         when(teamRepository.save(teamEntity)).thenReturn(teamEntity);
-        when(teamMapper.toModel(teamEntity)).thenReturn(teamModel);
+        when(teamMapper.toModel(teamEntity)).thenReturn(teamResponse);
 
-        TeamModels.TeamModel result = teamService.update(1L, patchRequest);
+        TeamModels.TeamResponse result = teamService.update(1L, patchRequest);
 
-        assertThat(result).isEqualTo(teamModel);
+        assertThat(result).isEqualTo(teamResponse);
         verify(teamRepository).findById(1L);
         verify(teamMapper).updateEntity(teamEntity, patchRequest);
         verify(teamRepository).save(teamEntity);

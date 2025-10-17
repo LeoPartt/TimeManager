@@ -39,12 +39,12 @@ class UserControllerTest {
     @MockitoBean
     private ClockService clockService;
 
-    private UserModels.UserModel userModel;
-    private UserModels.UserModel[] userModels;
+    private UserModels.UserResponse userResponse;
+    private UserModels.UserResponse[] userResponses;
 
     @BeforeEach
     void setUp() {
-        userModel = new UserModels.UserModel(
+        userResponse = new UserModels.UserResponse(
                 1L,
                 "johndoe",
                 "John",
@@ -53,12 +53,12 @@ class UserControllerTest {
                 "+1234567890"
         );
 
-        userModels = new UserModels.UserModel[]{userModel};
+        userResponses = new UserModels.UserResponse[]{userResponse};
     }
 
     @Test
     void testGet_whenUserExists_shouldReturnUser() throws Exception {
-        when(userService.get(1L)).thenReturn(userModel);
+        when(userService.get(1L)).thenReturn(userResponse);
 
         mockMvc.perform(get("/users/1"))
                 .andExpect(status().isOk())
@@ -81,7 +81,7 @@ class UserControllerTest {
 
     @Test
     void testGetAll_shouldReturnAllUsers() throws Exception {
-        when(userService.list()).thenReturn(userModels);
+        when(userService.list()).thenReturn(userResponses);
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -104,7 +104,7 @@ class UserControllerTest {
                 }
                 """;
 
-        when(userService.create(any())).thenReturn(userModel);
+        when(userService.create(any())).thenReturn(userResponse);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +159,7 @@ class UserControllerTest {
                 }
                 """;
 
-        UserModels.UserModel updatedModel = new UserModels.UserModel(
+        UserModels.UserResponse updatedModel = new UserModels.UserResponse(
                 1L,
                 "johndoe",
                 "UpdatedJohn",
@@ -207,7 +207,7 @@ class UserControllerTest {
                 }
                 """;
 
-        UserModels.UserModel patchedModel = new UserModels.UserModel(
+        UserModels.UserResponse patchedModel = new UserModels.UserResponse(
                 1L,
                 "johndoe",
                 "Jane",
