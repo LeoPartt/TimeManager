@@ -91,7 +91,7 @@ class TeamControllerTest {
         mockMvc.perform(post("/teams")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Development Team"));
     }
@@ -236,7 +236,7 @@ class TeamControllerTest {
     @Test
     void testDelete_shouldDeleteTeam() throws Exception {
         mockMvc.perform(delete("/teams/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
