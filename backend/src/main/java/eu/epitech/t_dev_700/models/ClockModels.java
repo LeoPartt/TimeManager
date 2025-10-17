@@ -21,7 +21,7 @@ public class ClockModels {
             @NotNull ClockModels.ClockAction io,
 
             @Schema(description = "Timestamp of the clock event (optional, defaults to current time)", example = "2024-01-15T10:30:00Z")
-            OffsetDateTime timestamp
+            @NotNull OffsetDateTime timestamp
     ) {}
 
 }
