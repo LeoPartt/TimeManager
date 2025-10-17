@@ -34,7 +34,7 @@ class ApiEndpoints {
   // ───────────────────────────────
   static String get teams => '$_api/teams';
   static String teamById(int id) => '$_api/teams/$id';
-  static String get createTeam => '$_api/teams/create';
+  static String get createTeam => '$_api/teams';
 
   // ───────────────────────────────
   //  MEMBERSHIPS endpoints
