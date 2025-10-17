@@ -157,7 +157,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForAdmin(),
                 post("/users").contentType(MediaType.APPLICATION_JSON).content(POST_REQUEST_BODY),
-                status().isOk());
+                status().isCreated());
     }
 
     @Test
@@ -173,7 +173,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 post("/users").contentType(MediaType.APPLICATION_JSON).content(POST_REQUEST_BODY),
-                status().isOk());
+                status().isCreated());
     }
 
     @Test
@@ -277,7 +277,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForAdmin(),
                 delete("/users/1"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -285,7 +285,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForMember(),
                 delete("/users/1"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -301,7 +301,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 delete("/users/2"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -309,7 +309,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 delete("/users/1"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test

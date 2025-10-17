@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,43 +29,44 @@ public class UserController implements CRUDController<
     @Override
     @PreAuthorize("@userAuth.isSelfOrManager(authentication, #id)")
     @GetMapping("{id}")
-    public UserModels.UserModel Get(@PathVariable("id") Long id) {
-        return userService.get(id);
+    public ResponseEntity<UserModels.UserModel> Get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(userService.get(id));
     }
 
     @Override
     @PreAuthorize("@userAuth.isManager(authentication)")
     @GetMapping
-    public UserModels.UserModel[] GetAll() {
-        return userService.list();
+    public ResponseEntity<UserModels.UserModel[]> GetAll() {
+        return ResponseEntity.ok(userService.list());
     }
 
     @Override
     @PreAuthorize("@userAuth.isManager(authentication)")
     @PostMapping
-    public UserModels.UserModel Post(@Valid @RequestBody UserModels.PostUserRequest body) {
-        return userService.create(body);
+    public ResponseEntity<UserModels.UserModel> Post(@Valid @RequestBody UserModels.PostUserRequest body) {
+        return this.created("users", userService.create(body));
     }
 
     @Override
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @PutMapping("{id}")
-    public UserModels.UserModel Put(@PathVariable Long id, @Valid @RequestBody UserModels.PutUserRequest body) {
-        return userService.replace(id, body);
+    public ResponseEntity<UserModels.UserModel> Put(@PathVariable Long id, @Valid @RequestBody UserModels.PutUserRequest body) {
+        return ResponseEntity.ok(userService.replace(id, body));
     }
 
     @Override
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @PatchMapping("{id}")
-    public UserModels.UserModel Patch(@PathVariable Long id, @Valid @RequestBody UserModels.PatchUserRequest body) {
-        return userService.update(id, body);
+    public ResponseEntity<UserModels.UserModel> Patch(@PathVariable Long id, @Valid @RequestBody UserModels.PatchUserRequest body) {
+        return ResponseEntity.ok(userService.update(id, body));
     }
 
     @Override
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @DeleteMapping("{id}")
-    public void Delete(@PathVariable Long id) {
+    public ResponseEntity<Void> Delete(@PathVariable Long id) {
         userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Get current authenticated user")
@@ -76,14 +78,14 @@ public class UserController implements CRUDController<
     @Operation(summary = "Get user's clock records")
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @GetMapping("{id}/clocks")
-    public Long[] getUserClocks(@PathVariable Long id, @RequestParam("from") Optional<Long> from, @RequestParam("to") Optional<Long> to) {
-        return this.userService.getClocks(id, from, to);
+    public ResponseEntity<Long[]> getUserClocks(@PathVariable Long id, @RequestParam("from") Optional<Long> from, @RequestParam("to") Optional<Long> to) {
+        return ResponseEntity.ok(this.userService.getClocks(id, from, to));
     }
 
     @Operation(summary = "Get user's teams")
     @GetMapping("{id}/teams")
-    public TeamModels.TeamModel[] getTeams(@PathVariable Long id) {
-        return userService.getTeams(id);
+    public ResponseEntity<TeamModels.TeamModel[]> getTeams(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getTeams(id));
     }
 
 }
