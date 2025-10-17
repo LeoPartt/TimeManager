@@ -3,6 +3,7 @@ package eu.epitech.t_dev_700.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.OffsetDateTime;
@@ -15,6 +16,7 @@ import java.time.OffsetDateTime;
                 columnNames = {"user_id","team_id"}),
         indexes = @Index(name = "idx_membership_team_role", columnList = "team_id, role")
 )
+@SQLDelete(sql = "UPDATE tm_user SET deleted_at = now() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 public class MembershipEntity {
     @Id

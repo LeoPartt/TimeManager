@@ -3,11 +3,11 @@ package eu.epitech.t_dev_700.mappers;
 import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.UserModels;
+import eu.epitech.t_dev_700.services.components.PasswordMapper;
 import org.mapstruct.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Mapper(componentModel = "spring", uses = PasswordMapper.class)
 public interface UserMapper extends CRUDMapper<
@@ -28,21 +28,17 @@ public interface UserMapper extends CRUDMapper<
     }
 
     @Override
+    default UserModels.UserModel[] listEntity(Stream<UserEntity> stream) {
+        return stream.map(this::toModel).toArray(UserModels.UserModel[]::new);
+    }
+
+    @Override
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "account", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "account.username", source = "username")
     @Mapping(target = "account.password", source = "password", qualifiedByName = "encodePassword")
     UserEntity createEntity(UserModels.PostUserRequest req);
-
-    /*@AfterMapping
-    default void attachAccount(UserModels.PostUserRequest body,
-                               @MappingTarget UserEntity user) {
-        var acc = new AccountEntity();
-        acc.setUsername(body.username());
-        user.setAccount(acc);
-        acc.setUser(user);
-    }*/
 
     @Override
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -68,18 +64,5 @@ public interface UserMapper extends CRUDMapper<
         AccountEntity acc = user.getAccount();
         acc.setUsername(req.username());
     }
-
-    @Component
-    class PasswordMapper {
-        private final PasswordEncoder encoder;
-        public PasswordMapper(PasswordEncoder encoder) { this.encoder = encoder; }
-
-        @Named("encodePassword")
-        public String encodePassword(String raw) {
-            if (raw == null || raw.isBlank()) return raw;
-            return encoder.encode(raw);
-        }
-    }
-
 }
 

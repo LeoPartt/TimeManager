@@ -9,7 +9,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.OffsetDateTime;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,7 +25,7 @@ import java.util.Objects;
         }
 )
 @SQLDelete(sql = "UPDATE tm_user SET deleted_at = now() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL") // only return active users by default
+@SQLRestriction("deleted_at IS NULL")
 public class UserEntity {
 
     @Id
@@ -55,6 +57,9 @@ public class UserEntity {
     // Soft delete marker
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MembershipEntity> memberships = new LinkedHashSet<>();
 
     public boolean isActive() { return deletedAt == null; }
 

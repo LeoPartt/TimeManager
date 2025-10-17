@@ -1,5 +1,8 @@
 package eu.epitech.t_dev_700.services;
 
+import eu.epitech.t_dev_700.entities.AccountEntity;
+import eu.epitech.t_dev_700.entities.UserEntity;
+import eu.epitech.t_dev_700.services.components.UserComponent;
 import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.mappers.TeamMapper;
@@ -11,6 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +37,14 @@ class TeamServiceTest {
     @Mock
     private TeamMapper teamMapper;
 
+    @Mock
+    private MembershipService membershipService;
+
     @InjectMocks
     private TeamService teamService;
+
+    @InjectMocks
+    private UserComponent userComponent;
 
     private TeamEntity teamEntity;
     private TeamModels.TeamModel teamModel;
@@ -66,6 +79,14 @@ class TeamServiceTest {
                 null,
                 "Patched description"
         );
+
+        UserEntity user = new UserEntity();
+        user.setAccount(new AccountEntity());
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(
+                new UsernamePasswordAuthenticationToken(user.getAccount(), null, List.of())
+        );
+        SecurityContextHolder.setContext(context);
     }
 
     @Test
@@ -203,7 +224,7 @@ class TeamServiceTest {
     void testGetOrThrow_whenTeamExists_shouldReturnTeam() {
         when(teamRepository.findById(1L)).thenReturn(Optional.of(teamEntity));
 
-        TeamEntity result = teamService.getOrThrow(1L);
+        TeamEntity result = teamService.findEntityOrThrow(1L);
 
         assertThat(result).isEqualTo(teamEntity);
         verify(teamRepository).findById(1L);
@@ -213,9 +234,9 @@ class TeamServiceTest {
     void testGetOrThrow_whenTeamNotExists_shouldThrowException() {
         when(teamRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> teamService.getOrThrow(999L))
+        assertThatThrownBy(() -> teamService.findEntityOrThrow(999L))
                 .isInstanceOf(ResourceNotFound.class)
-                .hasMessageContaining("TeamModel")
+                .hasMessageContaining("team")
                 .hasMessageContaining("999");
 
         verify(teamRepository).findById(999L);

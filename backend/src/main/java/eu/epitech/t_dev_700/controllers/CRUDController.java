@@ -1,53 +1,35 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.services.CRUDService;
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
+import eu.epitech.t_dev_700.models.HasId;
+import eu.epitech.t_dev_700.models.TeamModels;
+import eu.epitech.t_dev_700.models.UserModels;
+import org.springframework.http.ResponseEntity;
+
+import java.net.URI;
 
 /**
  * Generic CRUD service with mapping and template hooks.
  *
- * @param <E> Entity type
  * @param <M> DTO Model type
  * @param <C> DTO Create type
  * @param <R> DTO PUT type
  * @param <U> DTO Update type
  */
-public abstract class CRUDController<E, M, C, R, U> {
+public interface CRUDController<M extends HasId, C, R, U> {
 
-    private final CRUDService<E, M, C, R, U> crudService;
+    ResponseEntity<M> Get(Long id);
 
-    protected CRUDController(CRUDService<E, M, C, R, U> crudService) {
-        this.crudService = crudService;
-    }
+    ResponseEntity<M[]> GetAll();
 
-    @GetMapping("{id}")
-    public M Get(@PathVariable Long id) {
-        return crudService.get(id);
-    }
+    ResponseEntity<M> Post(C body);
 
-    @GetMapping
-    public Object GetAll() {
-        return crudService.list();
-    }
+    ResponseEntity<M> Put(Long id, R body);
 
-    @PostMapping
-    public M Post(@Valid @RequestBody C body) {
-        return crudService.create(body);
-    }
+    ResponseEntity<M> Patch(Long id, U body);
 
-    @PutMapping("{id}")
-    public M Put(@PathVariable Long id, @Valid @RequestBody R body) {
-        return crudService.replace(id, body);
-    }
+    ResponseEntity<Void> Delete(Long id);
 
-    @PatchMapping("{id}")
-    public M Patch(@PathVariable Long id, @Valid @RequestBody U body) {
-        return crudService.update(id, body);
-    }
-
-    @DeleteMapping("{id}")
-    public void Delete(@PathVariable Long id) {
-        crudService.delete(id);
+    default ResponseEntity<M> created(String path, M model) {
+        return ResponseEntity.created(URI.create("/%s/%d".formatted(path, (model == null)?0:model.id()))).body(model);
     }
 }

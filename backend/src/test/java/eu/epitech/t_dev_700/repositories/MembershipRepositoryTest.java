@@ -4,6 +4,7 @@ import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.MembershipEntity;
 import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -135,13 +138,12 @@ class MembershipRepositoryTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     void testDeleteMembership_shouldRemove() {
         MembershipEntity saved = membershipRepository.save(testMembership);
         Long membershipId = saved.getId();
-        entityManager.flush();
 
         membershipRepository.delete(saved);
-        entityManager.flush();
 
         Optional<MembershipEntity> found = membershipRepository.findById(membershipId);
         assertThat(found).isEmpty();

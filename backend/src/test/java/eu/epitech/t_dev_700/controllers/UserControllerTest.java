@@ -1,5 +1,6 @@
 package eu.epitech.t_dev_700.controllers;
 
+import eu.epitech.t_dev_700.services.TeamService;
 import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.ClockService;
@@ -31,6 +32,9 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private TeamService teamService;
 
     @MockitoBean
     private ClockService clockService;
@@ -105,13 +109,13 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value("John"));
     }
 
     @Test
-    void testPost_withInvalidData_shouldReturn400() throws Exception {
+    void testPost_withInvalidData_shouldReturn422() throws Exception {
         String requestBody = """
                 {
                     "username": "",
@@ -126,11 +130,11 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    void testPost_withMissingRequiredFields_shouldReturn400() throws Exception {
+    void testPost_withMissingRequiredFields_shouldReturn422() throws Exception {
         String requestBody = """
                 {
                     "username": "johndoe"
@@ -140,7 +144,7 @@ class UserControllerTest {
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -242,7 +246,7 @@ class UserControllerTest {
     @Test
     void testDelete_shouldDeleteUser() throws Exception {
         mockMvc.perform(delete("/users/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
