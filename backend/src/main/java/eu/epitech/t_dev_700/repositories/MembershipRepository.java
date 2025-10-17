@@ -1,18 +1,27 @@
 package eu.epitech.t_dev_700.repositories;
 
 import eu.epitech.t_dev_700.entities.MembershipEntity;
+import eu.epitech.t_dev_700.entities.TeamEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MembershipRepository extends JpaRepository<MembershipEntity, Long> {
 
     List<MembershipEntity> findByUser(UserEntity user);
+
+    List<MembershipEntity> findByTeam(TeamEntity team);
+
+    Optional<MembershipEntity> findByTeamAndUser(TeamEntity team, UserEntity user);
+
+    Optional<MembershipEntity> findByTeamAndRole(TeamEntity team, MembershipEntity.TeamRole role);
 
     boolean existsByUserAndTeam_Id(UserEntity user, Long team_id);
 

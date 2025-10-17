@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                         .accessDeniedHandler(
                                 (req, res, e) -> res.setStatus(HttpServletResponse.SC_FORBIDDEN))
                 )
-                .authenticationProvider(authenticationProvider) // if you log in with username/password
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -285,7 +285,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForMember(),
                 delete("/users/1"),
-                status().isForbidden());
+                status().isOk());
     }
 
     @Test
@@ -301,7 +301,7 @@ public class UserAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 delete("/users/2"),
-                status().isForbidden());
+                status().isOk());
     }
 
     @Test

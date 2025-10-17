@@ -3,7 +3,6 @@ package eu.epitech.t_dev_700.controllers;
 import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.ClockService;
-import eu.epitech.t_dev_700.services.TeamService;
 import eu.epitech.t_dev_700.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,8 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-
-import static eu.epitech.t_dev_700.services.components.UserAuthorization.getCurrentUser;
 
 @RestController
 @RequestMapping("users")
@@ -29,8 +26,6 @@ public class UserController implements CRUDController<
         > {
 
     private final UserService userService;
-    private final ClockService clockService;
-    private final TeamService teamService;
 
     @Override
     @PreAuthorize("@userAuth.isSelfOrManager(authentication, #id)")
@@ -68,12 +63,13 @@ public class UserController implements CRUDController<
     }
 
     @Override
-    @PreAuthorize("@userAuth.isManagerOfUser(authentication, #id)")
+    @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @DeleteMapping("{id}")
     public void Delete(@PathVariable Long id) {
         userService.delete(id);
     }
 
+    @Operation(summary = "Get current authenticated user")
     @GetMapping("/me")
     public UserModels.UserModel getMe() {
         return userService.getCurrentUser();
@@ -83,13 +79,13 @@ public class UserController implements CRUDController<
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @GetMapping("{id}/clocks")
     public Long[] getUserClocks(@PathVariable Long id, @RequestParam("from") Optional<Long> from, @RequestParam("to") Optional<Long> to) {
-        return clockService.getUserClocks(id, from, to);
+        return this.userService.getClocks(id, from, to);
     }
 
-    @Operation(summary = "Get current authenticated user")
+    @Operation(summary = "Get user's teams")
     @GetMapping("{id}/teams")
-    public TeamModels.TeamModel[] getUserTeams(@PathVariable Long id) {
-        return teamService.getByUser(userService.findEntityOrThrow(id));
+    public TeamModels.TeamModel[] getTeams(@PathVariable Long id) {
+        return userService.getTeams(id);
     }
 
 }
