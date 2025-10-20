@@ -7,8 +7,9 @@
 2. Create PR develop → main
 3. Merge to main
    ↓ (automatic)
-4. Tag created (vX.Y.Z)
-5. APK built and published to GitHub Releases
+4. Backend Docker image published to GHCR
+5. Tag created (vX.Y.Z)
+6. APK built and published to GitHub Releases
 ```
 
 ## Semantic Versioning
@@ -36,6 +37,7 @@ git push origin develop
 1. Create PR `develop → main` and merge
 
 The pipeline will:
+- Build and publish backend Docker image to GHCR
 - Validate version is greater than latest
 - Create tag `v0.2.0`
 - Build APK
@@ -43,26 +45,42 @@ The pipeline will:
 
 ## Server Deployment
 
+The backend Docker image is **automatically published to GitHub Container Registry** on every push to `main`.
+
+No need to clone the repository or build locally!
+
 ### Setup
 
 ```bash
-# Clone repo
-git clone https://github.com/your-org/time_manager.git
-cd time_manager
+# Create project directory
+mkdir -p ~/time-manager && cd ~/time-manager
+
+# Download configuration files
+curl -O https://raw.githubusercontent.com/LeoPartt/time_manager/main/compose.prod.yaml
+curl -O https://raw.githubusercontent.com/LeoPartt/time_manager/main/.env.prod.example
 
 # Configure environment
-cp .env.prod.example .env
-nano .env  # Edit with your credentials
+mv .env.prod.example .env
+nano .env  # Edit with your production credentials
 
-# Deploy
-docker compose -f compose.prod.yaml up -d --build
+# Deploy (automatically pulls image from GHCR)
+docker compose -f compose.prod.yaml up -d
 ```
+
+**Image location:** `ghcr.io/leopartt/timemanager/backend:latest`
 
 ### Update
 
+When a new version is pushed to `main`, update the server:
+
 ```bash
-git pull origin main
-docker compose -f compose.prod.yaml up -d --build
+cd ~/time-manager
+
+# Pull latest image
+docker compose -f compose.prod.yaml pull
+
+# Restart with new image
+docker compose -f compose.prod.yaml up -d
 ```
 
 ### Common Commands
