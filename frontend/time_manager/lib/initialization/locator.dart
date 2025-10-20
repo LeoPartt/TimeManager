@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:time_manager/data/datasources/local/cache_manager.dart';
 import 'package:time_manager/data/datasources/local/local_storage_service.dart';
 import 'package:time_manager/data/datasources/remote/account_api.dart';
 import 'package:time_manager/data/datasources/remote/schedule_api.dart';
@@ -20,6 +21,7 @@ import 'package:time_manager/domain/usecases/schedule/get_clock_out.dart';
 import 'package:time_manager/domain/usecases/schedule/get_clock_status.dart';
 import 'package:time_manager/domain/usecases/user/create_user.dart';
 import 'package:time_manager/domain/usecases/user/delete_user.dart';
+import 'package:time_manager/domain/usecases/user/get_current_user.dart';
 import 'package:time_manager/domain/usecases/user/get_user.dart';
 import 'package:time_manager/domain/usecases/user/get_user_profile.dart';
 import 'package:time_manager/domain/usecases/user/get_users.dart';
@@ -27,6 +29,7 @@ import 'package:time_manager/domain/usecases/user/update_user_profile.dart';
 import 'package:time_manager/presentation/cubits/account/auth_cubit.dart';
 import 'package:time_manager/presentation/cubits/clock/clock_cubit.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
+import 'package:time_manager/presentation/routes/guard/auth_guard.dart';
 
 import '../presentation/routes/app_router.dart';
 
@@ -39,14 +42,20 @@ Future<void> setupLocator() async {
   // CORE SERVICES
   // ─────────────────────────────────────────────
   locator.registerLazySingleton(() => NavigationService());
-    // Router
-locator.registerLazySingleton<AppRouter>(
-  () => AppRouter(navigatorKey: locator<NavigationService>().navigatorKey),
-);
-
-  locator.registerLazySingleton<LocalStorageService>(
+   locator.registerLazySingleton<LocalStorageService>(
     () => LocalStorageService(),
   );
+  locator.registerLazySingleton<CacheManager>(() => CacheManager());
+
+  locator.registerLazySingleton<AuthGuard>(
+  () => AuthGuard(locator<LocalStorageService>()),
+);
+    // Router
+locator.registerLazySingleton<AppRouter>(
+  () => AppRouter(locator<AuthGuard>(), navigatorKey: locator<NavigationService>().navigatorKey),
+);
+
+ 
   locator.registerLazySingleton<AuthHeaderService>(
     () => AuthHeaderService(locator()),
   );
@@ -87,7 +96,7 @@ locator.registerLazySingleton<AppRouter>(
   locator.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(
       api: locator<UserApi>(),
-      storage: locator<LocalStorageService>(),
+      storage: locator<LocalStorageService>(), cache:  locator<CacheManager>(),
     ),
   );
 
@@ -97,6 +106,8 @@ locator.registerLazySingleton<AppRouter>(
   locator.registerFactory(() => CreateUser(locator<UserRepository>()));
   locator.registerFactory(() => GetUser(locator<UserRepository>()));
   locator.registerFactory(() => GetUsers(locator<UserRepository>()));
+  locator.registerFactory(() => GetCurrentUser(locator<UserRepository>()));
+
 
   locator.registerFactory(
     () => UserCubit(
@@ -105,14 +116,16 @@ locator.registerLazySingleton<AppRouter>(
       deleteUser: locator<DeleteUser>(), 
       createUserUsecase: locator<CreateUser>(), 
       getUserUseCase: locator<GetUser>(), 
-      getUsersUseCase: locator<GetUsers>(),
+      getUsersUseCase: locator<GetUsers>(), getCurrentUser: locator<GetCurrentUser>(),
     ),
   );
   
   // CLOCK FEATURE
 locator.registerLazySingleton(() => ClockApi(locator<ApiClient>()));
 locator.registerLazySingleton<ClockRepository>(
-    () => ClockRepositoryImpl(locator<ClockApi>()));
+  () => ClockRepositoryImpl(api:locator<ClockApi>(),cache: locator<CacheManager>()),
+);
+
 
 locator.registerFactory(() => ClockIn(locator<ClockRepository>()));
 locator.registerFactory(() => ClockOut(locator<ClockRepository>()));

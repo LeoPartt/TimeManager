@@ -17,6 +17,18 @@ class Validators {
     return null;
   }
 
+static String? validatePhone(BuildContext context, String? value) {
+  final tr = AppLocalizations.of(context)!;
+  if (value == null || value.isEmpty) {
+    return tr.phoneNumberRequired;
+  }
+  if (value.length < 8) {
+    return tr.invalidPhoneNumber;
+  }
+  return null;
+}
+
+
   static String? validatePassword(BuildContext context, String? value) {
                 final tr = AppLocalizations.of(context)!;
 

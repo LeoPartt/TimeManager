@@ -104,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         LinearProgressIndicator(
           value: value,
           color: colorScheme.primary,
-          backgroundColor: colorScheme.surfaceVariant,
+          backgroundColor: colorScheme.surfaceContainerHighest,
           minHeight: 10,
           borderRadius: BorderRadius.circular(AppSizes.r8),
         ),

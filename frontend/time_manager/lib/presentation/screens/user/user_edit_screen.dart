@@ -2,12 +2,15 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_sizes.dart';
+import 'package:time_manager/core/utils/accessibility_utils.dart';
 import 'package:time_manager/core/utils/extensions/context_extensions.dart';
 import 'package:time_manager/core/utils/validators.dart';
 import 'package:time_manager/core/widgets/app_button.dart';
 import 'package:time_manager/core/widgets/app_card.dart';
 import 'package:time_manager/core/widgets/app_input_field.dart';
 import 'package:time_manager/core/widgets/app_loader.dart';
+import 'package:time_manager/core/widgets/app_phone_field.dart';
+import 'package:time_manager/core/widgets/get_default_contry_code.dart';
 import 'package:time_manager/domain/usecases/user/update_user_profile.dart';
 import 'package:time_manager/l10n/app_localizations.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
@@ -35,7 +38,7 @@ class _UserEditScreenState extends State<UserEditScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<UserCubit>().getUser(widget.userId);
+    context.read<UserCubit>().getUser(context, widget.userId);
   }
 
   @override
@@ -50,16 +53,16 @@ class _UserEditScreenState extends State<UserEditScreen> {
 
   void _onSubmit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      context.read<UserCubit>().updateProfile(
-            UpdateUserProfileParams(
-              id: widget.userId,
-              username: _usernameController.text.trim(),
-              firstName: _firstNameController.text.trim(),
-              lastName: _lastNameController.text.trim(),
-              email: _emailController.text.trim(),
-              phoneNumber: _phoneController.text.trim(),
-            ),
-          );
+      context.read<UserCubit>().updateProfile(context,
+        UpdateUserProfileParams(
+          id: widget.userId,
+          username: _usernameController.text.trim(),
+          firstName: _firstNameController.text.trim(),
+          lastName: _lastNameController.text.trim(),
+          email: _emailController.text.trim(),
+          phoneNumber: _phoneController.text.trim(),
+        ),
+      );
     }
   }
 
@@ -68,6 +71,8 @@ class _UserEditScreenState extends State<UserEditScreen> {
     final tr = AppLocalizations.of(context)!;
     final size = MediaQuery.sizeOf(context);
     final isTablet = size.width >= 600;
+      final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return BlocConsumer<UserCubit, UserState>(
       listener: (context, state) {
@@ -109,8 +114,10 @@ class _UserEditScreenState extends State<UserEditScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         // ────────────── HEADER ──────────────
-                        Header(label: tr.modify.toUpperCase()),
-
+ AccessibilityUtils.withLabel(
+                          label: tr.modify,
+                          child: Header(label: tr.modify.toUpperCase()),
+                        ),
                         SizedBox(
                           height: AppSizes.responsiveHeight(
                             context,
@@ -118,70 +125,110 @@ class _UserEditScreenState extends State<UserEditScreen> {
                           ),
                         ),
 
-                        // ────────────── FORM CARD ──────────────
                         AppCard(
                           padding: EdgeInsets.all(
                             AppSizes.responsiveWidth(context, AppSizes.p20),
                           ),
                           child: Form(
                             key: _formKey,
+                                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
                             child: Column(
                               children: [
-                                AppInputField(
-                                  label: tr.userNameLabel,
-                                  controller: _usernameController,
-                                  icon: Icons.person,
-                                  textInputAction: TextInputAction.next,
+                                AccessibilityUtils.withTooltip(
+                                  context,
+                                  tooltip: tr.userNameLabel,
+                                  child: AppInputField(
+                                    label: tr.userNameLabel,
+                                    controller: _usernameController,
+                                    icon: Icons.person,
+                                    textInputAction: TextInputAction.next,
+                                  ),
                                 ),
                                 const SizedBox(height: AppSizes.p16),
 
-                                AppInputField(
-                                  label: tr.firstNameLabel,
-                                  controller: _firstNameController,
-                                  icon: Icons.person_outline,
-                                  textInputAction: TextInputAction.next,
+                                AccessibilityUtils.withTooltip(
+                                  context,
+                                  tooltip: tr.firstNameLabel,
+                                  child: AppInputField(
+                                    label: tr.firstNameLabel,
+                                    controller: _firstNameController,
+                                    icon: Icons.person_outline,
+                                    textInputAction: TextInputAction.next,
+                                  ),
                                 ),
                                 const SizedBox(height: AppSizes.p16),
 
-                                AppInputField(
-                                  label: tr.lastNameLabel,
-                                  controller: _lastNameController,
-                                  icon: Icons.person_outline,
-                                  textInputAction: TextInputAction.next,
+                                AccessibilityUtils.withTooltip(context,
+                                  tooltip: tr.lastNameLabel,
+                                  child: AppInputField(
+                                    label: tr.lastNameLabel,
+                                    controller: _lastNameController,
+                                    icon: Icons.person_outline,
+                                    textInputAction: TextInputAction.next,
+                                  ),
                                 ),
                                 const SizedBox(height: AppSizes.p16),
 
-                                AppInputField(
-                                  label: tr.emailLabel,
-                                  controller: _emailController,
-                                  icon: Icons.email_outlined,
-                                  keyboardType: TextInputType.emailAddress,
-                                  textInputAction: TextInputAction.next,
-                                  validator: (v) =>
-                                      Validators.validateEmail(context, v),
+                                 AccessibilityUtils.withTooltip(context,
+                                  tooltip: tr.emailLabel,
+                                  child: AppInputField(
+                                    label: tr.emailLabel,
+                                    controller: _emailController,
+                                    icon: Icons.email_outlined,
+                                    keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    validator: (v) =>
+                                        Validators.validateEmail(context, v),
+                                  ),
                                 ),
                                 const SizedBox(height: AppSizes.p16),
 
-                                AppInputField(
-                                  label: tr.phoneNumberLabel,
-                                  controller: _phoneController,
-                                  icon: Icons.phone_outlined,
-                                  keyboardType: TextInputType.phone,
-                                  textInputAction: TextInputAction.done,
+                                AccessibilityUtils.withTooltip(context,
+                                  tooltip: tr.phoneNumberLabel,
+                                  child: AppPhoneField(
+                                    controller: _phoneController,
+                                    label: tr.phoneNumberLabel,
+                                    validator: (v) => Validators.validatePhone(
+                                      context,
+                                      v as String?,
+                                    ),
+                                  
+                                    initialCountryCode: getDefaultCountryCode(),
+                                  ),
                                 ),
 
                                 SizedBox(
                                   height: AppSizes.responsiveHeight(
-                                      context, AppSizes.p24),
+                                    context,
+                                    AppSizes.p24,
+                                  ),
                                 ),
 
-                                // ────────────── BUTTON ──────────────
-                                AppButton(
+                                AccessibilityUtils.withLabel(
                                   label: tr.validate,
-                                  fullSize: true,
-                                  isLoading: state is UserLoading,
-                                  onPressed: () => _onSubmit(context),
+                                  child: AppButton(
+                                    label: tr.validate,
+                                    fullSize: true,
+                                    isLoading: state is UserLoading,
+                                    onPressed: () => _onSubmit(context),
+                                  ),
                                 ),
+
+                                 Semantics(
+                          label: tr.validate,
+                          readOnly: true,
+                          child: Text(
+                            tr.validate,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurface.withValues(alpha:0.6),
+                              fontSize: AccessibilityUtils.accessibleText(
+                                context,
+                                AppSizes.textSm,
+                              ),
+                            ),
+                          ),
+                        ),
                               ],
                             ),
                           ),

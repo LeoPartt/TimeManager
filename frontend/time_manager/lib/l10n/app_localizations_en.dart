@@ -164,4 +164,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String fieldIsRequired(String field) {
     return 'The \'$field\' field is required.';
   }
+
+  @override
+  String get toggleThemeHint => 'Toggle between dark and light mode';
+
+  @override
+  String get languageSelectionHint => 'Select the application language';
+
+  @override
+  String get accessibilityInfo => 'These settings improve accessibility and readability for all users.';
+
+  @override
+  String get invalidPhoneNumber => 'Invalid phone number';
+
+  @override
+  String get phoneNumberRequired => 'Phone number is required';
+
+  @override
+  String get phoneFormatHint => 'Example: +1 202 555 0123';
 }

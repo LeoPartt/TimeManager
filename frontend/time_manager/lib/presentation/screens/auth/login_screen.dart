@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_sizes.dart';
+import 'package:time_manager/core/utils/accessibility_utils.dart';
 import 'package:time_manager/core/utils/validators.dart';
 import 'package:time_manager/core/utils/extensions/context_extensions.dart';
 import 'package:time_manager/core/widgets/app_avatars.dart';
@@ -36,9 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onLoginPressed(BuildContext context) {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthCubit>().login(
-            username: _usernameController.text.trim(),
-            password: _passwordController.text.trim(),
-          );
+        context,
+        username: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
     }
   }
 
@@ -48,29 +50,32 @@ class _LoginScreenState extends State<LoginScreen> {
     final size = MediaQuery.sizeOf(context);
     final isTablet = size.width >= 600;
 
-    return  BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          state.maybeWhen(
-            error: (message) => context.showSnack(message, isError: true),
-            authenticated: (_) {
-              context.showSnack("✅ ${tr.login} successful!");
-              context.router.replaceAll([const HomeRoute()]);
-            },
-            orElse: () {},
-          );
-        },
-        builder: (context, state) {
-          final isLoading = state is AuthLoading;
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        state.maybeWhen(
+          error: (message) => context.showSnack(message, isError: true),
+          authenticated: (_) {
+            context.showSnack("✅ ${tr.login} ${tr.successful}");
+            context.router.replaceAll([const HomeRoute()]);
+          },
+          orElse: () {},
+        );
+      },
+      builder: (context, state) {
+        final isLoading = state is AuthLoading;
 
-          return Scaffold(
+        return Scaffold(
           resizeToAvoidBottomInset: true,
           body: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSizes.responsiveWidth(context, AppSizes.p24),
-                    vertical: AppSizes.responsiveHeight(context, AppSizes.p24),
-                  ),
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.responsiveWidth(context, AppSizes.p24),
+                  vertical: AppSizes.responsiveHeight(context, AppSizes.p24),
+                ),
+                child: Semantics(
+                  label: tr.loginButton,
+                  hint: tr.login,
                   child: Center(
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
@@ -79,10 +84,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // ────────────── Logo / Avatar ──────────────
-                        
-                            
-                          // ────────────── Login Card ──────────────
                           AppCard(
                             padding: EdgeInsets.all(
                               AppSizes.responsiveWidth(context, AppSizes.p24),
@@ -92,66 +93,92 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                    AppAvatar(
-                            radius: isTablet ? 60 : 45,
-                            fallbackIcon:  Icons.person_outline_rounded,
-                          ),
-                          SizedBox(
-                            height: AppSizes.responsiveHeight(context, AppSizes.p24),
-                          ),
+                                  AccessibilityUtils.withLabel(
+                                    label: tr.login,
+                                    child: AppAvatar(
+                                      radius: isTablet ? 60 : 45,
+                                      fallbackIcon:
+                                          Icons.person_outline_rounded,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: AppSizes.responsiveHeight(
+                                      context,
+                                      AppSizes.p24,
+                                    ),
+                                  ),
                                   // Username
-                                  AppInputField(
-                                    controller: _usernameController,
-                                    label: tr.userNameLabel,
-                                    icon: Icons.person_outline,
-                                    keyboardType: TextInputType.name,
-                                    textInputAction: TextInputAction.next,
-                                    validator: (v) =>
-                                        Validators.validateNotEmpty(context, v, tr.userNameLabel),
+                                  AccessibilityUtils.withTooltip(
+                                    context,
+                                    tooltip: tr.userNameLabel,
+                                    child: AppInputField(
+                                      controller: _usernameController,
+                                      label: tr.userNameLabel,
+                                      icon: Icons.person_outline,
+                                      keyboardType: TextInputType.name,
+                                      textInputAction: TextInputAction.next,
+                                      validator: (v) =>
+                                          Validators.validateNotEmpty(
+                                            context,
+                                            v,
+                                            tr.userNameLabel,
+                                          ),
+                                    ),
                                   ),
                                   const SizedBox(height: AppSizes.p16),
-                            
+
                                   // Password
-                                  AppInputField(
-                                    controller: _passwordController,
-                                    label: tr.passwordLabel,
-                                    icon: Icons.lock_outline,
-                                    obscureText: true,
-                                    textInputAction: TextInputAction.done,
-                                    keyboardType: TextInputType.text,
-                                    validator: (v) =>
-                                        Validators.validatePassword(context, v),
-                                    onSubmitted: () => _onLoginPressed(context),
+                                  AccessibilityUtils.withTooltip(
+                                    context,
+                                    tooltip: tr.passwordLabel,
+                                    child: AppInputField(
+                                      controller: _passwordController,
+                                      label: tr.passwordLabel,
+                                      icon: Icons.lock_outline,
+                                      obscureText: true,
+                                      textInputAction: TextInputAction.done,
+                                      keyboardType: TextInputType.text,
+                                      validator: (v) =>
+                                          Validators.validatePassword(
+                                            context,
+                                            v,
+                                          ),
+                                      onSubmitted: () =>
+                                          _onLoginPressed(context),
+                                    ),
                                   ),
                                   const SizedBox(height: AppSizes.p24),
-                            
+
                                   // Login Button
-                                  AppButton(
-                                    fullSize: true,
-                                    isLoading: isLoading,
+                                  AccessibilityUtils.withLabel(
                                     label: tr.loginButton,
-                                    onPressed: () => _onLoginPressed(context),
+                                    child: AppButton(
+                                      fullSize: true,
+                                      isLoading: isLoading,
+                                      label: tr.loginButton,
+                                      onPressed: () => _onLoginPressed(context),
+                                    ),
                                   ),
                                   const SizedBox(height: AppSizes.p16),
-                            
+
                                   // Forgot password
-                                  TextButton(
-                                    onPressed: () {
-                                      context.showSnack(
-                                        "🔐 ${tr.forgotPassword}",
-                                      );
-                                    },
-                                    child: Text(
-                                      tr.forgotPassword,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                  Semantics(
+                                    label: tr.forgotPassword,
+                                    hint: tr.forgotPassword,
+                                    button: true,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        context.showSnack(
+                                          "🔐 ${tr.forgotPassword}",
+                                        );
+                                      },
+                                      child: Text(
+                                        tr.forgotPassword,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                        
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -165,8 +192,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-          );
-        },
-      );
+          ),
+        );
+      },
+    );
   }
 }

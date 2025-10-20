@@ -6,6 +6,7 @@ import 'package:time_manager/domain/entities/schedule.dart';
 import 'package:time_manager/domain/usecases/schedule/get_clock_in.dart';
 import 'package:time_manager/domain/usecases/schedule/get_clock_out.dart';
 import 'package:time_manager/domain/usecases/schedule/get_clock_status.dart';
+import 'package:time_manager/l10n/app_localizations.dart';
 
 import 'package:time_manager/presentation/cubits/clock/clock_state.dart';
 
@@ -20,7 +21,9 @@ class ClockCubit extends Cubit<ClockState> {
     required this.getStatusUseCase,
   }) : super(const ClockState.initial());
 
-  Future<void> clockIn(TimeOfDay selectedTime) async {
+  Future<void> clockIn(BuildContext context, TimeOfDay selectedTime) async {
+        final tr = AppLocalizations.of(context)!;
+
     emit(const ClockState.loading());
     try {
       final now = DateTime.now();
@@ -30,11 +33,13 @@ class ClockCubit extends Cubit<ClockState> {
        await clockInUseCase(dt);
       emit(ClockState.clockedIn(Clock(arrivalTs: dt, departureTs: null)));
     } catch (e) {
-      emit(ClockState.error('Clock-in failed: $e'));
+      emit(ClockState.error('${tr.clockin} ${tr.error.toLowerCase()}'));
     }
   }
 
-  Future<void> clockOut(TimeOfDay selectedTime) async {
+  Future<void> clockOut(BuildContext context, TimeOfDay selectedTime) async {
+        final tr = AppLocalizations.of(context)!;
+
     emit(const ClockState.loading());
     try {
        final now = DateTime.now();
@@ -44,11 +49,13 @@ class ClockCubit extends Cubit<ClockState> {
        await clockOutUseCase(dt);
       emit(ClockState.clockedOut(Clock(arrivalTs: null, departureTs: dt)));
     } catch (e) {
-      emit(ClockState.error('Clock-out failed: $e'));
+      emit(ClockState.error('${tr.clockout} ${tr.error.toLowerCase()}'));
     }
   }
 
-  Future<void> getStatus() async {
+  Future<void> getStatus(BuildContext context ) async {
+        final tr = AppLocalizations.of(context)!;
+
     emit(const ClockState.loading());
     try {
       final status = await getStatusUseCase();
@@ -58,17 +65,17 @@ class ClockCubit extends Cubit<ClockState> {
         emit(ClockState.clockedOut(status!));
       }
     } catch (e) {
-      emit(ClockState.error(e.toString()));
+      emit(ClockState.error('${tr.error}: ${e.toString()}'));
     }
   }
 
-   Future<void> toggleClockState(TimeOfDay timestamp) async {
+   Future<void> toggleClockState(BuildContext context, TimeOfDay timestamp) async {
     final current = state;
     
     if (current is ClockedIn) {
-      await clockOut(timestamp);
+      await clockOut(context, timestamp);
     } else {
-      await clockIn(timestamp);
+      await clockIn(context, timestamp);
     }
   }
 }

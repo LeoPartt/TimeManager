@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:time_manager/core/constants/app_colors.dart';
 import 'package:time_manager/core/constants/app_sizes.dart';
 
 class AppSearchBar extends StatelessWidget {
@@ -16,16 +15,27 @@ class AppSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = AppSizes.responsiveHeight(context, 56);
+        final theme = Theme.of(context);
 
+  final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
+    final width = AppSizes.responsiveWidth(context, 350);
+    final height = AppSizes.responsiveHeight(context, 56);
+    final radius = BorderRadius.circular(AppSizes.r16);
+
+    final backgroundColor = colorScheme.secondary;
+    final borderColor = colorScheme.primary.withValues(alpha: 0.35);
+    final iconColor = colorScheme.onSurface.withValues(alpha:0.8);
+   
     return Container(
-      width: AppSizes.responsiveWidth(context, 350),
+      width: width,
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.accent,
-        borderRadius: BorderRadius.circular(AppSizes.r16),
+        color: backgroundColor,
+        borderRadius: radius,
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.35),
+          color: borderColor,
           width: 2,
         ),
       ),
@@ -33,11 +43,11 @@ class AppSearchBar extends StatelessWidget {
         child: TextField(
           controller: controller,
           onChanged: onChanged,
-          style: TextStyle(
-            color: AppColors.textPrimary,
+          style: textTheme.bodyLarge?.copyWith(
             fontSize: AppSizes.responsiveText(context, AppSizes.textLg),
-            height: 1.2, 
+            height: 1.3,
           ),
+
           decoration: InputDecoration(
             filled: false, 
             isDense: true, 
@@ -46,15 +56,15 @@ class AppSearchBar extends StatelessWidget {
               child: Icon(
                 Icons.search_rounded,
                 size: AppSizes.responsiveWidth(context, AppSizes.iconMedium),
-                color: AppColors.textPrimary,
+                color: iconColor,
               ),
             ),
             prefixIconConstraints: const BoxConstraints(minWidth: 40),
             hintText: hintText,
-            hintStyle: TextStyle(
-              color: AppColors.textPrimary.withValues(alpha: 0.65),
+            hintStyle:textTheme.bodyMedium?.copyWith(
               fontSize: AppSizes.responsiveText(context, AppSizes.textLg),
             ),
+
             border: InputBorder.none,
             focusedBorder: InputBorder.none,
             enabledBorder: InputBorder.none,

@@ -400,6 +400,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The \'{field}\' field is required.'**
   String fieldIsRequired(String field);
+
+  /// No description provided for @toggleThemeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle between dark and light mode'**
+  String get toggleThemeHint;
+
+  /// No description provided for @languageSelectionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the application language'**
+  String get languageSelectionHint;
+
+  /// No description provided for @accessibilityInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'These settings improve accessibility and readability for all users.'**
+  String get accessibilityInfo;
+
+  /// No description provided for @invalidPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid phone number'**
+  String get invalidPhoneNumber;
+
+  /// No description provided for @phoneNumberRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number is required'**
+  String get phoneNumberRequired;
+
+  /// No description provided for @phoneFormatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: +1 202 555 0123'**
+  String get phoneFormatHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

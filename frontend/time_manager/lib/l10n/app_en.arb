@@ -68,5 +68,11 @@
         "example": "email"
       }
     }
-  }
+  },"toggleThemeHint": "Toggle between dark and light mode",
+  "languageSelectionHint": "Select the application language",
+  "accessibilityInfo": "These settings improve accessibility and readability for all users.",
+
+  "invalidPhoneNumber": "Invalid phone number",
+  "phoneNumberRequired": "Phone number is required",
+  "phoneFormatHint": "Example: +1 202 555 0123"
 }
