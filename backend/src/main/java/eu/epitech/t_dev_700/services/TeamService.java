@@ -43,7 +43,9 @@ public class TeamService extends CRUDService<
 
     @CRUDHookUtils.CRUDHook(action = CRUDHookUtils.Action.CREATE, moment = CRUDHookUtils.Moment.AFTER)
     public void onTeamCreation(TeamEntity entity, TeamModels.PostTeamRequest request) {
-        this.membershipService.createMembership(entity, UserAuthorization.getCurrentUser(), MembershipEntity.TeamRole.MANAGER);
+        UserEntity currentUser = UserAuthorization.getCurrentUser();
+        if (currentUser == null) return;
+        this.membershipService.createMembership(entity, currentUser, MembershipEntity.TeamRole.MANAGER);
     }
 
     @Transactional(readOnly = true)
