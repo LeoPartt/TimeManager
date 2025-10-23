@@ -15,7 +15,7 @@ public class ErrorModels {
 
     @Schema(description = "Error response (see RFC 9457)")
     @ExternalDocumentation(url = "https://datatracker.ietf.org/doc/html/rfc9457")
-    public static record ErrorResponse(
+    public record ErrorResponse(
 
             @Schema(description = "Reason phrase of the status code")
             @NotNull
