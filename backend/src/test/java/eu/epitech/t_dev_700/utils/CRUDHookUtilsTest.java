@@ -11,8 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
@@ -144,7 +142,7 @@ class CRUDHookUtilsTest {
     }
 
     // Test service with hooks
-    static class TestCRUDService extends CRUDService<TeamEntity, TeamModels.TeamModel, TeamModels.PostTeamRequest, TeamModels.PutTeamRequest, TeamModels.PatchTeamRequest> {
+    static class TestCRUDService extends CRUDService<TeamEntity, TeamModels.TeamResponse, TeamModels.PostTeamRequest, TeamModels.PutTeamRequest, TeamModels.PatchTeamRequest> {
 
         boolean beforeCreateCalled = false;
         boolean afterCreateCalled = false;
@@ -206,7 +204,7 @@ class CRUDHookUtilsTest {
     }
 
     // Test service with multiple hooks for the same action
-    static class TestServiceWithMultipleHooks extends CRUDService<TeamEntity, TeamModels.TeamModel, TeamModels.PostTeamRequest, TeamModels.PutTeamRequest, TeamModels.PatchTeamRequest> {
+    static class TestServiceWithMultipleHooks extends CRUDService<TeamEntity, TeamModels.TeamResponse, TeamModels.PostTeamRequest, TeamModels.PutTeamRequest, TeamModels.PatchTeamRequest> {
 
         boolean hook1Called = false;
         boolean hook2Called = false;

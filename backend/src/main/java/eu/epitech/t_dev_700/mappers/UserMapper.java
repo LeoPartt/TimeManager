@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 @Mapper(componentModel = "spring", uses = PasswordMapper.class)
 public interface UserMapper extends CRUDMapper<
         UserEntity,
-        UserModels.UserModel,
+        UserModels.UserResponse,
         UserModels.PostUserRequest,
         UserModels.PutUserRequest,
         UserModels.PatchUserRequest
@@ -20,16 +20,16 @@ public interface UserMapper extends CRUDMapper<
 
     @Override
     @Mapping(target = "username", source = "account.username")
-    UserModels.UserModel toModel(UserEntity entity);
+    UserModels.UserResponse toModel(UserEntity entity);
 
     @Override
-    default UserModels.UserModel[] listEntity(List<UserEntity> entities) {
-        return entities.stream().map(this::toModel).toArray(UserModels.UserModel[]::new);
+    default UserModels.UserResponse[] listEntity(List<UserEntity> entities) {
+        return entities.stream().map(this::toModel).toArray(UserModels.UserResponse[]::new);
     }
 
     @Override
-    default UserModels.UserModel[] listEntity(Stream<UserEntity> stream) {
-        return stream.map(this::toModel).toArray(UserModels.UserModel[]::new);
+    default UserModels.UserResponse[] listEntity(Stream<UserEntity> stream) {
+        return stream.map(this::toModel).toArray(UserModels.UserResponse[]::new);
     }
 
     @Override

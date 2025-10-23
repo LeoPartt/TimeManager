@@ -4,9 +4,6 @@ import eu.epitech.t_dev_700.models.constraints.NullableNotBlank;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.http.ResponseEntity;
-
-import java.net.URI;
 
 public class TeamModels {
 
@@ -15,9 +12,8 @@ public class TeamModels {
         String description();
     }
 
-    // INTERNALS
     @Schema(description = "Team information model")
-    public record TeamModel (
+    public record TeamResponse(
             @Schema(description = "Unique team identifier", example = "1")
             Long id,
 
@@ -28,7 +24,6 @@ public class TeamModels {
             String description
     ) implements Team, HasId {}
 
-    //REQUESTS
     @Schema(description = "Request body for creating a new team")
     public record PostTeamRequest(
             @Schema(description = "Team name", example = "Development Team")

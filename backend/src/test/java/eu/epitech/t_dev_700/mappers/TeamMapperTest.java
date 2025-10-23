@@ -32,7 +32,7 @@ class TeamMapperTest {
 
     @Test
     void testToModel_shouldMapEntityToModel() {
-        TeamModels.TeamModel model = teamMapper.toModel(teamEntity);
+        TeamModels.TeamResponse model = teamMapper.toModel(teamEntity);
 
         assertThat(model).isNotNull();
         assertThat(model.id()).isEqualTo(1L);
@@ -44,7 +44,7 @@ class TeamMapperTest {
     void testToModel_withNullDescription_shouldMapCorrectly() {
         teamEntity.setDescription(null);
 
-        TeamModels.TeamModel model = teamMapper.toModel(teamEntity);
+        TeamModels.TeamResponse model = teamMapper.toModel(teamEntity);
 
         assertThat(model).isNotNull();
         assertThat(model.description()).isNull();
@@ -59,7 +59,7 @@ class TeamMapperTest {
 
         List<TeamEntity> entities = Arrays.asList(teamEntity, team2);
 
-        TeamModels.TeamModel[] models = teamMapper.listEntity(entities);
+        TeamModels.TeamResponse[] models = teamMapper.listEntity(entities);
 
         assertThat(models).hasSize(2);
         assertThat(models[0].id()).isEqualTo(1L);
@@ -72,7 +72,7 @@ class TeamMapperTest {
     void testListEntity_withEmptyList_shouldReturnEmptyArray() {
         List<TeamEntity> entities = Arrays.asList();
 
-        TeamModels.TeamModel[] models = teamMapper.listEntity(entities);
+        TeamModels.TeamResponse[] models = teamMapper.listEntity(entities);
 
         assertThat(models).isEmpty();
     }

@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class UserService extends CRUDService<
         UserEntity,
-        UserModels.UserModel,
+        UserModels.UserResponse,
         UserModels.PostUserRequest,
         UserModels.PutUserRequest,
         UserModels.PatchUserRequest
@@ -36,12 +36,12 @@ public class UserService extends CRUDService<
     }
 
     @Transactional(readOnly = true)
-    public UserModels.UserModel getCurrentUser() {
+    public UserModels.UserResponse getCurrentUser() {
         return userMapper.toModel(UserAuthorization.getCurrentUser());
     }
 
     @Transactional(readOnly = true)
-    public TeamModels.TeamModel[] getTeams(Long id) {
+    public TeamModels.TeamResponse[] getTeams(Long id) {
         return teamService.getByUser(this.findEntityOrThrow(id));
     }
 
