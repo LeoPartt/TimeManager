@@ -1,7 +1,7 @@
 package eu.epitech.t_dev_700.doc;
 
 
-import eu.epitech.t_dev_700.models.ErrorResponse;
+import eu.epitech.t_dev_700.models.ErrorModels;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,9 +14,5 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@ApiResponses(value = {
-        @ApiResponse(responseCode = "401", description = "Unauthorized",
-                content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-})
+@ApiResponse(responseCode = "401", description = "The client could not be authenticated")
 public @interface ApiUnauthorizedResponse {}
-

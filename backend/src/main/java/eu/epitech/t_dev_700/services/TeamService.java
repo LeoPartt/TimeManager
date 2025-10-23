@@ -84,7 +84,7 @@ public class TeamService extends CRUDService<
 
     @Transactional
     public UserModels.UserResponse updateManager(Long id, Long userId) {
-        UserEntity user = this.userComponent.getUser(id);
+        UserEntity user = this.userComponent.getUser(userId);
         this.membershipService.updateManagerOfTeam(this.findEntityOrThrow(id), user);
         return userMapper.toModel(user);
     }

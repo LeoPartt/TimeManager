@@ -1,19 +1,20 @@
 package eu.epitech.t_dev_700.services.exceptions;
 
 import eu.epitech.t_dev_700.models.ClockModels;
+import eu.epitech.t_dev_700.models.ErrorModels;
 import eu.epitech.t_dev_700.utils.HasDetails;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
-public final class InvalidClocking extends IllegalStateException implements Consumer<Object>, Runnable, HasDetails {
+@Schema(example = "Invalid clocking")
+public final class InvalidClocking extends IllegalStateException implements Consumer<Object>, Runnable, HasDetails<ErrorModels.InvalidClockingDetail> {
 
-    private final Map<String, Object> details = new HashMap<>();
+    private final ErrorModels.InvalidClockingDetail details;
 
     public InvalidClocking(ClockModels.ClockAction expectedAction) {
         super("Invalid clocking");
-        this.details.put("expected", expectedAction);
+        this.details = new ErrorModels.InvalidClockingDetail(expectedAction);
     }
 
     @Override
@@ -27,7 +28,7 @@ public final class InvalidClocking extends IllegalStateException implements Cons
     }
 
     @Override
-    public Map<String, Object> details() {
+    public ErrorModels.InvalidClockingDetail details() {
         return details;
     }
 }

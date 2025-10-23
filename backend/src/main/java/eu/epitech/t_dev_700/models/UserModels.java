@@ -20,7 +20,7 @@ public class UserModels {
         String phoneNumber();
     }
 
-    @Schema(description = "User information model", contentMediaType = "application/json")
+    @Schema(description = "User information model")
     public record UserResponse(
             @Schema(description = "Unique user identifier", example = "1")
             Long id,
@@ -42,7 +42,7 @@ public class UserModels {
     ) implements User, HasId {}
 
     //REQUESTS
-    @Schema(description = "Request body for creating a new user", contentMediaType = "application/json")
+    @Schema(description = "Request body for creating a new user")
     public record PostUserRequest(
             @Schema(description = "Username for the new user", example = "john.doe")
             @NotBlank String username,
@@ -64,7 +64,7 @@ public class UserModels {
     ) implements User {
     }
 
-    @Schema(description = "Request body for completely replacing a user (PUT)", contentMediaType = "application/json")
+    @Schema(description = "Request body for completely replacing a user (PUT)")
     public record PutUserRequest(
             @Schema(description = "Username", example = "john.doe")
             @NotBlank String username,
@@ -83,7 +83,7 @@ public class UserModels {
     ) implements User {
     }
 
-    @Schema(description = "Request body for partially updating a user (PATCH)", contentMediaType = "application/json")
+    @Schema(description = "Request body for partially updating a user (PATCH)")
     public record PatchUserRequest(
             @Schema(description = "Username (optional)", example = "john.doe")
             @NullableNotBlank String username,

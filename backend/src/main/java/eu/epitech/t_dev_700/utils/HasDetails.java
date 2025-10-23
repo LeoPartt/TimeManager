@@ -2,8 +2,8 @@ package eu.epitech.t_dev_700.utils;
 
 import java.util.Map;
 
-public interface HasDetails {
+public interface HasDetails<T> {
 
-    Map<String, Object> details();
+    T details();
 
 }

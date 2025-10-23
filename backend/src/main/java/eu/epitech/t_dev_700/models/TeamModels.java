@@ -12,8 +12,7 @@ public class TeamModels {
         String description();
     }
 
-    // INTERNALS
-    @Schema(description = "Team information model", contentMediaType = "application/json")
+    @Schema(description = "Team information model")
     public record TeamResponse(
             @Schema(description = "Unique team identifier", example = "1")
             Long id,
@@ -25,8 +24,7 @@ public class TeamModels {
             String description
     ) implements Team, HasId {}
 
-    //REQUESTS
-    @Schema(description = "Request body for creating a new team", contentMediaType = "application/json")
+    @Schema(description = "Request body for creating a new team")
     public record PostTeamRequest(
             @Schema(description = "Team name", example = "Development Team")
             @NotBlank String name,
@@ -35,7 +33,7 @@ public class TeamModels {
             @NotNull String description
     ) implements Team {}
 
-    @Schema(description = "Request body for completely replacing a team (PUT)", contentMediaType = "application/json")
+    @Schema(description = "Request body for completely replacing a team (PUT)")
     public record PutTeamRequest(
             @Schema(description = "Team name", example = "Development Team")
             @NotBlank String name,
@@ -44,7 +42,7 @@ public class TeamModels {
             @NotNull String description
     ) implements Team {}
 
-    @Schema(description = "Request body for partially updating a team (PATCH)", contentMediaType = "application/json")
+    @Schema(description = "Request body for partially updating a team (PATCH)")
     public record PatchTeamRequest(
             @Schema(description = "Team name (optional)", example = "Development Team")
             @NullableNotBlank String name,

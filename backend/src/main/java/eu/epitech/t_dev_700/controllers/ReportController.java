@@ -1,6 +1,5 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.doc.ApiRoleProtected;
 import eu.epitech.t_dev_700.models.ReportModels;
 import eu.epitech.t_dev_700.doc.ApiUnauthorizedResponse;
 import io.swagger.v3.oas.annotations.Operation;

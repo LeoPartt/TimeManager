@@ -1,10 +1,11 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.doc.ApiRoleProtected;
+import eu.epitech.t_dev_700.doc.ApiErrorResponse;
+import eu.epitech.t_dev_700.doc.ApiUnauthorizedResponse;
 import eu.epitech.t_dev_700.models.ClockModels;
 import eu.epitech.t_dev_700.services.ClockService;
-import eu.epitech.t_dev_700.doc.ApiForbiddenResponse;
-import eu.epitech.t_dev_700.doc.ApiUnauthorizedResponse;
+import eu.epitech.t_dev_700.services.exceptions.InvalidClocking;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +26,7 @@ public class ClockController {
 
     @Operation(summary = "Record clock event")
     @ApiResponse(responseCode = "204", description = "Successfully clocked in / out")
-    @ApiResponse(responseCode = "409", description = "The action is not valid for the current state")
+    @ApiErrorResponse(InvalidClocking.class)
     @PostMapping
     public ResponseEntity<Void> PostClock(@Valid @RequestBody ClockModels.PostClockRequest body) {
         this.clockService.postClock(body);
@@ -34,8 +35,7 @@ public class ClockController {
 
     @Operation(summary = "Record clock event for user")
     @ApiResponse(responseCode = "204", description = "Successfully clocked in / out")
-    @ApiResponse(responseCode = "409", description = "The action is not valid for the current state")
-    @ApiRoleProtected(roles = {"Self", "Manager of"})
+    @ApiErrorResponse({InvalidClocking.class, ResourceNotFound.class})
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @PostMapping("/{id}")
     public ResponseEntity<Void> PostClock(@PathVariable Long id, @Valid @RequestBody ClockModels.PostClockRequest body) {

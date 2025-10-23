@@ -1,8 +1,10 @@
 package eu.epitech.t_dev_700.controllers;
 
+import eu.epitech.t_dev_700.doc.ApiErrorResponse;
 import eu.epitech.t_dev_700.models.AuthModels;
 import eu.epitech.t_dev_700.services.AuthService;
 import eu.epitech.t_dev_700.services.JwtService;
+import eu.epitech.t_dev_700.services.exceptions.InvalidCredentials;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -27,6 +29,7 @@ public class AuthController {
 
     @Operation(summary = "Authenticate user")
     @ApiResponse(responseCode = "200", description = "Successfully logged in", useReturnTypeSchema = true)
+    @ApiErrorResponse(InvalidCredentials.class)
     @SecurityRequirements
     @PostMapping("/login")
     public ResponseEntity<AuthModels.LoginResponse> PostLogin(@Valid @RequestBody AuthModels.LoginRequest body) {

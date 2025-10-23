@@ -1,11 +1,11 @@
 package eu.epitech.t_dev_700.controllers;
 
-import eu.epitech.t_dev_700.doc.ApiForbiddenResponse;
-import eu.epitech.t_dev_700.doc.ApiRoleProtected;
+import eu.epitech.t_dev_700.doc.ApiErrorResponse;
 import eu.epitech.t_dev_700.doc.ApiUnauthorizedResponse;
 import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.UserService;
+import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +34,7 @@ public class UserController implements CRUDController<
     @Override
     @Operation(summary = "Get user at id")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    @ApiRoleProtected(roles = {"Self", "Manager"})
+    @ApiErrorResponse(ResourceNotFound.class)
     @PreAuthorize("@userAuth.isSelfOrManager(authentication, #id)")
     @GetMapping("{id}")
     public ResponseEntity<UserModels.UserResponse> Get(@PathVariable("id") Long id) {
@@ -44,7 +44,6 @@ public class UserController implements CRUDController<
     @Override
     @Operation(summary = "Get all users")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    @ApiRoleProtected(roles = {"Manager"})
     @PreAuthorize("@userAuth.isManager(authentication)")
     @GetMapping
     public ResponseEntity<UserModels.UserResponse[]> GetAll() {
@@ -54,8 +53,6 @@ public class UserController implements CRUDController<
     @Override
     @Operation(summary = "Create a user")
     @ApiResponse(responseCode = "201", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "400")
-    @ApiRoleProtected(roles = {"Manager"})
     @PreAuthorize("@userAuth.isManager(authentication)")
     @PostMapping
     public ResponseEntity<UserModels.UserResponse> Post(@Valid @RequestBody UserModels.PostUserRequest body) {
@@ -65,7 +62,7 @@ public class UserController implements CRUDController<
     @Override
     @Operation(summary = "Modify an existing user")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    @ApiRoleProtected(roles = {"Self", "Manager of"})
+    @ApiErrorResponse(ResourceNotFound.class)
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @PutMapping("{id}")
     public ResponseEntity<UserModels.UserResponse> Put(@PathVariable Long id, @Valid @RequestBody UserModels.PutUserRequest body) {
@@ -75,7 +72,7 @@ public class UserController implements CRUDController<
     @Override
     @Operation(summary = "Update an existing user")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    @ApiRoleProtected(roles = {"Self", "Manager of"})
+    @ApiErrorResponse(ResourceNotFound.class)
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @PatchMapping("{id}")
     public ResponseEntity<UserModels.UserResponse> Patch(@PathVariable Long id, @Valid @RequestBody UserModels.PatchUserRequest body) {
@@ -85,7 +82,7 @@ public class UserController implements CRUDController<
     @Override
     @Operation(summary = "Delete an existing user")
     @ApiResponse(responseCode = "204")
-    @ApiRoleProtected(roles = {"Self", "Manager of"})
+    @ApiErrorResponse(ResourceNotFound.class)
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> Delete(@PathVariable Long id) {
@@ -102,7 +99,7 @@ public class UserController implements CRUDController<
 
     @Operation(summary = "Get user's clock records")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
-    @ApiRoleProtected(roles = {"Self", "Manager of"})
+    @ApiErrorResponse(ResourceNotFound.class)
     @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
     @GetMapping("{id}/clocks")
     public ResponseEntity<Long[]> getUserClocks(@PathVariable Long id, @RequestParam("from") Optional<Long> from, @RequestParam("to") Optional<Long> to) {
@@ -111,6 +108,7 @@ public class UserController implements CRUDController<
 
     @Operation(summary = "Get user's teams")
     @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    @ApiErrorResponse(ResourceNotFound.class)
     @GetMapping("{id}/teams")
     public ResponseEntity<TeamModels.TeamResponse[]> getTeams(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getTeams(id));
