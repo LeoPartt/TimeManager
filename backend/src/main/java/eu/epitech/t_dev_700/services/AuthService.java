@@ -1,6 +1,7 @@
 package eu.epitech.t_dev_700.services;
 
 import eu.epitech.t_dev_700.entities.AccountEntity;
+import eu.epitech.t_dev_700.entities.UserEntity;
 import eu.epitech.t_dev_700.models.AuthModels;
 import eu.epitech.t_dev_700.services.exceptions.DeletedUser;
 import eu.epitech.t_dev_700.services.exceptions.InvalidCredentials;
@@ -46,7 +47,9 @@ public class AuthService {
         Session session = entityManager.unwrap(Session.class);
         try {
             session.disableFilter("deletedUserFilter");
-            if (account.getUser().getDeletedAt() != null) throw new DeletedUser(account.getUsername());
+            UserEntity user = account.getUser();
+            if (user == null) return;
+            if (user.getDeletedAt() != null) throw new DeletedUser(account.getUsername());
         } finally {
             session.enableFilter("deletedUserFilter");
         }

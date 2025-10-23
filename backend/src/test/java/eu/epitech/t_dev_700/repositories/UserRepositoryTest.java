@@ -3,12 +3,15 @@ package eu.epitech.t_dev_700.repositories;
 import eu.epitech.t_dev_700.entities.AccountEntity;
 import eu.epitech.t_dev_700.entities.UserEntity;
 import jakarta.validation.ConstraintViolationException;
+import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -32,6 +35,7 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
+
         testAccount = new AccountEntity();
         testAccount.setUsername("testuser");
         testAccount.setPassword("hashedPassword");
@@ -120,6 +124,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     void testDeleteUser_shouldSoftDelete() {
         UserEntity saved = userRepository.save(testUser);
         entityManager.flush();
@@ -127,14 +132,11 @@ class UserRepositoryTest {
 
         // Reload to ensure it's managed
         UserEntity managed = userRepository.findById(saved.getId()).orElseThrow();
-        Long userId = managed.getId();
         userRepository.delete(managed);
         entityManager.flush();
         entityManager.clear();
 
-        // Due to @SQLRestriction, soft-deleted users should not be found
-        Optional<UserEntity> found = userRepository.findById(userId);
-        assertThat(found).isEmpty();
+        assertThat(userRepository.findAll()).isEmpty();
     }
 
     @Test

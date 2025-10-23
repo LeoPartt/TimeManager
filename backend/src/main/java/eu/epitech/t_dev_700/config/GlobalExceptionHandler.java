@@ -97,7 +97,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnexpected(Exception ex, WebRequest request) {
-        System.out.println(ex.getClass() + " " + ex.getMessage());
         return new ErrorModels.ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request).toResponse();
     }
 }
