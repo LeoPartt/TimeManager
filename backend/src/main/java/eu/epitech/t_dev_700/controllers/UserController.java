@@ -21,11 +21,10 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@RequestMapping("users")
-@RequiredArgsConstructor
-
+@RequestMapping("/users")
 @Tag(name = "User Management")
 @ApiUnauthorizedResponse
+@RequiredArgsConstructor
 public class UserController implements CRUDController<
         UserModels.UserResponse,
         UserModels.PostUserRequest,
