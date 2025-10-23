@@ -5,9 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.http.ResponseEntity;
-
-import java.net.URI;
 
 public class UserModels {
 
@@ -24,7 +21,7 @@ public class UserModels {
     }
 
     @Schema(description = "User information model")
-    public record UserModel(
+    public record UserResponse(
             @Schema(description = "Unique user identifier", example = "1")
             Long id,
 
