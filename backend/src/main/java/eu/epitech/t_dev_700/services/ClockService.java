@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static eu.epitech.t_dev_700.models.ClockModels.ClockAction;
+
 @Service
 @RequiredArgsConstructor
 public class ClockService {
@@ -55,20 +57,20 @@ public class ClockService {
 
     public void postClock(ClockModels.PostClockRequest body, UserEntity user) {
         switch (body.io()) {
-            case IN -> scheduleRepository
+            case ClockAction.IN -> scheduleRepository
                     .findByUserAndDepartureTsIsNull(user)
                     .ifPresentOrElse(
-                            new InvalidClocking(),
+                            new InvalidClocking(ClockAction.OUT),
                             () -> scheduleRepository.save(scheduleRepository
                                     .createFromUserAndArrivalTs(user, body.timestamp())));
-            case OUT -> scheduleRepository
+            case ClockAction.OUT -> scheduleRepository
                     .findByUserAndDepartureTsIsNull(user)
                     .ifPresentOrElse(
                             scheduleEntity -> {
                                 scheduleEntity.setDepartureTs(body.timestamp());
                                 scheduleRepository.save(scheduleEntity);
                             },
-                            new InvalidClocking());
+                            new InvalidClocking(ClockAction.IN));
         }
     }
 

@@ -118,7 +118,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForAdmin(),
                 post("/teams").contentType(MediaType.APPLICATION_JSON).content(POST_REQUEST_BODY),
-                status().isOk());
+                status().isCreated());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 post("/teams").contentType(MediaType.APPLICATION_JSON).content(POST_REQUEST_BODY),
-                status().isOk());
+                status().isCreated());
     }
 
     @Test
@@ -207,7 +207,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForAdmin(),
                 delete("/teams/1"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -247,7 +247,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 delete("/teams/1"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -303,7 +303,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForAdmin(),
                 post("/teams/1/members/3"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -327,7 +327,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 post("/teams/1/members/3"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -343,7 +343,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForAdmin(),
                 delete("/teams/1/members/3"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -367,7 +367,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForManager(),
                 delete("/teams/1/members/3"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
@@ -464,7 +464,7 @@ public class TeamAuthTest extends AbstractAuthTest {
         doTestRequestForAuthExpectCode(
                 authForAdmin(),
                 delete("/teams/1/manager"),
-                status().isOk());
+                status().isNoContent());
     }
 
     @Test
