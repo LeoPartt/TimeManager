@@ -4,8 +4,6 @@ import eu.epitech.t_dev_700.models.ErrorModels;
 import eu.epitech.t_dev_700.utils.HasDetails;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 

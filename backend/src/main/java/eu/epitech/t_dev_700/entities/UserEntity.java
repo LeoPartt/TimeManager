@@ -1,12 +1,15 @@
 package eu.epitech.t_dev_700.entities;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.*;
 
 import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
@@ -25,7 +28,8 @@ import java.util.Set;
         }
 )
 @SQLDelete(sql = "UPDATE tm_user SET deleted_at = now() WHERE id = ?")
-@SQLRestriction("deleted_at IS NULL")
+@FilterDef(name = "deletedUserFilter", autoEnabled = true)
+@Filter(name = "deletedUserFilter", condition = "deleted_at IS NULL")
 public class UserEntity {
 
     @Id

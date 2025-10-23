@@ -10,6 +10,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,8 +65,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ErrorModels.ErrorResponse(HttpStatus.NOT_FOUND, ex, request).toResponse();
     }
 
-    @ExceptionHandler(InvalidCredentials.class)
-    public ResponseEntity<Object> InvalidCredentialsException(InvalidCredentials ex, WebRequest request) {
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> AuthenticationException(AuthenticationException ex, WebRequest request) {
         return new ErrorModels.ErrorResponse(HttpStatus.UNAUTHORIZED, ex, request).toResponse();
     }
 
@@ -96,7 +97,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnexpected(Exception ex, WebRequest request) {
-        System.out.println(ex.getClass() + " " + ex.getMessage());
         return new ErrorModels.ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request).toResponse();
     }
 }
