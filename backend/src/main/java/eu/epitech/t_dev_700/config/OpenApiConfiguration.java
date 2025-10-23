@@ -1,7 +1,6 @@
 package eu.epitech.t_dev_700.config;
 
 import eu.epitech.t_dev_700.models.ErrorModels;
-import eu.epitech.t_dev_700.services.exceptions.InvalidCredentials;
 import eu.epitech.t_dev_700.utils.HasDetails;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Operation;
@@ -19,6 +18,7 @@ import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -26,8 +26,6 @@ import java.util.*;
 
 @Configuration
 public class OpenApiConfiguration {
-
-    static String BISES = " ⑵⑶⑷⑸⑹⑺⑻⑼";
 
     @Bean
     public OpenApiCustomizer customOpenAPI() {
@@ -76,7 +74,7 @@ public class OpenApiConfiguration {
 
         for (Class<?> errorClass : errorsClass) {
             String code = getCodeFromError(errorClass);
-            String name = "%s%s".formatted(code, BISES.charAt(Collections.frequency(codes, code)));
+            String name = "%s%s".formatted(code, "*".repeat(Collections.frequency(codes, code)));
             codes.add(code);
 
             Schema<?> schema = buildSchema(code, path);
@@ -127,7 +125,7 @@ public class OpenApiConfiguration {
     }
 
     private String getCodeFromError(Class<?> clazz) {
-        if (InvalidCredentials.class.isAssignableFrom(clazz)) return "401";
+        if (AuthenticationException.class.isAssignableFrom(clazz)) return "401";
         if (NoSuchElementException.class.isAssignableFrom(clazz)) return "404";
         if (IllegalStateException.class.isAssignableFrom(clazz)) return "409";
         return "500";
