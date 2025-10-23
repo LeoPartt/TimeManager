@@ -21,6 +21,7 @@ import 'package:time_manager/domain/usecases/schedule/get_clock_in.dart';
 import 'package:time_manager/domain/usecases/schedule/get_clock_out.dart';
 import 'package:time_manager/domain/usecases/schedule/get_clock_status.dart';
 import 'package:time_manager/domain/usecases/team/create_team.dart';
+import 'package:time_manager/domain/usecases/team/get_teams.dart';
 import 'package:time_manager/domain/usecases/user/create_user.dart';
 import 'package:time_manager/domain/usecases/user/delete_user.dart';
 import 'package:time_manager/domain/usecases/user/get_user.dart';
@@ -128,9 +129,13 @@ locator.registerFactory(() => ClockCubit(
   );
 
   locator.registerFactory(() => CreateTeam(locator<TeamRepository>()));
+  locator.registerFactory(() => GetTeams(locator<TeamRepository>()));
 
-  locator.registerFactory(() => TeamCubit(createTeamUseCase: locator<CreateTeam>()));
 
-  // Router
+  locator.registerFactory(() => TeamCubit(
+    createTeamUseCase: locator<CreateTeam>(), 
+    getTeamsUseCase: locator<GetTeams>()
+    ));
+
   locator.registerLazySingleton(() => AppRouter());
 }

@@ -8,5 +8,6 @@ class TeamState with _$TeamState {
   const factory TeamState.initial() = TeamInitial;
   const factory TeamState.loading() = TeamLoading;
   const factory TeamState.loaded(Team team) = TeamLoaded;
+  const factory TeamState.loadedTeams(List<Team> teams) = TeamsLoaded;
   const factory TeamState.error(String message) = TeamError;
 }

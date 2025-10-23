@@ -55,13 +55,14 @@ extension TeamStatePatterns on TeamState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( TeamInitial value)?  initial,TResult Function( TeamLoading value)?  loading,TResult Function( TeamLoaded value)?  loaded,TResult Function( TeamError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( TeamInitial value)?  initial,TResult Function( TeamLoading value)?  loading,TResult Function( TeamLoaded value)?  loaded,TResult Function( TeamsLoaded value)?  loadedTeams,TResult Function( TeamError value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case TeamInitial() when initial != null:
 return initial(_that);case TeamLoading() when loading != null:
 return loading(_that);case TeamLoaded() when loaded != null:
-return loaded(_that);case TeamError() when error != null:
+return loaded(_that);case TeamsLoaded() when loadedTeams != null:
+return loadedTeams(_that);case TeamError() when error != null:
 return error(_that);case _:
   return orElse();
 
@@ -80,13 +81,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( TeamInitial value)  initial,required TResult Function( TeamLoading value)  loading,required TResult Function( TeamLoaded value)  loaded,required TResult Function( TeamError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( TeamInitial value)  initial,required TResult Function( TeamLoading value)  loading,required TResult Function( TeamLoaded value)  loaded,required TResult Function( TeamsLoaded value)  loadedTeams,required TResult Function( TeamError value)  error,}){
 final _that = this;
 switch (_that) {
 case TeamInitial():
 return initial(_that);case TeamLoading():
 return loading(_that);case TeamLoaded():
-return loaded(_that);case TeamError():
+return loaded(_that);case TeamsLoaded():
+return loadedTeams(_that);case TeamError():
 return error(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -104,13 +106,14 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( TeamInitial value)?  initial,TResult? Function( TeamLoading value)?  loading,TResult? Function( TeamLoaded value)?  loaded,TResult? Function( TeamError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( TeamInitial value)?  initial,TResult? Function( TeamLoading value)?  loading,TResult? Function( TeamLoaded value)?  loaded,TResult? Function( TeamsLoaded value)?  loadedTeams,TResult? Function( TeamError value)?  error,}){
 final _that = this;
 switch (_that) {
 case TeamInitial() when initial != null:
 return initial(_that);case TeamLoading() when loading != null:
 return loading(_that);case TeamLoaded() when loaded != null:
-return loaded(_that);case TeamError() when error != null:
+return loaded(_that);case TeamsLoaded() when loadedTeams != null:
+return loadedTeams(_that);case TeamError() when error != null:
 return error(_that);case _:
   return null;
 
@@ -128,12 +131,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Team team)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Team team)?  loaded,TResult Function( List<Team> teams)?  loadedTeams,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TeamInitial() when initial != null:
 return initial();case TeamLoading() when loading != null:
 return loading();case TeamLoaded() when loaded != null:
-return loaded(_that.team);case TeamError() when error != null:
+return loaded(_that.team);case TeamsLoaded() when loadedTeams != null:
+return loadedTeams(_that.teams);case TeamError() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -152,12 +156,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Team team)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Team team)  loaded,required TResult Function( List<Team> teams)  loadedTeams,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case TeamInitial():
 return initial();case TeamLoading():
 return loading();case TeamLoaded():
-return loaded(_that.team);case TeamError():
+return loaded(_that.team);case TeamsLoaded():
+return loadedTeams(_that.teams);case TeamError():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +180,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Team team)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Team team)?  loaded,TResult? Function( List<Team> teams)?  loadedTeams,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case TeamInitial() when initial != null:
 return initial();case TeamLoading() when loading != null:
 return loading();case TeamLoaded() when loaded != null:
-return loaded(_that.team);case TeamError() when error != null:
+return loaded(_that.team);case TeamsLoaded() when loadedTeams != null:
+return loadedTeams(_that.teams);case TeamError() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -326,6 +332,78 @@ $TeamCopyWith<$Res> get team {
     return _then(_self.copyWith(team: value));
   });
 }
+}
+
+/// @nodoc
+
+
+class TeamsLoaded implements TeamState {
+  const TeamsLoaded(final  List<Team> teams): _teams = teams;
+  
+
+ final  List<Team> _teams;
+ List<Team> get teams {
+  if (_teams is EqualUnmodifiableListView) return _teams;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_teams);
+}
+
+
+/// Create a copy of TeamState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TeamsLoadedCopyWith<TeamsLoaded> get copyWith => _$TeamsLoadedCopyWithImpl<TeamsLoaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TeamsLoaded&&const DeepCollectionEquality().equals(other._teams, _teams));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_teams));
+
+@override
+String toString() {
+  return 'TeamState.loadedTeams(teams: $teams)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TeamsLoadedCopyWith<$Res> implements $TeamStateCopyWith<$Res> {
+  factory $TeamsLoadedCopyWith(TeamsLoaded value, $Res Function(TeamsLoaded) _then) = _$TeamsLoadedCopyWithImpl;
+@useResult
+$Res call({
+ List<Team> teams
+});
+
+
+
+
+}
+/// @nodoc
+class _$TeamsLoadedCopyWithImpl<$Res>
+    implements $TeamsLoadedCopyWith<$Res> {
+  _$TeamsLoadedCopyWithImpl(this._self, this._then);
+
+  final TeamsLoaded _self;
+  final $Res Function(TeamsLoaded) _then;
+
+/// Create a copy of TeamState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? teams = null,}) {
+  return _then(TeamsLoaded(
+null == teams ? _self._teams : teams // ignore: cast_nullable_to_non_nullable
+as List<Team>,
+  ));
+}
+
+
 }
 
 /// @nodoc

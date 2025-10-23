@@ -62,4 +62,35 @@ class TeamRepositoryImpl implements TeamRepository {
     await api.deleteTeam(id);
     await storage.removeData('last_team');
   }
+
+  @override
+  Future<void> addMember(int teamId, int userId) async {
+    await api.addMember(teamId, userId);
+  }
+
+  @override
+  Future<void> removeMember(int teamId, int userId) async {
+    await api.removeMember(teamId, userId);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getMembers(int teamId) async {
+    final members = await api.getMembers(teamId);
+    return members.cast<Map<String, dynamic>>();
+  }
+
+  @override
+  Future<void> assignManager(int teamId, int userId) async {
+    await api.assignManager(teamId, userId);
+  }
+
+  @override
+  Future<void> removeManager(int teamId) async {
+    await api.removeManager(teamId);
+  }
+
+  @override
+  Future<Map<String, dynamic>> getManager(int teamId) async {
+    return await api.getManager(teamId);
+  }
 }

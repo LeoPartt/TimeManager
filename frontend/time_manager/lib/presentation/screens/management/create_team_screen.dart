@@ -9,6 +9,7 @@ import 'package:time_manager/core/widgets/app_input_field.dart';
 import 'package:time_manager/presentation/cubits/team/team_cubit.dart';
 import 'package:time_manager/presentation/cubits/team/team_state.dart';
 import 'package:time_manager/presentation/widgets/header.dart';
+import 'package:time_manager/presentation/widgets/navbar.dart';
 
 @RoutePage()
 class CreateTeamScreen extends StatefulWidget {
@@ -42,6 +43,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const NavBar(),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(AppSizes.p24),

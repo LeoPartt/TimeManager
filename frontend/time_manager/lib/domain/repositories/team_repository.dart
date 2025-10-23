@@ -10,4 +10,10 @@ abstract class TeamRepository {
   });
   Future<Team> updateTeam(UpdateTeamParams params);
   Future<void> deleteTeam(int id);
+  Future<void> addMember(int teamId, int userId);
+  Future<void> removeMember(int teamId, int userId);
+  Future<List<Map<String, dynamic>>> getMembers(int teamId);
+  Future<void> assignManager(int teamId, int userId);
+  Future<void> removeManager(int teamId);
+  Future<Map<String, dynamic>> getManager(int teamId);
 }
