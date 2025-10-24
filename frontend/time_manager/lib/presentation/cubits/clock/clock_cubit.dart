@@ -53,21 +53,21 @@ class ClockCubit extends Cubit<ClockState> {
     }
   }
 
-  Future<void> getStatus(BuildContext context ) async {
-        final tr = AppLocalizations.of(context)!;
+  // Future<void> getStatus(BuildContext context ) async {
+  //       final tr = AppLocalizations.of(context)!;
 
-    emit(const ClockState.loading());
-    try {
-      final status = await getStatusUseCase();
-      if (status?.departureTs == null) {
-        emit(ClockState.clockedIn(status!));
-      } else {
-        emit(ClockState.clockedOut(status!));
-      }
-    } catch (e) {
-      emit(ClockState.error('${tr.error}: ${e.toString()}'));
-    }
-  }
+  //   emit(const ClockState.loading());
+  //   try {
+  //     final status = await getStatusUseCase();
+  //     if (status?.departureTs == null) {
+  //       emit(ClockState.clockedIn(status!));
+  //     } else {
+  //       emit(ClockState.clockedOut(status!));
+  //     }
+  //   } catch (e) {
+  //     emit(ClockState.error('${tr.error}: ${e.toString()}'));
+  //   }
+  // }
 
    Future<void> toggleClockState(BuildContext context, TimeOfDay timestamp) async {
     final current = state;

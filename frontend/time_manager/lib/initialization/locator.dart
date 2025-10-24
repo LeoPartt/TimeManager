@@ -159,5 +159,4 @@ locator.registerFactory(() => ClockCubit(
     getTeamsUseCase: locator<GetTeams>()
     ));
 
-  locator.registerLazySingleton(() => AppRouter());
 }

@@ -77,11 +77,9 @@ class UserCubit extends Cubit<UserState> {
    emit(const UserState.loading());
     try {
       final users = await getUsersUseCase();
-          print('✅ Cubit: ${users.length} utilisateurs chargés');
 
       emit(UserState.listLoaded(users));
     } catch (e) {
-          print('❌ Cubit erreur: $e');
 
       emit(UserState.error(('${tr.error}: ${e.toString()}')));
     }

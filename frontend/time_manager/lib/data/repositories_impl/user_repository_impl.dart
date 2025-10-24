@@ -67,7 +67,11 @@ static const String _cacheKeyProfile = 'cached_user_profile';
       }
       rethrow;
     }
+  
+
+  
   }
+
 
   @override
   Future<User> createUser({
@@ -86,38 +90,12 @@ static const String _cacheKeyProfile = 'cached_user_profile';
       'email': email,
       'phoneNumber': phoneNumber,
     });
-    final dto = UserModel.fromJson(response);
+    final dto = UserModel.fromJson(res);
     await storage.saveUser(jsonEncode(dto.toJson()));
     return dto.toDomain();
   }
 
-    @override
-  Future<User> getUser(int id) async {
-    final response = await api.getUser(id);
-    final dto = UserModel.fromJson(response);
-    await storage.saveUser(jsonEncode(dto.toJson()));
 
-    
-    return dto.toDomain();
-  }
-
-    @override
-  Future<List<User>> getUsers() async {
-    final list = await api.getUsers();
-      print('📦 getUsers() → API retourne : $list'); // <== 🔍 LOG ICI
-
-    
-    final users = list
-        .map((e) => UserModel.fromJson(e as Map<String, dynamic>).toDomain())
-        .toList();
-
-          print('👤 Users convertis : ${users.map((u) => "${u.firstName} ${u.lastName}").toList()}');
-
-
-    return users;
-
-        
-  }
 
 
   @override
