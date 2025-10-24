@@ -28,7 +28,7 @@ public class ReportsService {
     private final MembershipService membershipService;
     private final PlanningService planningService;
 
-    private final OffsetDateTime oneYearAgo = OffsetDateTime.from(LocalDateTime.now().minusYears(1));
+    private final OffsetDateTime oneYearAgo = ZonedDateTime.now().minusYears(1).toOffsetDateTime();
 
     public ReportModels.GlobalReportResponse getGlobalReports() {
         Averages averages = computeGlobalWorkAverage();
