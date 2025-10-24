@@ -1,8 +1,6 @@
 package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.models.HasId;
-import eu.epitech.t_dev_700.models.TeamModels;
-import eu.epitech.t_dev_700.models.UserModels;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
@@ -29,7 +27,7 @@ public interface CRUDController<M extends HasId, C, R, U> {
 
     ResponseEntity<Void> Delete(Long id);
 
-    default ResponseEntity<M> created(String path, M model) {
+    default <T extends HasId> ResponseEntity<T> created(String path, T model) {
         return ResponseEntity.created(URI.create("/%s/%d".formatted(path, (model == null)?0:model.id()))).body(model);
     }
 }
