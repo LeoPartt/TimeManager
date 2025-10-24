@@ -19,7 +19,7 @@ class UserApi {
     }
   }
 
-  Future<Map<String, dynamic>> getUser(int id) {
+  Future<dynamic> getUser(int id) {
     try {
       return client.get(ApiEndpoints.userById(id));
     } on NetworkException {
@@ -29,26 +29,30 @@ class UserApi {
     }
   }
 
-  Future<List<dynamic>> getUsers() async {
-    final Map<String, dynamic> res = await client.get(ApiEndpoints.users);
-    try {
-      if (res.containsKey('data') && res['data'] is List) {
-        return res['data'] as List<dynamic>;
-      }
 
-      if (res is List) {
-        return res as List<dynamic>;
-      }
-    } on NetworkException {
-      rethrow;
-    } catch (e) {
-      // Si aucun format reconnu
-      throw Exception('Unexpected error getting the list of users: $res');
+  
+ Future<List<dynamic>> getUsers() async {
+  try {
+    final response = await client.get(ApiEndpoints.users);
+
+    if (response is List) {
+      return response;
     }
 
-    // Si aucun format reconnu
-    throw Exception('Unexpected response format: $res');
+    if (response is Map<String, dynamic> &&
+        response.containsKey('data') &&
+        response['data'] is List) {
+      return response['data'] as List<dynamic>;
+    }
+
+    throw Exception('Unexpected response format: $response');
+  } on NetworkException {
+    rethrow;
+  } catch (e) {
+    throw Exception('Unexpected error getting users: $e');
   }
+}
+
 
   Future<Map<String, dynamic>> createUser(Map<String, dynamic> body) async {
     //

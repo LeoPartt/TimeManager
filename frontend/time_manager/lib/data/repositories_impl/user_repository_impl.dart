@@ -46,7 +46,7 @@ class UserRepositoryImpl implements UserRepository {
     return dto.toDomain();
   }
 
-    @override
+  @override
   Future<User> getUser(int id) async {
     final response = await api.getUser(id);
     final dto = UserModel.fromJson(response);
@@ -59,10 +59,19 @@ class UserRepositoryImpl implements UserRepository {
     @override
   Future<List<User>> getUsers() async {
     final list = await api.getUsers();
+      print('📦 getUsers() → API retourne : $list'); // <== 🔍 LOG ICI
+
     
-    return list
+    final users = list
         .map((e) => UserModel.fromJson(e as Map<String, dynamic>).toDomain())
         .toList();
+
+          print('👤 Users convertis : ${users.map((u) => "${u.firstName} ${u.lastName}").toList()}');
+
+
+    return users;
+
+        
   }
 
 

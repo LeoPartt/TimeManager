@@ -33,12 +33,20 @@ class _AppSearchBarState extends State<AppSearchBar> {
   Widget build(BuildContext context) {
     final width = AppSizes.responsiveWidth(context, 350);
 
-    final lowerQuery = _query.toLowerCase();
-    final filteredUsers = _allUsers ;
-    final filteredTeams = _allTeams
-        .where((t) => t.name.toLowerCase().contains(lowerQuery))
-        .toList();
-    final results = [...filteredUsers, ...filteredTeams];
+ final lowerQuery = _query.toLowerCase();
+final filteredUsers = _allUsers
+    .where((u) =>
+        u.firstName.toLowerCase().contains(lowerQuery) ||
+        u.lastName.toLowerCase().contains(lowerQuery) ||
+        u.email.toLowerCase().contains(lowerQuery))
+    .toList();
+
+final filteredTeams = _allTeams
+    .where((t) => t.name.toLowerCase().contains(lowerQuery))
+    .toList();
+
+final results = [...filteredUsers, ...filteredTeams];
+
 
     return MultiBlocListener(
       listeners: [
@@ -85,7 +93,8 @@ class _AppSearchBarState extends State<AppSearchBar> {
                   child: TextField(
                     controller: _controller,
                     onChanged: (value) =>
-                        setState(() => _query = value.trim()),
+                        setState(() { _query = value.trim(); 
+                        print(_query);} ),
                     style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize:
@@ -113,7 +122,7 @@ class _AppSearchBarState extends State<AppSearchBar> {
                             padding: const EdgeInsets.all(16.0),
                             child: Center(
                               child: Text(
-                                'No results found.',
+                                _allTeams.toString(),
                                 style: TextStyle(
                                   color: AppColors.textPrimary.withValues(
                                     alpha: 0.8,

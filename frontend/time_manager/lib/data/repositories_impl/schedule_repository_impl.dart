@@ -21,9 +21,9 @@ class ClockRepositoryImpl implements ClockRepository {
     return ClockModel.fromJson(res).toDomain();
   }
 
-  @override
-  Future<Clock?> getClockStatus() async {
-    final res = await api.getClockStatus();
-    return ClockModel.fromJson(res).toDomain();
-  }
+  // @override
+  // Future<Clock?> getClockStatus() async {
+  //   final res = await api.getClockStatus();
+  //   return ClockModel.fromJson(res).toDomain();
+  // }
 }

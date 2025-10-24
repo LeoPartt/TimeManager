@@ -11,6 +11,6 @@ class ClockApi {
   Future<Map<String, dynamic>> clockOut() async =>
       client.post(ApiEndpoints.clockOut, {});
 
-  Future<Map<String, dynamic>> getClockStatus() async =>
+  Future<dynamic> getClockStatus() async =>
       client.get(ApiEndpoints.clockStatus);
 }

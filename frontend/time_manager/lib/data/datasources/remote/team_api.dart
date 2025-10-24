@@ -14,12 +14,16 @@ class TeamApi {
     try {
       final res = await client.get(ApiEndpoints.teams);
 
-      if (res.containsKey('data') && res['data'] is List) {
-        return res['data'] as List<dynamic>;
-      }
-      if (res is List) {
-        return res as List<dynamic>;
-      }
+    if (res is List) {
+          return res;
+        }
+
+        if (res is Map<String, dynamic> &&
+            res.containsKey('data') &&
+            res['data'] is List) {
+          return res['data'] as List<dynamic>;
+        }
+
 
       throw Exception('Unexpected response format for getTeams(): $res');
     } on NetworkException {
@@ -116,7 +120,7 @@ class TeamApi {
       }
 
       if (res is List) {
-        return res as List<dynamic>;
+        return res;
       }
 
       throw NetworkException('Unexpected response format: $res');
