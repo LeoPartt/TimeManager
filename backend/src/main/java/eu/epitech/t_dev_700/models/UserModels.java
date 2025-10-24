@@ -39,9 +39,9 @@ public class UserModels {
 
             @Schema(description = "User's phone number", example = "+1234567890")
             String phoneNumber
-    ) implements User, HasId {}
+    ) implements User, HasId {
+    }
 
-    //REQUESTS
     @Schema(description = "Request body for creating a new user")
     public record PostUserRequest(
             @Schema(description = "Username for the new user", example = "john.doe")

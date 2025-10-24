@@ -114,4 +114,5 @@ public class UserController implements CRUDController<
         return ResponseEntity.ok(userService.getTeams(id));
     }
 
+
 }
