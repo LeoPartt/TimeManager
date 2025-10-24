@@ -29,15 +29,19 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_healthy
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD} 
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       SPRING_PROFILES_ACTIVE: dev
-      JWT_SECRET: ${JWT_SECRET}  
+      JWT_SECRET: ${JWT_SECRET}
     networks:
       - internal
     healthcheck:
@@ -87,6 +91,20 @@ services:
         - action: rebuild
           path: ./frontend/time_manager/pubspec.yaml
           target: /app/pubspec.yaml
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "127.0.0.1:${MAILPIT_SMTP_PORT:-1025}:1025"  # SMTP port
+      - "127.0.0.1:${MAILPIT_WEB_PORT:-8025}:8025"   # Web UI port
+    restart: unless-stopped
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget --no-verbose --tries=1 --spider http://localhost:8025/api/v1/info || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   nginx:
     image: nginx:alpine
