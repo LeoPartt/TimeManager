@@ -48,6 +48,7 @@ public class UserEntity {
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
+    @NotBlank
     @Column(name = "email", columnDefinition = "VARCHAR")
     private String email;
 
