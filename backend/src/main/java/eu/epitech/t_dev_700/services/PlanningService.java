@@ -7,6 +7,8 @@ import eu.epitech.t_dev_700.models.PlanningModels;
 import eu.epitech.t_dev_700.repositories.PlanningRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlanningService extends CRUDService<
         PlanningEntity,
@@ -27,8 +29,12 @@ public class PlanningService extends CRUDService<
         this.membershipService = membershipService;
     }
 
-    public PlanningModels.PlanningResponse[] getForUser(UserEntity user) {
-        return this.CRUDMapper.listEntity(this.planningRepository.findByUser(user));
+    public List<PlanningEntity> getForUser(UserEntity user) {
+        return this.planningRepository.findByUser(user);
+    }
+
+    public PlanningModels.PlanningResponse[] listForUser(UserEntity user) {
+        return this.CRUDMapper.listEntity(this.getForUser(user));
     }
 
     public boolean isOwner(UserEntity user, Long planningId) {

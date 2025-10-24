@@ -54,10 +54,12 @@ public class UserService extends CRUDService<
         return clockService.getUserClocks(id, from, to);
     }
 
+    @Transactional(readOnly = true)
     public PlanningModels.PlanningResponse[] getPlannings(Long id) {
-        return planningService.getForUser(this.findEntityOrThrow(id));
+        return planningService.listForUser(this.findEntityOrThrow(id));
     }
 
+    @Transactional()
     public PlanningModels.PlanningResponse createPlanning(PlanningModels.PostPlanningRequest body) {
         return planningService.create(body);
     }

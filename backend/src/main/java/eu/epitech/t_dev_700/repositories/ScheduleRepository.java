@@ -17,6 +17,8 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
 
     List<ScheduleEntity> findByUserAndArrivalTsBefore(UserEntity user, OffsetDateTime arrivalTs);
 
+    List<ScheduleEntity> findByUserAndArrivalTsAfter(UserEntity user, OffsetDateTime oneYearAgo);
+
     List<ScheduleEntity> findByUserAndDepartureTsAfter(UserEntity user, OffsetDateTime departureTs);
 
     List<ScheduleEntity> findByUserAndDepartureTsAfterAndArrivalTsBefore(UserEntity user, OffsetDateTime departureTs, OffsetDateTime arrivalTs);
@@ -35,5 +37,4 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
         scheduleEntity.setArrivalTs(arrivalTs);
         return scheduleEntity;
     }
-
 }

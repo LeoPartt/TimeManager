@@ -29,6 +29,13 @@ public class MembershipService {
     }
 
     @Transactional(readOnly = true)
+    public List<UserEntity> getUsersOfTeam(TeamEntity team) {
+        return membershipRepository.findByTeam(team).stream()
+                .map(MembershipEntity::getUser)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public boolean isUserMemberOfTeam(UserEntity user, Long teamId) {
         return membershipRepository.existsByUserAndTeam_Id(user, teamId);
     }
