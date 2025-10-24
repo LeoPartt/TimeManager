@@ -25,6 +25,7 @@ public class PasswordResetService {
         String token = RandomStringUtils.secure().nextNumeric(6);
         TemporaryTokenEntity tempToken = new TemporaryTokenEntity();
         tempToken.setAccount(user.getAccount());
+        tempToken.setAction(TemporaryTokenEntity.Action.CHANGE_PASSWORD);
         tempToken.setToken(String.valueOf(Objects.hash(token)));
         tempToken.setExpiresAt(LocalDateTime.now().plusMinutes(15));
 
