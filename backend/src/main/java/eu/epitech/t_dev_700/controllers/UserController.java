@@ -2,6 +2,7 @@ package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.doc.ApiErrorResponse;
 import eu.epitech.t_dev_700.doc.ApiUnauthorizedResponse;
+import eu.epitech.t_dev_700.models.PlanningModels;
 import eu.epitech.t_dev_700.models.TeamModels;
 import eu.epitech.t_dev_700.models.UserModels;
 import eu.epitech.t_dev_700.services.UserService;
@@ -9,13 +10,17 @@ import eu.epitech.t_dev_700.services.exceptions.ResourceNotFound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -28,7 +33,7 @@ public class UserController implements CRUDController<
         UserModels.PutUserRequest,
         UserModels.PatchUserRequest
         > {
-
+    private final Validator validator;
     private final UserService userService;
 
     @Override
@@ -114,5 +119,30 @@ public class UserController implements CRUDController<
         return ResponseEntity.ok(userService.getTeams(id));
     }
 
+    @Operation(summary = "Get user's plannings")
+    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    @ApiErrorResponse(ResourceNotFound.class)
+    @PreAuthorize("@userAuth.isSelfOrManagerOfUser(authentication, #id)")
+    @GetMapping("{id}/plannings")
+    public ResponseEntity<PlanningModels.PlanningResponse[]> getPlannings(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getPlannings(id));
+    }
+
+    @Operation(summary = "Create a user's planning")
+    @ApiResponse(responseCode = "200", useReturnTypeSchema = true)
+    @ApiErrorResponse(ResourceNotFound.class)
+    @PreAuthorize("@userAuth.isManagerOfUser(authentication, #id)")
+    @PostMapping("{id}/plannings")
+    public ResponseEntity<PlanningModels.PlanningResponse> postPlanning(@PathVariable Long id, @RequestBody PlanningModels.PostPlanningRequest body) {
+        PlanningModels.PostPlanningRequest fullBody = setPlanningBodyIdAndValidate(id, body);
+        return created("users/%d/plannings".formatted(id), userService.createPlanning(fullBody));
+    }
+
+    private PlanningModels.PostPlanningRequest setPlanningBodyIdAndValidate(Long id, PlanningModels.PostPlanningRequest body) {
+        PlanningModels.PostPlanningRequest fullBody = new PlanningModels.PostPlanningRequest(id, body);
+        Set<ConstraintViolation<PlanningModels.PostPlanningRequest>> violations = validator.validate(fullBody);
+        if (!violations.isEmpty()) throw new ConstraintViolationException(violations);
+        return fullBody;
+    }
 
 }

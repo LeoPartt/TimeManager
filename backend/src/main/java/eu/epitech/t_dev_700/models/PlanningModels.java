@@ -3,6 +3,7 @@ package eu.epitech.t_dev_700.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import eu.epitech.t_dev_700.entities.PlanningEntity;
 import eu.epitech.t_dev_700.models.constraints.NullableNotBlank;
+import eu.epitech.t_dev_700.models.groups.ExpectsUserId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
@@ -39,11 +40,17 @@ public class PlanningModels {
             @Schema(description = "End time of this entry", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
             LocalTime endTime
+
     ) implements Planning, HasId {
     }
 
     @Schema(description = "Request body for creating a new planning entry")
     public record PostPlanningRequest(
+
+            @Schema(hidden = true)
+            @NotBlank(groups = ExpectsUserId.class)
+            Long userId,
+
             @Schema(description = "Day of week of this entry", example = "1")
             @JsonFormat(shape = JsonFormat.Shape.NUMBER)
             @NotBlank
@@ -58,7 +65,11 @@ public class PlanningModels {
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
             @NotBlank
             LocalTime endTime
+
     ) implements Planning {
+        public PostPlanningRequest(Long id, PostPlanningRequest body) {
+            this(id, body.dayOfWeek(), body.startTime(), body.endTime());
+        }
     }
 
     @Schema(description = "Request body for completely replacing a planning entry (PUT)")
@@ -77,6 +88,7 @@ public class PlanningModels {
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
             @NotBlank
             LocalTime endTime
+
     ) implements Planning {
     }
 
@@ -96,6 +108,7 @@ public class PlanningModels {
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
             @NullableNotBlank
             LocalTime endTime
+
     ) implements Planning {
     }
 

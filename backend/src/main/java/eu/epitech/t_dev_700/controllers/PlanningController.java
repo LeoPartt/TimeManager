@@ -2,14 +2,17 @@ package eu.epitech.t_dev_700.controllers;
 
 import eu.epitech.t_dev_700.doc.ApiUnauthorizedResponse;
 import eu.epitech.t_dev_700.models.PlanningModels;
+import eu.epitech.t_dev_700.models.groups.ExpectsUserId;
 import eu.epitech.t_dev_700.services.PlanningService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users/{id}/plannings")
+@RequestMapping("/plannings")
 @Tag(name = "Plannings")
 @ApiUnauthorizedResponse
 public class PlanningController implements CRUDController<
@@ -21,34 +24,46 @@ public class PlanningController implements CRUDController<
 
     PlanningService planningService;
 
-
     @Override
-    public ResponseEntity<PlanningModels.PlanningResponse> Get(Long id) {
-        return null;
+    @PreAuthorize("@userAuth.isOwnerOrManagerOfOwner(authentication, #id)")
+    @GetMapping("{id}")
+    public ResponseEntity<PlanningModels.PlanningResponse> Get(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(planningService.get(id));
     }
 
     @Override
+    @PreAuthorize("@userAuth.isAdmin(authentication)")
+    @GetMapping
     public ResponseEntity<PlanningModels.PlanningResponse[]> GetAll() {
-        return null;
+        return ResponseEntity.ok(planningService.list());
     }
 
     @Override
-    public ResponseEntity<PlanningModels.PlanningResponse> Post(PlanningModels.PostPlanningRequest body) {
-        return null;
+    @PreAuthorize("@userAuth.isAdmin(authentication)")
+    @PostMapping
+    public ResponseEntity<PlanningModels.PlanningResponse> Post(@Validated(ExpectsUserId.class) @RequestBody PlanningModels.PostPlanningRequest body) {
+        return this.created("plannings", planningService.create(body));
     }
 
     @Override
-    public ResponseEntity<PlanningModels.PlanningResponse> Put(Long id, PlanningModels.PutPlanningRequest body) {
-        return null;
+    @PreAuthorize("@userAuth.isManagerOfOwner(authentication, #id)")
+    @PutMapping("{id}")
+    public ResponseEntity<PlanningModels.PlanningResponse> Put(@PathVariable("id") Long id, @Valid @RequestBody PlanningModels.PutPlanningRequest body) {
+        return ResponseEntity.ok(planningService.replace(id, body));
     }
 
     @Override
-    public ResponseEntity<PlanningModels.PlanningResponse> Patch(Long id, PlanningModels.PatchPlanningRequest body) {
-        return null;
+    @PreAuthorize("@userAuth.isManagerOfOwner(authentication, #id)")
+    @PatchMapping("{id}")
+    public ResponseEntity<PlanningModels.PlanningResponse> Patch(@PathVariable("id") Long id, @Valid @RequestBody PlanningModels.PatchPlanningRequest body) {
+        return ResponseEntity.ok(planningService.update(id, body));
     }
 
     @Override
-    public ResponseEntity<Void> Delete(Long id) {
-        return null;
+    @PreAuthorize("@userAuth.isManagerOfOwner(authentication, #id)")
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> Delete(@PathVariable("id") Long id) {
+        planningService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
