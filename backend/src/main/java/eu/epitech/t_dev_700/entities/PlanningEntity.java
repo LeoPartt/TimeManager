@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Check;
 
-import java.time.OffsetTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Getter
@@ -26,11 +26,11 @@ public class PlanningEntity {
     @Enumerated(EnumType.ORDINAL)
     private DayOfWeek DayOfWeek;
 
-    @Column(name = "start_time", nullable = false)
-    private OffsetTime StartTime;
+    @Column(name = "start_time", columnDefinition = "TIME", nullable = false)
+    private LocalTime StartTime;
 
-    @Column(name = "end_time", nullable = false)
-    private OffsetTime EndTime;
+    @Column(name = "end_time", columnDefinition = "TIME", nullable = false)
+    private LocalTime EndTime;
 
     @Override
     public boolean equals(Object o) {
