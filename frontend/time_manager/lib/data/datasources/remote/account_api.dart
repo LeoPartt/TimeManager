@@ -1,28 +1,45 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:time_manager/core/constants/api_endpoints.dart';
 import 'package:time_manager/core/exceptions/network_exception.dart';
+import 'package:time_manager/data/services/http_client.dart';
 
+/// Handles authentication and account-related HTTP requests.
 class AccountApi {
-  final String baseUrl;
-  AccountApi(this.baseUrl);
+  final ApiClient client;
 
-  Future<Map<String, dynamic>> login(String email, String password) async {
-    final res = await http.post(
-      Uri.parse('$baseUrl/api/auth/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
-    if (res.statusCode == 200) return jsonDecode(res.body);
-    throw NetworkException.fromStatusCode(res.statusCode);
+  AccountApi(this.client);
+
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    try {
+      return await client.post(ApiEndpoints.login, {
+        'username': username,
+        'password': password,
+      }, withAuth: false);
+    } on NetworkException {
+      rethrow;
+    } catch (e) {
+      throw NetworkException('Unexpected error during login: $e');
+    }
   }
 
-  Future<Map<String, dynamic>> register(String name, String email, String password) async {
-    final res = await http.post(
-      Uri.parse('$baseUrl/api/auth/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'name': name, 'email': email, 'password': password}),
-    );
-    if (res.statusCode == 201) return jsonDecode(res.body);
-    throw NetworkException.fromStatusCode(res.statusCode);
+  Future<Map<String, dynamic>> register(String username, String email, String password) async {
+    try {
+      return await client.post(ApiEndpoints.register, {
+        'username': username,
+        'email': email,
+        'password': password,
+      }, withAuth: false);
+    } on NetworkException {
+      rethrow;
+    } catch (e) {
+      throw NetworkException('Unexpected error during registration: $e');
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      await client.post(ApiEndpoints.logout, {});
+    } on NetworkException {
+      rethrow;
+    }
   }
 }

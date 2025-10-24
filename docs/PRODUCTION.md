@@ -53,7 +53,7 @@ No need to clone the repository or build locally!
 
 ```bash
 # Create project directory
-mkdir -p ~/time-manager && cd ~/time-manager
+mkdir -p ~/time_manager && cd ~/time_manager
 
 # Download configuration files
 curl -O https://raw.githubusercontent.com/LeoPartt/time_manager/main/compose.prod.yaml
@@ -67,14 +67,14 @@ nano .env  # Edit with your production credentials
 docker compose -f compose.prod.yaml up -d
 ```
 
-**Image location:** `ghcr.io/leopartt/timemanager/backend:latest`
+**Image location:** `ghcr.io/leopartt/time_manager/backend:latest`
 
 ### Update
 
 When a new version is pushed to `main`, update the server:
 
 ```bash
-cd ~/time-manager
+cd ~/time_manager
 
 # Pull latest image
 docker compose -f compose.prod.yaml pull

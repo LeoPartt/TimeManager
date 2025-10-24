@@ -6,11 +6,12 @@ part 'user.freezed.dart';
 abstract class User with _$User {
   const factory User({
     required int id,
-    required String name,
+    required String username,
     required String email,
-    String? avatarUrl,
-    String? phone,
-    String? role,
-    String? token, // si renvoyé par ton API (facultatif)
+    //String? avatarUrl,
+    String? phoneNumber,
+    required final String firstName,
+    required final String lastName,
+    //String? role,
   }) = _User;
 }

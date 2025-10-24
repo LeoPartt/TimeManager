@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AccountCredentials {
 
- String get email; String get password;
+ String get username; String get password;
 /// Create a copy of AccountCredentials
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AccountCredentialsCopyWith<AccountCredentials> get copyWith => _$AccountCredent
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountCredentials&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountCredentials&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,password);
+int get hashCode => Object.hash(runtimeType,username,password);
 
 @override
 String toString() {
-  return 'AccountCredentials(email: $email, password: $password)';
+  return 'AccountCredentials(username: $username, password: $password)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AccountCredentialsCopyWith<$Res>  {
   factory $AccountCredentialsCopyWith(AccountCredentials value, $Res Function(AccountCredentials) _then) = _$AccountCredentialsCopyWithImpl;
 @useResult
 $Res call({
- String email, String password
+ String username, String password
 });
 
 
@@ -65,9 +65,9 @@ class _$AccountCredentialsCopyWithImpl<$Res>
 
 /// Create a copy of AccountCredentials
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? username = null,Object? password = null,}) {
   return _then(_self.copyWith(
-email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -154,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String password)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String username,  String password)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountCredentials() when $default != null:
-return $default(_that.email,_that.password);case _:
+return $default(_that.username,_that.password);case _:
   return orElse();
 
 }
@@ -175,10 +175,10 @@ return $default(_that.email,_that.password);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String password)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String username,  String password)  $default,) {final _that = this;
 switch (_that) {
 case _AccountCredentials():
-return $default(_that.email,_that.password);case _:
+return $default(_that.username,_that.password);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +195,10 @@ return $default(_that.email,_that.password);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String password)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String username,  String password)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountCredentials() when $default != null:
-return $default(_that.email,_that.password);case _:
+return $default(_that.username,_that.password);case _:
   return null;
 
 }
@@ -210,10 +210,10 @@ return $default(_that.email,_that.password);case _:
 @JsonSerializable()
 
 class _AccountCredentials implements AccountCredentials {
-  const _AccountCredentials({required this.email, required this.password});
+  const _AccountCredentials({required this.username, required this.password});
   factory _AccountCredentials.fromJson(Map<String, dynamic> json) => _$AccountCredentialsFromJson(json);
 
-@override final  String email;
+@override final  String username;
 @override final  String password;
 
 /// Create a copy of AccountCredentials
@@ -229,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountCredentials&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountCredentials&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,password);
+int get hashCode => Object.hash(runtimeType,username,password);
 
 @override
 String toString() {
-  return 'AccountCredentials(email: $email, password: $password)';
+  return 'AccountCredentials(username: $username, password: $password)';
 }
 
 
@@ -249,7 +249,7 @@ abstract mixin class _$AccountCredentialsCopyWith<$Res> implements $AccountCrede
   factory _$AccountCredentialsCopyWith(_AccountCredentials value, $Res Function(_AccountCredentials) _then) = __$AccountCredentialsCopyWithImpl;
 @override @useResult
 $Res call({
- String email, String password
+ String username, String password
 });
 
 
@@ -266,9 +266,9 @@ class __$AccountCredentialsCopyWithImpl<$Res>
 
 /// Create a copy of AccountCredentials
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? username = null,Object? password = null,}) {
   return _then(_AccountCredentials(
-email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,
   ));

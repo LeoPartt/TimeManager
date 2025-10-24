@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:time_manager/domain/usecases/user/update_user_profile.dart';
 import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
-import 'package:time_manager/presentation/cubits/user/user_state.dart';
 import 'package:time_manager/core/constants/app_strings.dart';
 
 @RoutePage()
@@ -15,9 +13,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final nameCtrl = TextEditingController();
-  final emailCtrl = TextEditingController();
-  final phoneCtrl = TextEditingController();
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -29,58 +27,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.dashboard)),
-      body: BlocBuilder<UserCubit, UserState>(
-        builder: (context, state) {
-          return state.when(
-            initial: () => const Center(child: Text("No data yet")),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (msg) => Center(child: Text(msg)),
-            loaded: (user) {
-              nameCtrl.text = user.name;
-              emailCtrl.text = user.email;
-              phoneCtrl.text = user.phone ?? "";
+      // body: BlocBuilder<UserCubit, UserState>(
+      //   builder: (context, state) {
+      //     return state.when(
+      //       initial: () => const Center(child: Text("No data yet")),
+      //       loading: () => const Center(child: CircularProgressIndicator()),
+      //       error: (msg) => Center(child: Text(msg)),
+      //       loaded: (user) {
+      //         usernameController.text = user.username;
+      //         emailController.text = user.email;
+      //         phoneController.text = user.phoneNumber ?? "";
 
-              return Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: nameCtrl,
-                      decoration: const InputDecoration(labelText: "Name"),
-                    ),
-                    TextField(
-                      controller: emailCtrl,
-                      decoration: const InputDecoration(labelText: "Email"),
-                    ),
-                    TextField(
-                      controller: phoneCtrl,
-                      decoration: const InputDecoration(labelText: "Phone"),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        final params = UpdateUserProfileParams(
-                          name: nameCtrl.text,
-                          email: emailCtrl.text,
-                          phone: phoneCtrl.text,
-                        );
-                        context.read<UserCubit>().updateProfile(params);
-                      },
-                      child: const Text("Save Changes"),
-                    ),
-                    const SizedBox(height: 10),
-                    OutlinedButton(
-                      onPressed: () =>
-                          context.read<UserCubit>().removeAccount(),
-                      child: const Text("Delete Account"),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      ),
+      //         return Padding(
+      //           padding: const EdgeInsets.all(24.0),
+      //           child: Column(
+      //             children: [
+      //               TextField(
+      //                 controller: usernameController,
+      //                 decoration: const InputDecoration(labelText: "UserName"),
+      //               ),
+      //               TextField(
+      //                 controller: emailController,
+      //                 decoration: const InputDecoration(labelText: "Email"),
+      //               ),
+      //               TextField(
+      //                 controller: phoneController,
+      //                 decoration: const InputDecoration(labelText: "Phone"),
+      //               ),
+      //               const SizedBox(height: 20),
+      //               ElevatedButton(
+      //                 onPressed: () {
+      //                   final params = UpdateUserProfileParams(
+      //                     username: usernameController.text,
+      //                     email: emailController.text,
+      //                     phoneNumber: phoneController.text, id: 0,
+      //                   );
+      //                   context.read<UserCubit>().updateProfile(params);
+      //                 },
+      //                 child: const Text("Save Changes"),
+      //               ),
+      //               const SizedBox(height: 10),
+      //               OutlinedButton(
+      //                 onPressed: () =>
+      //                     context.read<UserCubit>().removeAccount(id),
+      //                 child: const Text("Delete Account"),
+      //               ),
+      //             ],
+      //           ),
+      //         );
+      //       },
+      //     );
+      //   },
+      // ),
     );
   }
 }

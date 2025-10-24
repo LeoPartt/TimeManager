@@ -4,5 +4,5 @@ class DeleteUser {
   final UserRepository repository;
   DeleteUser(this.repository);
 
-  Future<void> call() => repository.deleteUser();
+  Future<void> call(int id) => repository.deleteUser(id);
 }

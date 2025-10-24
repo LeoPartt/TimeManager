@@ -36,7 +36,7 @@ class Header extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: AppSizes.textDisplay,
+              fontSize: size.width * 0.08,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
