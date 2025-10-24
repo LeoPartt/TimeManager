@@ -40,7 +40,7 @@ Employees can clock in/out, view their activity summaries, and managers can acce
 ## Backend API
 
 ### Base URL
-```http://localhost/api```
+```http://localhost:<backend_port>/api```
 
 ### Main Endpoints
 | Method | Endpoint | Description |
@@ -75,10 +75,22 @@ Passwords are hashed and user data is validated server-side.
 ## Docker Setup
 
 ### Development
+<<<<<<< HEAD
 
 **Start the development environment with hot reload:**
 ```bash
 docker compose watch
+=======
+Create a `docker-compose.yml` file with services for:
+- `backend` (Spring Boot)
+- `frontend` (Flutter build or web)
+- `db` (PostgreSQL)
+- `proxy` (Nginx)
+
+Run all containers:
+```bash
+  docker-compose up --build
+>>>>>>> 90adba150e1a355a80d5adecd35c02faaa1421f2
 ```
 
 This command:
@@ -101,28 +113,24 @@ A separate docker-compose.prod.yml handles optimized builds and production confi
 ---
 
 ## Environment Variables
-| Variable       | Description                          |
-|----------------|--------------------------------------|
-| DB_NAME        | Database name                        |
-| DB_USER        | PostgreSQL username                  |
-| DB_PASSWORD    | PostgreSQL password                  |
-| DB_HOST        | Database host                        |
-| DB_PORT        | Database port                        |
-| JWT_SECRET     | JWT secret key                       |
-| SERVER_PORT    | Server port                          |
-| ADMIN_PASSWORD | Admin password                       |
-| NGINX_PORT     | Nginx port                           |
-| VERSION        | App version (prod only)              |
-| BUILD_NUMBER   | Incremental build number (prod only) |
+| Variable | Description |
+|----------|-------------|
+|POSTGRES_USER | PostgreSQL username |
+|POSTGRES_PASSWORD | PostgreSQL password |
+|POSTGRES_DB | Database name |
+|SPRING_DATASOURCE_URL | JDBC connection URL |
+|JWT_SECRET | Secret key for token generation |
+|SERVER_PORT | Backend server port |
 
 ---
 
-## CI/CD Pipelines
+## CI/CD Pipeline
 
-1. Using **GitHub Actions**, the pipelines includes:
+1. Using **GitHub Actions**, the pipeline includes:
 2. **Build** backend and frontend
 3. **Run tests** and check coverage
 4. **Generate artifacts** (APK or web build)
+5. **Deploy** to the testing environment
 
 ---
 

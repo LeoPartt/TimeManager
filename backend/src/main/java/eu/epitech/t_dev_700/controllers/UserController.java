@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 @RequiredArgsConstructor
+
 @Tag(name = "User Management")
 @ApiUnauthorizedResponse
 public class UserController implements CRUDController<

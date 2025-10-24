@@ -14,7 +14,6 @@ class ManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final searchCtrl = TextEditingController(); 
     final tr = AppLocalizations.of(context)!;
 
     return Scaffold(
@@ -30,25 +29,19 @@ class ManagementScreen extends StatelessWidget {
               SizedBox(height: size.height * 0.04),
 
               AppSearchBar(
-                hintText: tr.searchbarhint,
-                controller: searchCtrl,
-                onChanged: (query) {
-
-                },
               ),
-
               SizedBox(height: size.height * 0.04),
 
               AppButton(
                 label: tr.addanewuser,
                 fullSize: true,
-                onPressed: () => context.pushRoute(const SettingsRoute()),
+                onPressed: () => context.pushRoute(const CreateUserRoute()),
               ),
               SizedBox(height: size.height * 0.03),
               AppButton(
                 label: tr.addanewteam,
                 fullSize: true,
-                onPressed: () => context.pushRoute(const SettingsRoute()),
+                onPressed: () => context.pushRoute(const CreateTeamRoute()),
               ),
             ],
           ),

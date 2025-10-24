@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Utility class that helps ensure accessibility consistency across the app.
-///
-/// It adapts color contrast, text scaling, and semantics to improve
-/// usability for all users (especially with visual impairments).
+/*Utility class that helps ensure accessibility consistency across the app.
+
+ It adapts color contrast, text scaling, and semantics to improve
+ usability for all users (especially with visual impairments).*/
 class AccessibilityUtils {
-  /// Ensures sufficient color contrast based on the current theme brightness.
-  ///
-  /// If the background color is too dark or too bright, this method
-  /// returns a text color that ensures readable contrast.
+  /* Ensures sufficient color contrast based on the current theme brightness.
+   If the background color is too dark or too bright, this method
+   returns a text color that ensures readable contrast*/
   static Color ensureContrast(BuildContext context, Color background) {
     final luminance = background.computeLuminance();
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -21,9 +20,8 @@ class AccessibilityUtils {
     }
   }
 
-  /// Wraps a widget with semantic information for screen readers.
-  ///
-  /// This helps assistive technologies describe widgets verbally.
+  /* Wraps a widget with semantic information for screen readers.
+   This helps assistive technologies describe widgets verbally.*/
   static Widget withLabel({
     required String label,
     required Widget child,
@@ -40,23 +38,14 @@ class AccessibilityUtils {
   ///
   /// Respects the device's textScaleFactor and stays within safe bounds.
   static double accessibleText(BuildContext context, double baseSize) {
-    final scaled = MediaQuery.textScalerOf(context).scale(baseSize);
-    final min = baseSize * 0.8;
-    final max = baseSize * 1.4;
-    return scaled.clamp(min, max).toDouble();
+    final scale = MediaQuery.of(context).textScaleFactor.clamp(0.8, 1.4);
+    return baseSize * scale;
   }
 
-
   /// Returns true if the system text scale is large (e.g., accessibility zoom)
-  static bool isTextZoomed(
-    BuildContext context, {
-    double threshold = 1.2,      
-    double probeSize = 16.0,    
-  }) {
-    assert(probeSize > 0);
-    final ts = MediaQuery.textScalerOf(context);
-    final ratio = ts.scale(probeSize) / probeSize; 
-    return ratio > threshold;
+  static bool isTextZoomed(BuildContext context) {
+    final scale = MediaQuery.of(context).textScaleFactor;
+    return scale > 1.2;
   }
 
   /// Adds a semantic tooltip for non-text widgets (e.g., icons, buttons)

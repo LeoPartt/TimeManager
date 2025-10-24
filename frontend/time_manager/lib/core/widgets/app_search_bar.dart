@@ -1,69 +1,187 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_manager/core/constants/app_colors.dart';
 import 'package:time_manager/core/constants/app_sizes.dart';
+import 'package:time_manager/domain/entities/user.dart';
+import 'package:time_manager/domain/entities/team.dart';
+import 'package:time_manager/presentation/cubits/user/user_cubit.dart';
+import 'package:time_manager/presentation/cubits/user/user_state.dart';
+import 'package:time_manager/presentation/cubits/team/team_cubit.dart';
+import 'package:time_manager/presentation/cubits/team/team_state.dart';
 
-class AppSearchBar extends StatelessWidget {
-  final TextEditingController controller;
-  final ValueChanged<String>? onChanged;
-  final String hintText;
+class AppSearchBar extends StatefulWidget {
+  const AppSearchBar({super.key});
 
-  const AppSearchBar({
-    super.key,
-    required this.controller,
-    this.onChanged,
-    required this.hintText,
-  });
+  @override
+  State<AppSearchBar> createState() => _AppSearchBarState();
+}
+
+class _AppSearchBarState extends State<AppSearchBar> {
+  final TextEditingController _controller = TextEditingController();
+  List<User> _allUsers = [];
+  List<Team> _allTeams = [];
+  String _query = '';
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<UserCubit>().getUsers();
+    context.read<TeamCubit>().getTeams();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final height = AppSizes.responsiveHeight(context, 56);
+    final width = AppSizes.responsiveWidth(context, 350);
 
-    return Container(
-      width: AppSizes.responsiveWidth(context, 350),
-      height: height,
-      decoration: BoxDecoration(
-        color: AppColors.accent,
-        borderRadius: BorderRadius.circular(AppSizes.r16),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.35),
-          width: 2,
+ final lowerQuery = _query.toLowerCase();
+final filteredUsers = _allUsers
+    .where((u) =>
+        u.firstName.toLowerCase().contains(lowerQuery) ||
+        u.lastName.toLowerCase().contains(lowerQuery) ||
+        u.email.toLowerCase().contains(lowerQuery))
+    .toList();
+
+final filteredTeams = _allTeams
+    .where((t) => t.name.toLowerCase().contains(lowerQuery))
+    .toList();
+
+final results = [...filteredUsers, ...filteredTeams];
+
+
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<UserCubit, UserState>(
+          listener: (context, state) {
+            state.whenOrNull(
+              listLoaded: (users) => setState(() => _allUsers = users),
+            );
+          },
         ),
-      ),
-      child: Center(
-        child: TextField(
-          controller: controller,
-          onChanged: onChanged,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: AppSizes.responsiveText(context, AppSizes.textLg),
-            height: 1.2, 
-          ),
-          decoration: InputDecoration(
-            filled: false, 
-            isDense: true, 
-            prefixIcon: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.p12),
-              child: Icon(
-                Icons.search_rounded,
-                size: AppSizes.responsiveWidth(context, AppSizes.iconMedium),
-                color: AppColors.textPrimary,
-              ),
-            ),
-            prefixIconConstraints: const BoxConstraints(minWidth: 40),
-            hintText: hintText,
-            hintStyle: TextStyle(
-              color: AppColors.textPrimary.withValues(alpha: 0.65),
-              fontSize: AppSizes.responsiveText(context, AppSizes.textLg),
-            ),
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(
-              vertical: AppSizes.p12, 
-              horizontal: AppSizes.p8,
-            ),
-          ),
+        BlocListener<TeamCubit, TeamState>(
+          listener: (context, state) {
+            state.whenOrNull(
+              loadedTeams: (teams) => setState(() => _allTeams = teams),
+            );
+          },
         ),
+      ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Container global avec coins arrondis, qui s’ouvre en bas quand il y a des résultats
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: width,
+            decoration: BoxDecoration(
+              color: AppColors.accent,
+              borderRadius: BorderRadius.circular(AppSizes.r24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Barre de recherche
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: TextField(
+                    controller: _controller,
+                    onChanged: (value) =>
+                        setState(() { _query = value.trim(); 
+                        print(_query);} ),
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize:
+                          AppSizes.responsiveText(context, AppSizes.textLg),
+                    ),
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.search_rounded,
+                          color: AppColors.textPrimary),
+                      hintText: 'Search user or team...',
+                      hintStyle: TextStyle(
+                        color: AppColors.textPrimary.withValues(alpha: 0.6),
+                      ),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+
+                // Résultats intégrés directement dans le container
+                if (_query.isNotEmpty)
+                  Container(
+                    color: AppColors.accent.withValues(alpha: 0.95),
+                    constraints: const BoxConstraints(maxHeight: 250),
+                    child: results.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(
+                              child: Text(
+                                _allTeams.toString(),
+                                style: TextStyle(
+                                  color: AppColors.textPrimary.withValues(
+                                    alpha: 0.8,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : ListView.separated(
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: results.length,
+                            separatorBuilder: (_, _) => Divider(
+                              height: 1,
+                              color:
+                                  AppColors.primary.withValues(alpha: 0.2),
+                            ),
+                            itemBuilder: (context, index) {
+                              final item = results[index];
+                              final isUser = item is User;
+
+                              return ListTile(
+                                leading: Icon(
+                                  isUser ? Icons.person : Icons.group,
+                                  color: AppColors.textPrimary,
+                                ),
+                                title: Text(
+                                  isUser
+                                      ? '${item.firstName} ${item.lastName}'
+                                      : (item as Team).name,
+                                  style: TextStyle(
+                                    color: AppColors.textPrimary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                subtitle: isUser
+                                    ? Text(
+                                        item.email,
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary
+                                              .withValues(alpha: 0.7),
+                                        ),
+                                      )
+                                    : Text(
+                                        (item as Team).description ??
+                                            'No description',
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary
+                                              .withValues(alpha: 0.7),
+                                        ),
+                                      ),
+                              );
+                            },
+                          ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

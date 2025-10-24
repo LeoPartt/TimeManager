@@ -35,7 +35,9 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD} 
       SPRING_PROFILES_ACTIVE: dev
+      JWT_SECRET: ${JWT_SECRET}  
     networks:
       - internal
     healthcheck:
@@ -59,11 +61,12 @@ services:
     volumes:
       # Only cache pub dependencies - Docker Compose watch handles source sync
       - flutter_pub_cache:/root/.pub-cache
+
     networks:
       - internal
     healthcheck:
       test: ["CMD", "sh", "-c", "curl -s -o /dev/null http://localhost:8080 || exit 0"]
-      interval: 30s
+      interval: 50s
       timeout: 10s
       retries: 3
       start_period: 30s

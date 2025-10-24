@@ -7,7 +7,7 @@ import 'app_sizes.dart';
 /// Each text style is designed to be scalable and consistent.
 class AppTextStyles {
   // ───────────────────────────────
-  // 🧱 Titles & Headings
+  //  Titles & Headings
   // ───────────────────────────────
   static TextStyle heading1(BuildContext context) => TextStyle(
         fontSize: AppSizes.responsiveText(context, AppSizes.textDisplay),
@@ -28,7 +28,7 @@ class AppTextStyles {
       );
 
   // ───────────────────────────────
-  // 📝 Body Texts
+  //  Body Texts
   // ───────────────────────────────
   static TextStyle bodyLarge(BuildContext context) => TextStyle(
         fontSize: AppSizes.responsiveText(context, AppSizes.textLg),
@@ -48,7 +48,7 @@ class AppTextStyles {
       );
 
   // ───────────────────────────────
-  // 🧭 Labels & Captions
+  //  Labels & Captions
   // ───────────────────────────────
   static TextStyle label(BuildContext context) => TextStyle(
         fontSize: AppSizes.responsiveText(context, AppSizes.textSm),
@@ -63,7 +63,7 @@ class AppTextStyles {
       );
 
   // ───────────────────────────────
-  // 🔘 Buttons
+  //  Buttons
   // ───────────────────────────────
   static TextStyle buttonPrimary(BuildContext context) => TextStyle(
         fontSize: AppSizes.responsiveText(context, AppSizes.textLg),
@@ -79,7 +79,7 @@ class AppTextStyles {
       );
 
   // ───────────────────────────────
-  // 💬 Error / Info messages
+  //  Error / Info messages
   // ───────────────────────────────
   static TextStyle error(BuildContext context) => TextStyle(
         fontSize: AppSizes.responsiveText(context, AppSizes.textSm),

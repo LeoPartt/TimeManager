@@ -7,10 +7,13 @@ part 'update_user_profile.freezed.dart';
 @freezed
 abstract class UpdateUserProfileParams with _$UpdateUserProfileParams {
   const factory UpdateUserProfileParams({
-    String? name,
+    required int id,
+    String? username,
     String? email,
     String? avatarUrl,
-    String? phone,
+    String? phoneNumber,
+    String? firstName,
+    String? lastName,
   }) = _UpdateUserProfileParams;
 }
 

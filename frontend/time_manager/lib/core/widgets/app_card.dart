@@ -20,8 +20,12 @@ class AppCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+
 
     return InkWell(
+                              radius: AppSizes.r24,
+
       borderRadius: BorderRadius.circular(AppSizes.r16),
       onTap: onTap,
       child: Container(
@@ -34,11 +38,11 @@ class AppCard extends StatelessWidget {
         padding: padding ??
             EdgeInsets.all(AppSizes.responsiveWidth(context, AppSizes.p16)),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(AppSizes.r16),
           boxShadow: [
             BoxShadow(
-              color: theme.shadowColor.withValues(alpha: 0.2),
+              color: theme.shadowColor.withOpacity(0.2),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),

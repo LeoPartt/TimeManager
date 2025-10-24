@@ -6,6 +6,10 @@ class AppStrings {
   static const String registerTitle = "Create an Account";
   static const String emailLabel = "Email Address";
   static const String passwordLabel = "Password";
+  static const String userNameLabel = "username";
+  static const String firstNameLabel = "First Name";
+  static const String phoneNumberLabel = "Phone Number";
+  static const String lastNameLabel =  "Last Name";
   static const String forgotPassword = "Forgot your password?";
   static const String loginButton = "Sign In";
   static const String registerButton = "Sign Up";
@@ -21,6 +25,9 @@ class AppStrings {
   // ───────────────────────────────
   static const String teams = "Teams";
   static const String teamDetails = "Team Details";
+  static const String createTeam = "Create team";
+  static const String teamNameLabel = "Name :" ;
+  static const String teamDescriptionLabel = "Description :";
 
   // ───────────────────────────────
   // Schedule

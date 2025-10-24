@@ -25,22 +25,76 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<User> updateUserProfile(UpdateUserProfileParams params) async {
-    final body = <String, dynamic>{};
-    if (params.name != null) body['name'] = params.name;
-    if (params.email != null) body['email'] = params.email;
-    if (params.avatarUrl != null) body['avatarUrl'] = params.avatarUrl;
-    if (params.phone != null) body['phone'] = params.phone;
+  Future<User> createUser({
+    required String username,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String phoneNumber,
+  }) async {
+    final response = await api.createUser({
+      'username': username,
+      'password': password,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'phoneNumber': phoneNumber,
+    });
+    final dto = UserModel.fromJson(response);
+    await storage.saveUser(jsonEncode(dto.toJson()));
+    return dto.toDomain();
+  }
 
-    final data = await api.updateProfile(body);
+  @override
+  Future<User> getUser(int id) async {
+    final response = await api.getUser(id);
+    final dto = UserModel.fromJson(response);
+    await storage.saveUser(jsonEncode(dto.toJson()));
+
+    
+    return dto.toDomain();
+  }
+
+    @override
+  Future<List<User>> getUsers() async {
+    final list = await api.getUsers();
+      print('📦 getUsers() → API retourne : $list'); // <== 🔍 LOG ICI
+
+    
+    final users = list
+        .map((e) => UserModel.fromJson(e as Map<String, dynamic>).toDomain())
+        .toList();
+
+          print('👤 Users convertis : ${users.map((u) => "${u.firstName} ${u.lastName}").toList()}');
+
+
+    return users;
+
+        
+  }
+
+
+  @override
+  Future<User> updateUserProfile(UpdateUserProfileParams params) async {
+
+    final body = <String, dynamic>{};
+    if (params.username != null) body['username'] = params.username;
+    if (params.email != null) body['email'] = params.email;
+    //if (params.avatarUrl != null) body['avatarUrl'] = params.avatarUrl;
+    if (params.firstName != null) body['firstName'] = params.firstName;
+    if (params.phoneNumber != null) body['phoneNumber'] = params.phoneNumber;
+    if (params.lastName != null) body['lastName'] = params.lastName;
+
+    final data = await api.updateProfile(params.id, body);
     final dto = UserModel.fromJson(data);
     await storage.saveUser(jsonEncode(dto.toJson()));
     return dto.toDomain();
   }
 
   @override
-  Future<void> deleteUser() async {
-    await api.deleteUser();
+  Future<void> deleteUser(int id) async {
+    await api.deleteUser(id);
     await storage.clear(); // efface user et token
   }
 }

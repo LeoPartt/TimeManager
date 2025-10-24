@@ -8,13 +8,15 @@ part 'user_model.g.dart';
 abstract class UserModel with _$UserModel {
   const factory UserModel({
     required int id,
-    required String name,
+    required String username,
     required String email,
-    String? avatarUrl,
-    String? role,
-    String? phone,
+     required String firstName,
+    required String lastName,
+    //String? avatarUrl,
+    //String? role,
+    String? phoneNumber,
 
-    String? token,
+    //String? token,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
@@ -24,11 +26,13 @@ abstract class UserModel with _$UserModel {
 extension UserModelX on UserModel {
   User toDomain() => User(
         id: id,
-        name: name,
+        username: username,
         email: email,
-        avatarUrl: avatarUrl,
-        role: role,
-        phone: phone,
-        token: token,
+        firstName:firstName,
+        lastName:lastName,
+        //avatarUrl: avatarUrl,
+        //role: role,
+        phoneNumber: phoneNumber,
+       // token: token,
       );
 }
