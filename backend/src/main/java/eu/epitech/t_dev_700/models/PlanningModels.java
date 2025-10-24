@@ -2,10 +2,10 @@ package eu.epitech.t_dev_700.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import eu.epitech.t_dev_700.entities.PlanningEntity;
-import eu.epitech.t_dev_700.models.constraints.NullableNotBlank;
+import eu.epitech.t_dev_700.models.constraints.ValidTimeRange;
 import eu.epitech.t_dev_700.models.groups.ExpectsUserId;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
 
@@ -13,7 +13,7 @@ public class PlanningModels {
 
     public interface Planning {
 
-        PlanningEntity.DayOfWeek dayOfWeek();
+        PlanningEntity.WeekDay weekDay();
 
         LocalTime startTime();
 
@@ -31,13 +31,13 @@ public class PlanningModels {
 
             @Schema(description = "Day of week of this entry", example = "1")
             @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-            PlanningEntity.DayOfWeek dayOfWeek,
+            PlanningEntity.WeekDay weekDay,
 
-            @Schema(description = "Start time of this entry", example = "09:30")
+            @Schema(description = "Start time of this entry", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
             LocalTime startTime,
 
-            @Schema(description = "End time of this entry", example = "09:30")
+            @Schema(description = "End time of this entry (must be after startTime)", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
             LocalTime endTime
 
@@ -45,68 +45,68 @@ public class PlanningModels {
     }
 
     @Schema(description = "Request body for creating a new planning entry")
+    @ValidTimeRange
     public record PostPlanningRequest(
 
             @Schema(hidden = true)
-            @NotBlank(groups = ExpectsUserId.class)
+            @NotNull(groups = ExpectsUserId.class)
             Long userId,
 
             @Schema(description = "Day of week of this entry", example = "1")
             @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-            @NotBlank
-            PlanningEntity.DayOfWeek dayOfWeek,
+            @NotNull
+            PlanningEntity.WeekDay weekDay,
 
-            @Schema(description = "Start time of this entry", example = "09:30")
+            @Schema(description = "Start time of this entry", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-            @NotBlank
+            @NotNull
             LocalTime startTime,
 
-            @Schema(description = "End time of this entry", example = "09:30")
+            @Schema(description = "End time of this entry (must be after startTime)", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-            @NotBlank
+            @NotNull
             LocalTime endTime
 
     ) implements Planning {
         public PostPlanningRequest(Long id, PostPlanningRequest body) {
-            this(id, body.dayOfWeek(), body.startTime(), body.endTime());
+            this(id, body.weekDay(), body.startTime(), body.endTime());
         }
     }
 
     @Schema(description = "Request body for completely replacing a planning entry (PUT)")
+    @ValidTimeRange
     public record PutPlanningRequest(
             @Schema(description = "Day of week of this entry", example = "1")
             @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-            @NotBlank
-            PlanningEntity.DayOfWeek dayOfWeek,
+            @NotNull
+            PlanningEntity.WeekDay weekDay,
 
-            @Schema(description = "Start time of this entry", example = "09:30")
+            @Schema(description = "Start time of this entry", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-            @NotBlank
+            @NotNull
             LocalTime startTime,
 
-            @Schema(description = "End time of this entry", example = "09:30")
+            @Schema(description = "End time of this entry (must be after startTime)", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-            @NotBlank
+            @NotNull
             LocalTime endTime
 
     ) implements Planning {
     }
 
     @Schema(description = "Request body for partially updating a planning entry (PATCH)")
+    @ValidTimeRange
     public record PatchPlanningRequest(
             @Schema(description = "Day of week of this entry", example = "1")
             @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-            @NullableNotBlank
-            PlanningEntity.DayOfWeek dayOfWeek,
+            PlanningEntity.WeekDay weekDay,
 
-            @Schema(description = "Start time of this entry", example = "09:30")
+            @Schema(description = "Start time of this entry", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-            @NullableNotBlank
             LocalTime startTime,
 
-            @Schema(description = "End time of this entry", example = "09:30")
+            @Schema(description = "End time of this entry (must be after startTime)", format = "Time", example = "09:30")
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-            @NullableNotBlank
             LocalTime endTime
 
     ) implements Planning {

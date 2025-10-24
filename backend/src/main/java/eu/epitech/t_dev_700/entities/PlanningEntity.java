@@ -24,7 +24,7 @@ public class PlanningEntity {
 
     @Column(name = "day_of_week", nullable = false)
     @Enumerated(EnumType.ORDINAL)
-    private DayOfWeek DayOfWeek;
+    private WeekDay WeekDay;
 
     @Column(name = "start_time", columnDefinition = "TIME", nullable = false)
     private LocalTime StartTime;
@@ -44,7 +44,7 @@ public class PlanningEntity {
         return Objects.hashCode(id);
     }
 
-    public enum DayOfWeek {
+    public enum WeekDay {
         MONDAY,
         TUESDAY,
         WEDNESDAY,

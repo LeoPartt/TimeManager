@@ -6,6 +6,7 @@ import eu.epitech.t_dev_700.models.groups.ExpectsUserId;
 import eu.epitech.t_dev_700.services.PlanningService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/plannings")
-@Tag(name = "Plannings")
+@RequiredArgsConstructor
+@Tag(name = "Plannings management")
 @ApiUnauthorizedResponse
 public class PlanningController implements CRUDController<
         PlanningModels.PlanningResponse,
@@ -22,7 +24,7 @@ public class PlanningController implements CRUDController<
         PlanningModels.PatchPlanningRequest
         > {
 
-    PlanningService planningService;
+    private final PlanningService planningService;
 
     @Override
     @PreAuthorize("@userAuth.isOwnerOrManagerOfOwner(authentication, #id)")
@@ -41,7 +43,7 @@ public class PlanningController implements CRUDController<
     @Override
     @PreAuthorize("@userAuth.isAdmin(authentication)")
     @PostMapping
-    public ResponseEntity<PlanningModels.PlanningResponse> Post(@Validated(ExpectsUserId.class) @RequestBody PlanningModels.PostPlanningRequest body) {
+    public ResponseEntity<PlanningModels.PlanningResponse> Post(@Valid @Validated(ExpectsUserId.class) @RequestBody PlanningModels.PostPlanningRequest body) {
         return this.created("plannings", planningService.create(body));
     }
 
