@@ -44,6 +44,11 @@ public class MembershipService {
     }
 
     @Transactional(readOnly = true)
+    public boolean isUserManagerOfOther(UserEntity user, UserEntity otherUser) {
+        return this.isUserManagerOfOther(user, otherUser.getId());
+    }
+
+    @Transactional(readOnly = true)
     public boolean isUserManagerOfOther(UserEntity user, Long userId) {
         return !membershipRepository.existsMembershipOfUserIdOnTeamsManagedByOther(userId, user);
     }
