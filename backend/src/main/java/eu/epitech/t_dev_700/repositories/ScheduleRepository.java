@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +17,17 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
 
     List<ScheduleEntity> findByUserAndArrivalTsBefore(UserEntity user, OffsetDateTime arrivalTs);
 
+    List<ScheduleEntity> findByUserAndArrivalTsAfter(UserEntity user, OffsetDateTime oneYearAgo);
+
     List<ScheduleEntity> findByUserAndDepartureTsAfter(UserEntity user, OffsetDateTime departureTs);
 
     List<ScheduleEntity> findByUserAndDepartureTsAfterAndArrivalTsBefore(UserEntity user, OffsetDateTime departureTs, OffsetDateTime arrivalTs);
+
+    List<ScheduleEntity> findByDepartureTsIsNotNullAndArrivalTsAfter(OffsetDateTime arrivalTs);
+
+    List<ScheduleEntity> findByUserAndDepartureTsIsNotNullAndArrivalTsAfter(UserEntity user, OffsetDateTime arrivalTs);
+
+    List<ScheduleEntity> findByUserIdInAndDepartureTsIsNotNullAndArrivalTsAfter(Collection<Long> user_id, OffsetDateTime arrivalTs);
 
     Optional<ScheduleEntity> findByUserAndDepartureTsIsNull(UserEntity user);
 

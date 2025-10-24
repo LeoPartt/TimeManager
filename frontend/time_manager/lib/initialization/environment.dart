@@ -6,11 +6,11 @@ class Environment {
   static String get baseUrl {
     switch (current) {
       case 'prod':
-        return 'https://api.time-manager.com';
+        return 'https://timemanager.duckdns.org';
       case 'staging':
         return 'https://staging.time-manager.com';
       default:
-        return 'http://localhost';
+        return 'http://localhost/api';
     }
   }
 

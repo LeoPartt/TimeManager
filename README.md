@@ -75,10 +75,22 @@ Passwords are hashed and user data is validated server-side.
 ## Docker Setup
 
 ### Development
+<<<<<<< HEAD
 
 **Start the development environment with hot reload:**
 ```bash
 docker compose watch
+=======
+Create a `docker-compose.yml` file with services for:
+- `backend` (Spring Boot)
+- `frontend` (Flutter build or web)
+- `db` (PostgreSQL)
+- `proxy` (Nginx)
+
+Run all containers:
+```bash
+  docker-compose up --build
+>>>>>>> 90adba150e1a355a80d5adecd35c02faaa1421f2
 ```
 
 This command:

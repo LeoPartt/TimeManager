@@ -20,11 +20,12 @@ class ApiClient {
   // Generic HTTP methods
   // ───────────────────────────────
 
-  Future<Map<String, dynamic>> get(String endpoint) async {
-    final headers = await authHeaderService.buildHeaders();
-    final response = await http.get(Uri.parse('$_baseUrl$endpoint'), headers: headers);
-    return _handleResponse(response);
-  }
+  Future<dynamic> get(String endpoint) async {
+  final headers = await authHeaderService.buildHeaders();
+  final response = await http.get(Uri.parse('$_baseUrl$endpoint'), headers: headers);
+  return _handleResponse(response);
+}
+
 
   Future<Map<String, dynamic>> post(String endpoint, Map<String, dynamic> body,{bool withAuth = true}) async {
   final headers = withAuth
@@ -60,15 +61,21 @@ class ApiClient {
   // ───────────────────────────────
   //  Private helper
   // ───────────────────────────────
-  Map<String, dynamic> _handleResponse(http.Response response) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      if (response.body.isEmpty) return {};
-      try {
-        return jsonDecode(response.body) as Map<String, dynamic>;
-      } catch (_) {
-        return {'data': response.body};
-      }
+dynamic _handleResponse(http.Response response) {
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    if (response.body.isEmpty) return {};
+
+    try {
+      final decoded = jsonDecode(response.body);
+
+      // ✅ Peut être Map, List, ou autre
+      return decoded;
+    } catch (e) {
+      throw NetworkException('Invalid JSON: ${response.body}');
     }
-    throw NetworkException.fromStatusCode(context!, response.statusCode);
   }
+
+  throw NetworkException.fromStatusCode(context!, response.statusCode);
+}
+
 }

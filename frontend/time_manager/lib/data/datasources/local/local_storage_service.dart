@@ -28,6 +28,18 @@ class LocalStorageService {
     return _storage.read(key: _keyUser);
   }
 
+  Future<void> saveData(String key, String jsonValue) async {
+    await _storage.write(key: key, value: jsonValue);
+  }
+
+  Future<String?> getData(String key) async {
+    return _storage.read(key: key);
+  }
+
+  Future<void> removeData(String key) async {
+    await _storage.delete(key: key);
+  }
+
   Future<void> clear() async {
     await _storage.deleteAll();
   }

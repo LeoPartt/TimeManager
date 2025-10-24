@@ -1,7 +1,6 @@
 package eu.epitech.t_dev_700.config;
 
-import eu.epitech.t_dev_700.models.ErrorModel;
-import eu.epitech.t_dev_700.services.exceptions.InvalidCredentials;
+import eu.epitech.t_dev_700.models.ErrorModels;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.DecodingException;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request) {
-        return new ErrorModel(
+        return new ErrorModels.ErrorResponse(
                 HttpStatus.UNPROCESSABLE_ENTITY,
                 "Validation failed",
                 request,
@@ -51,42 +51,42 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request) {
-        return new ErrorModel(HttpStatus.BAD_REQUEST, "Malformed JSON body", request).toResponse();
+        return new ErrorModels.ErrorResponse(HttpStatus.BAD_REQUEST, "Malformed JSON body", request).toResponse();
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Object> handleConflict(IllegalStateException ex, WebRequest request) {
-        return new ErrorModel(HttpStatus.CONFLICT, ex, request).toResponse();
+        return new ErrorModels.ErrorResponse(HttpStatus.CONFLICT, ex, request).toResponse();
     }
 
     @ExceptionHandler({EntityNotFoundException.class, NoSuchElementException.class})
     public ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
-        return new ErrorModel(HttpStatus.NOT_FOUND, ex, request).toResponse();
+        return new ErrorModels.ErrorResponse(HttpStatus.NOT_FOUND, ex, request).toResponse();
     }
 
-    @ExceptionHandler(InvalidCredentials.class)
-    public ResponseEntity<Object> InvalidCredentialsException(InvalidCredentials ex, WebRequest request) {
-        return new ErrorModel(HttpStatus.UNAUTHORIZED, ex, request).toResponse();
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> AuthenticationException(AuthenticationException ex, WebRequest request) {
+        return new ErrorModels.ErrorResponse(HttpStatus.UNAUTHORIZED, ex, request).toResponse();
     }
 
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<Object> MalformedJwtTokenException(JwtException ex, WebRequest request) {
         return (switch (ex) {
-            case ExpiredJwtException ignored -> new ErrorModel(HttpStatus.UNAUTHORIZED, "Token expired", request);
+            case ExpiredJwtException ignored -> new ErrorModels.ErrorResponse(HttpStatus.UNAUTHORIZED, "Token expired", request);
             case PrematureJwtException ignored ->
-                    new ErrorModel(HttpStatus.UNAUTHORIZED, "Token not active yet", request);
+                    new ErrorModels.ErrorResponse(HttpStatus.UNAUTHORIZED, "Token not active yet", request);
             case MalformedJwtException ignored ->
-                    new ErrorModel(HttpStatus.BAD_REQUEST, "Invalid token format", request);
-            case DecodingException ignored -> new ErrorModel(HttpStatus.BAD_REQUEST, "Invalid token format", request);
+                    new ErrorModels.ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid token format", request);
+            case DecodingException ignored -> new ErrorModels.ErrorResponse(HttpStatus.BAD_REQUEST, "Invalid token format", request);
             case InvalidClaimException ignored ->
-                    new ErrorModel(HttpStatus.UNAUTHORIZED, "Invalid token claims", request);
-            default -> new ErrorModel(HttpStatus.UNAUTHORIZED, "Invalid or unauthorized token", request);
+                    new ErrorModels.ErrorResponse(HttpStatus.UNAUTHORIZED, "Invalid token claims", request);
+            default -> new ErrorModels.ErrorResponse(HttpStatus.UNAUTHORIZED, "Invalid or unauthorized token", request);
         }).toResponse();
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleUnexpected(AccessDeniedException ex, WebRequest request) {
-        return new ErrorModel(
+        return new ErrorModels.ErrorResponse(
                 HttpStatus.FORBIDDEN,
                 (((ServletWebRequest) request).getHttpMethod() == HttpMethod.GET)
                         ? "You are not allowed to access this resource"
@@ -96,7 +96,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnexpected(Exception ex, WebRequest request) {
-        System.out.println(ex.getClass() + " " + ex.getMessage());
-        return new ErrorModel(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request).toResponse();
+        return new ErrorModels.ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request, ex).toResponse();
     }
 }

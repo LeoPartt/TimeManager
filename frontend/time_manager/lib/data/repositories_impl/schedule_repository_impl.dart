@@ -42,10 +42,10 @@ class ClockRepositoryImpl implements ClockRepository {
     }
   }
 
-  @override
-  Future<Clock?> getClockStatus() async {
+  // @override
+  // Future<Clock?> getClockStatus() async {
     try {
-      final res = await api.getClockStatus();
+    //   final res = await api.getClockStatus();
       final dto = ClockModel.fromJson(res);
       // 🔹 Mise à jour du cache
       await cache.save(_cacheKeyClock, dto.toJson(), ttlSeconds: 600);
@@ -54,12 +54,12 @@ class ClockRepositoryImpl implements ClockRepository {
       // 🔸 Si erreur réseau, on lit le cache
       final cached = await cache.get(_cacheKeyClock);
       if (cached != null) {
-        return ClockModel.fromJson(cached).toDomain();
+      //   return ClockModel.fromJson(cached).toDomain();
       }
       rethrow;
     }
   }
     Future<void> clearClockCache() async {
     await cache.remove(_cacheKeyClock);
-  }
+  // }
 }

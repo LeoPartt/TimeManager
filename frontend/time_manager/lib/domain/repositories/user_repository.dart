@@ -2,7 +2,7 @@ import 'package:time_manager/domain/entities/user.dart';
 import 'package:time_manager/domain/usecases/user/update_user_profile.dart';
 
 abstract class UserRepository {
-    Future<User> getUser(int id);
+  Future<User> getUser(int id);
   Future<List<User>> getUsers();
     Future<User?> getCurrentUser();
 

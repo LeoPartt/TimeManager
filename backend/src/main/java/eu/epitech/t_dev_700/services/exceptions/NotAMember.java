@@ -1,18 +1,17 @@
 package eu.epitech.t_dev_700.services.exceptions;
 
+import eu.epitech.t_dev_700.models.ErrorModels;
 import eu.epitech.t_dev_700.utils.HasDetails;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.HashMap;
-import java.util.Map;
+@Schema(example = "User #0 is not a member of team #0")
+public final class NotAMember extends IllegalStateException implements Runnable, HasDetails<ErrorModels.NotAMemberDetail> {
 
-public final class NotAMember extends IllegalStateException implements Runnable, HasDetails {
-
-    private final Map<String, Object> details = new HashMap<>();
+    private final ErrorModels.NotAMemberDetail details;
 
     public NotAMember(Long userId, Long teamId) {
         super("User #%d is not a member of team #%d".formatted(userId, teamId));
-        this.details.put("userId", userId);
-        this.details.put("teamId", userId);
+        this.details = new ErrorModels.NotAMemberDetail(userId, teamId);
     }
 
     @Override
@@ -21,7 +20,7 @@ public final class NotAMember extends IllegalStateException implements Runnable,
     }
 
     @Override
-    public Map<String, Object> details() {
+    public ErrorModels.NotAMemberDetail details() {
         return details;
     }
 }

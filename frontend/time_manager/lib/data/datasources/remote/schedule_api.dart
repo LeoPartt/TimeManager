@@ -31,6 +31,6 @@ final body = {
     }
   }
 
-  Future<Map<String, dynamic>> getClockStatus() async =>
+  Future<dynamic> getClockStatus() async =>
       client.get(ApiEndpoints.clockStatus);
 }
